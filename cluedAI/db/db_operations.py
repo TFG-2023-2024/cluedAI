@@ -3,7 +3,7 @@ import os
 from db.initial_data import initial_characters, initial_items, initial_locations
 from db.db_randomizers import randomize_archetypes, randomize_items, randomize_locations
 
-def create_db():
+def connect_db():
     """
     Connect to MongoDB and create the database if it doesn't exist.
 
@@ -71,7 +71,7 @@ def setup_db():
     - None
     """
     # CONNECT TO DATABASE
-    db, characters_collection, items_collection, locations_collection = create_db()
+    db, characters_collection, items_collection, locations_collection = connect_db()
 
     # Insert initial data
     insert_data(initial_characters, characters_collection)
@@ -93,7 +93,7 @@ def flush_db():
     """
     try:
         # Connect to MongoDB
-        db = create_db()
+        db = connect_db()
 
         # Drop collections
         db["characters"].drop()
@@ -138,11 +138,11 @@ def randomize():
     """
 
     # CONNECT TO DATABASE
-    db, characters_collection, items_collection, locations_collection = create_db()
+    db, characters_collection, items_collection, locations_collection = connect_db()
     randomized_data = {}
 
-    # Randomize character archetypes
-    randomized_data["archetypes"] = randomize_archetypes(characters_collection)
+    # Randomize character archetypes and update 
+    randomize_archetypes(characters_collection)
 
     # Randomize locations
     randomized_data["locations"] = randomize_locations(locations_collection)

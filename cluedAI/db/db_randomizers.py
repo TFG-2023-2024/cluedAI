@@ -13,7 +13,16 @@ def randomize_archetypes(characters_collection):
     characters = list(characters_collection.find({}, {"Archetype": 1}))  # Fetching archetype data from MongoDB
     archetypes = [character["Archetype"] for character in characters]
     random.shuffle(archetypes)
-    return archetypes
+    try:
+        # Update each document in characters_collection with a random archetype
+        for index, character in enumerate(characters_collection.find()):
+            random_archetype = archetypes[index]  # Get random archetype
+            characters_collection.update_one(
+                {"_id": character["_id"]},
+                {"$set": {"Archetype": random_archetype}}
+            )
+    except Exception as e:
+        print(f"Error updating character archetypes: {e}")
 
 def randomize_locations(locations_collection):
     """
@@ -65,7 +74,7 @@ def randomize_items(items_collection, locations_ids):
             random_location_id = random.choice(locations_ids)
             # Assign the random location ID to the item
             item["Location"] = random_location_id
-            randomized_items.append(item)
+            randomized_items.append(item["_id"])
 
         return randomized_items
     except Exception as e:
