@@ -1,5 +1,41 @@
 import pymongo
+import os
 from db.initial_data import initial_characters, initial_items, initial_locations
+from db.db_randomizers import randomize_archetypes, randomize_items, randomize_locations
+
+def create_db():
+    """
+    Connect to MongoDB and create the database if it doesn't exist.
+
+    This function establishes a connection to MongoDB using the URI and database name
+    specified in the environment variables. If the database doesn't exist, it creates it.
+
+    Args:
+    - None
+
+    Returns:
+    - db (pymongo.database.Database): The MongoDB database object.
+    """
+    try:
+        # Connect to MongoDB
+        myclient = pymongo.MongoClient(os.getenv('MONGODB_URI'))
+
+        # Get database name from environment variables
+        db_name = os.getenv('MONGODB_DB')
+
+        # Create or get the database
+        db = myclient[db_name]
+
+        # CREATE COLLECTIONS
+        characters_collection = db["characters"]
+        items_collection = db["items"]
+        locations_collection = db["locations"]
+
+        print(f"Connected to MongoDB database: {db_name}")
+        return db, characters_collection, items_collection, locations_collection
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
+        return None
 
 def insert_data(data, collection):
     """
@@ -20,7 +56,7 @@ def insert_data(data, collection):
         print(f"Error inserting data: {e}")
         return None
     
-def setup_database():
+def setup_db():
     """
     Setup the MongoDB database by inserting initial data into respective collections.
 
@@ -34,21 +70,39 @@ def setup_database():
     Returns:
     - None
     """
-   # CONNECT TO DATABASE
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-
-    # CREATE DATABASE
-    db = myclient["cluedAI"]
-
-    # CREATE COLLECTIONS
-    characters_collection = db["characters"]
-    items_collection = db["items"]
-    locations_collection = db["locations"]
+    # CONNECT TO DATABASE
+    db, characters_collection, items_collection, locations_collection = create_db()
 
     # Insert initial data
     insert_data(initial_characters, characters_collection)
     insert_data(initial_items, items_collection)
     insert_data(initial_locations, locations_collection)
+
+def flush_db():
+    """
+    Flush all data from the MongoDB database.
+
+    This function drops all collections in the MongoDB database, effectively
+    removing all documents from the database.
+
+    Args:
+    - None
+
+    Returns:
+    - None
+    """
+    try:
+        # Connect to MongoDB
+        db = create_db()
+
+        # Drop collections
+        db["characters"].drop()
+        db["items"].drop()
+        db["locations"].drop()
+
+        print("Database flushed successfully.")
+    except Exception as e:
+        print(f"Error flushing database: {e}")
     
 def insert_column_data(column_data, column_name, collection):
     """
@@ -72,3 +126,28 @@ def insert_column_data(column_data, column_name, collection):
         print(f"Error inserting data into {column_name} column: {e}")
         return None
 
+def randomize():
+    """
+    Randomizes character archetypes, locations, and items.
+
+    Args:
+    - None.
+
+    Returns:
+    - randomized_data (dict): Dictionary containing randomized character archetypes, locations, and items.
+    """
+
+    # CONNECT TO DATABASE
+    db, characters_collection, items_collection, locations_collection = create_db()
+    randomized_data = {}
+
+    # Randomize character archetypes
+    randomized_data["archetypes"] = randomize_archetypes(characters_collection)
+
+    # Randomize locations
+    randomized_data["locations"] = randomize_locations(locations_collection)
+
+    # Randomize items with random location IDs
+    randomized_data["items"] = randomize_items(items_collection, randomized_data["locations"])
+
+    return randomized_data
