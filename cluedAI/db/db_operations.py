@@ -30,9 +30,10 @@ def connect_db():
         characters_collection = db["characters"]
         items_collection = db["items"]
         locations_collection = db["locations"]
+        users_collection = db["users"]
 
         print(f"Connected to MongoDB database: {db_name}")
-        return db, characters_collection, items_collection, locations_collection
+        return db, characters_collection, items_collection, locations_collection, users_collection
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
         return None
@@ -71,7 +72,7 @@ def setup_db():
     - None
     """
     # CONNECT TO DATABASE
-    db, characters_collection, items_collection, locations_collection = connect_db()
+    _, characters_collection, items_collection, locations_collection, _ = connect_db()
 
     # Insert initial data
     insert_data(initial_characters, characters_collection)
@@ -138,7 +139,7 @@ def randomize():
     """
 
     # CONNECT TO DATABASE
-    db, characters_collection, items_collection, locations_collection = connect_db()
+    _, characters_collection, items_collection, locations_collection, _ = connect_db()
     randomized_data = {}
 
     # Randomize character archetypes and update 
@@ -151,3 +152,23 @@ def randomize():
     randomized_data["items"] = randomize_items(items_collection, randomized_data["locations"])
 
     return randomized_data
+
+def obtain_by_id(id, collection):
+    """
+    Fetches a database object by its ID from the given collection.
+
+    Args:
+    - id (any): The ID of the object to fetch.
+    - collection (pymongo.collection.Collection): The MongoDB collection to search in.
+
+    Returns:
+    - db_object (dict): The database object corresponding to the provided ID.
+                        Returns None if the object is not found.
+    """
+    try:
+        # Find the object in the collection by its ID
+        db_object = collection.find_one({"_id": id})
+        return db_object
+    except Exception as e:
+        print(f"Error obtaining object by ID: {e}")
+        return None
