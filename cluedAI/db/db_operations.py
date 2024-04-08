@@ -94,12 +94,13 @@ def flush_db():
     """
     try:
         # Connect to MongoDB
-        db = connect_db()
+        db, _, _, _, _ = connect_db()
 
         # Drop collections
         db["characters"].drop()
         db["items"].drop()
         db["locations"].drop()
+        db["users"].drop()
 
         print("Database flushed successfully.")
     except Exception as e:
