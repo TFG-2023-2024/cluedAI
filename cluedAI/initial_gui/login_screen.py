@@ -2,11 +2,11 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from dotenv import load_dotenv
 from users.user_operations import log_user
-from create_screen import create
+from initial_gui.create_screen import create
 import os
 
-load_dotenv()
-openai_api_key = os.getenv('OPENAI_API_KEY')
+#load_dotenv()
+#openai_api_key = os.getenv('OPENAI_API_KEY')
 
 def login():
     OUTPUT_PATH = Path(__file__).parent
@@ -26,12 +26,12 @@ def login():
         
         if not api or not username or api=="Enter your API Key" or username=="Enter your username":
             messagebox.showerror(title='Error', message='Both fields must be completed.', icon="error")
-        elif api != openai_api_key:  
+        elif api != "a":  
             messagebox.showerror(title='Error', message='The API key is incorrect.', icon="error")
         else:
             log_user(username)
             window.destroy()
-            #create()
+            create(username)
 
 
     canvas = Canvas(
