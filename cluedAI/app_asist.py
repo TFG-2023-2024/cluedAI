@@ -1,103 +1,114 @@
+#Este codigo es para probar los metodos dentro del mismo permitiendo crear x hilos con x personajes de la db mediante un rango de id ademas de acceder a dichos hilos en cualquier momento
 import openai
 import tkinter as tk
 from dotenv import load_dotenv
 import os
 import threading
-from db.db_operations import connect_db, obtain_by_id
+import random
 from characters.character_operations import create_character
 
+# Cargar la clave de API de OpenAI
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
-print(os.getenv('OPENAI_API_KEY'))
 client = openai.OpenAI()
-assistant = create_character(1)
-thread = client.beta.threads.create()
 
-# Función para manejar la entrada del usuario y obtener la respuesta de OpenAI
-def manejar_entrada(event=None):
-    entrada_usuario = texto_entrada.get("1.0", "end-1c")
-    texto_entrada.delete("1.0", "end")
-    texto_respuesta.insert(tk.END, "User: " + entrada_usuario + "\n\n")
+def crear_hilos_asistentes(num_hilos, rango_ids):
+    random.shuffle(rango_ids)
+    ids_seleccionados = rango_ids[:num_hilos]
+    asistentes = [create_character(id) for id in ids_seleccionados]
+    threads = [client.beta.threads.create() for _ in range(num_hilos)]
+    return asistentes, threads
+
+def manejar_entrada(index, textos_entrada, textos_respuesta, threads, asistentes):
+    entrada_usuario = textos_entrada[index].get("1.0", "end-1c")
+    textos_entrada[index].delete("1.0", "end")
+    textos_respuesta[index].insert(tk.END, "User: " + entrada_usuario + "\n\n")
 
     def consulta_api():
         message = client.beta.threads.messages.create(
-            thread_id=thread.id,
+            thread_id=threads[index].id,
             role="user",
             content=entrada_usuario,
         )
         run = client.beta.threads.runs.create(
-            thread_id=thread.id,
-            assistant_id=assistant.id,
+            thread_id=threads[index].id,
+            assistant_id=asistentes[index].id,
         )
 
         while True:
-            run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+            run = client.beta.threads.runs.retrieve(thread_id=threads[index].id, run_id=run.id)
             if run.status == "completed":
-                messages = list(client.beta.threads.messages.list(thread_id=thread.id))
+                messages = list(client.beta.threads.messages.list(thread_id=threads[index].id))
                 for message in messages:
-                    assert message.content[0].type == "text"
-                    respuesta = message.content[0].text.value
-                    print(respuesta)
-                    texto_respuesta.insert(tk.END, "Asistente: " + respuesta + "\n\n")
-                    break
+                    if message.content[0].type == "text":
+                        respuesta = message.content[0].text.value
+                        textos_respuesta[index].insert(tk.END, "Asistente: " + respuesta + "\n\n")
+                        break
                 break
-
 
     hilo_consulta = threading.Thread(target=consulta_api)
     hilo_consulta.start()
 
-# Función para mostrar los registros completos de la conversación
-def show_logs():
-    # Aquí iría la lógica para mostrar los registros completos de la conversación
-    pass
+def on_close_window(window, window_list, index):
+    window_list[index] = None
+    window.destroy()
 
-# Function to change the button appearance when clicked
-def animate_button_click(button):
-    # Change button background color when clicked
-    button.config(bg="red")
-    # Change button relief to SUNKEN
-    button.config(relief=tk.SUNKEN)
-    # After a delay, change button back to normal appearance
-    button.after(200, lambda: restore_button(button))
+def crear_ventana_entrada(index, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta):
+    if ventanas_entrada[index] is None or not ventanas_entrada[index].winfo_exists():
+        ventana_entrada = tk.Toplevel()
+        ventana_entrada.title(f"Input for Thread {index + 1}")
+        ventana_entrada.protocol("WM_DELETE_WINDOW", lambda: on_close_window(ventana_entrada, ventanas_entrada, index))
 
-# Function to restore the button appearance
-def restore_button(button):
-    # Restore button background color
-    button.config(bg="SystemButtonFace")
-    # Restore button relief to RAISED
-    button.config(relief=tk.RAISED)
+        texto_entrada = tk.Text(ventana_entrada, height=5)
+        texto_entrada.pack(fill=tk.BOTH, expand=True)
+        textos_entrada[index] = texto_entrada
 
-# Configuración de la ventana Tkinter
-ventana = tk.Tk()
-ventana.title("cluedAI")
+        boton_submit = tk.Button(ventana_entrada, text="Submit", command=lambda: crear_ventana_salida(index, threads, asistentes, ventanas_salida, textos_entrada, textos_respuesta))
+        boton_submit.pack()
 
-# Etiqueta para el campo de texto de entrada
-etiqueta_entrada = tk.Label(ventana, text="Conversation:")
-etiqueta_entrada.pack()
+        ventanas_entrada[index] = ventana_entrada
+    else:
+        ventanas_entrada[index].deiconify()
 
-# Área de texto para mostrar respuestas
-texto_respuesta = tk.Text(ventana, height=20)
-texto_respuesta.pack(fill=tk.BOTH, expand=True)
+def crear_ventana_salida(index, threads, asistentes, ventanas_salida, textos_entrada, textos_respuesta):
+    if ventanas_salida[index] is None or not ventanas_salida[index].winfo_exists():
+        ventana_salida = tk.Toplevel()
+        ventana_salida.title(f"Output for Thread {index + 1}")
+        ventana_salida.protocol("WM_DELETE_WINDOW", lambda: on_close_window(ventana_salida, ventanas_salida, index))
 
-# Etiqueta para el campo de texto de entrada
-etiqueta_entrada = tk.Label(ventana, text="Write here:")
-etiqueta_entrada.pack()
+        texto_respuesta = tk.Text(ventana_salida, height=20)
+        texto_respuesta.pack(fill=tk.BOTH, expand=True)
+        textos_respuesta[index] = texto_respuesta
 
-# Campo de texto para la entrada del usuario
-texto_entrada = tk.Text(ventana, height=5)
-texto_entrada.pack(fill=tk.BOTH, expand=True)
+        ventanas_salida[index] = ventana_salida
+    else:
+        ventanas_salida[index].deiconify()
 
-# Botón para enviar texto
-boton_enviar = tk.Button(ventana, text="Send", command=manejar_entrada)
-boton_enviar.pack(side=tk.BOTTOM)
-boton_enviar.bind("<Button-1>", lambda event: animate_button_click(boton_enviar))
+    manejar_entrada(index, textos_entrada, textos_respuesta, threads, asistentes)
 
-# Botón para ver registros completos de la conversación
-boton_logs = tk.Button(ventana, text="Logs", command=show_logs)
-boton_logs.pack(side=tk.BOTTOM)
+def crear_botones_hilos(ventana_principal, num_hilos, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta):
+    for i in range(num_hilos):
+        boton_hilo = tk.Button(ventana_principal, text=f"Thread {i + 1}", command=lambda i=i: crear_ventana_entrada(i, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta))
+        boton_hilo.pack(fill=tk.BOTH, expand=True)
 
-# Vincula la tecla Enter para poder enviar sin pulsar el boton
-texto_entrada.bind("<Return>", manejar_entrada)
+def iniciar_aplicacion(num_hilos, rango_ids):
+    ventana_principal = tk.Tk()
+    ventana_principal.title("cluedAI")
 
-# Iniciar la interfaz gráfica
-ventana.mainloop()
+    asistentes, threads = crear_hilos_asistentes(num_hilos, rango_ids)
+
+    textos_entrada = [None] * num_hilos
+    textos_respuesta = [None] * num_hilos
+    ventanas_entrada = [None] * num_hilos
+    ventanas_salida = [None] * num_hilos
+
+    crear_botones_hilos(ventana_principal, num_hilos, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta)
+
+    ventana_principal.mainloop()
+
+# Número de hilos y rango de IDs de personajes disponibles
+NUM_HILOS = 5
+RANGO_IDS = list(range(1, 11))
+
+# Iniciar la aplicación
+iniciar_aplicacion(NUM_HILOS, RANGO_IDS)
