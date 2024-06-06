@@ -1,6 +1,7 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from users.user_operations import insert_character
+from initial_gui.game_screen import chat
 
 def create(username):
     OUTPUT_PATH = Path(__file__).parent
@@ -25,8 +26,8 @@ def create(username):
             messagebox.showerror(title='Error', message='All fields must be completed.')
         else:
             insert_character(username, data)
-            #window.destroy()
-            #REDIRECT
+            window.destroy()
+            chat()
 
     canvas = Canvas(
         window,
