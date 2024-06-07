@@ -3,7 +3,7 @@ from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Tk, Canvas, Ent
 
 def chat():
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/chat_v0")
+    ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/game")
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
