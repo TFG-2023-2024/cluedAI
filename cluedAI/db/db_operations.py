@@ -1,3 +1,4 @@
+import random
 import pymongo
 import os
 from db.initial_data import initial_characters, initial_items, initial_locations
@@ -136,7 +137,7 @@ def randomize():
     - None.
 
     Returns:
-    - randomized_data (dict): Dictionary containing randomized character archetypes, locations, and items.
+    - randomized_data (dict): Dictionary containing randomized location IDs.
     """
 
     # CONNECT TO DATABASE
@@ -149,8 +150,7 @@ def randomize():
     # Randomize locations
     randomized_data["locations"] = randomize_locations(locations_collection)
 
-    # Randomize items with random location IDs
-    randomized_data["items"] = randomize_items(items_collection, randomized_data["locations"])
+    randomize_items(items_collection, randomized_data["locations"])
 
     return randomized_data
 
@@ -173,3 +173,23 @@ def obtain_by_id(id, collection):
     except Exception as e:
         print(f"Error obtaining object by ID: {e}")
         return None
+
+def start_day():
+    """
+    Randomizes the Location ID on both the character and item collection.
+
+    Returns:
+    - randomized_day (dict): The randomized data for the characters.
+    """
+    # Fetch all location IDs
+    _, characters_collection, _, _, _ = connect_db()
+
+    randomized_data = randomize()
+    random_location_id = random.choice(randomized_data["locations"])
+
+    # Randomize character locations
+    for character in characters_collection.find():
+        random_location_id = random.choice(randomized_data["locations"])
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+
+    return None

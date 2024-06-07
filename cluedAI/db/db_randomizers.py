@@ -56,27 +56,17 @@ def randomize_items(items_collection, locations_ids):
     Args:
     - items_collection (pymongo.collection.Collection): The MongoDB collection containing item documents.
     - locations_ids (list): List of location IDs to choose from.
-
-    Returns:
-    - randomized_items (list): Randomized list of item documents with random location IDs assigned.
     """
     try:
-        # Fetch all items from the items collection
-        all_items = list(items_collection.find())
-
-        # Randomly shuffle the list of items
-        random.shuffle(all_items)
-
-        # Assign a random location ID to each item
-        randomized_items = []
-        for item in all_items:
+        for item in items_collection.find():
             # Randomly select a location ID
             random_location_id = random.choice(locations_ids)
             # Assign the random location ID to the item
-            item["Location"] = random_location_id
-            randomized_items.append(item["_id"])
+            items_collection.update_one({"_id": item["_id"]}, {"$set": {"Location": random_location_id}})
 
-        return randomized_items
+    
+
+        return None
     except Exception as e:
         print(f"Error randomizing items: {e}")
         return []
