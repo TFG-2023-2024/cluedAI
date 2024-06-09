@@ -10,7 +10,7 @@ import os
 
 def login():
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/login")
+    ASSETS_PATH = OUTPUT_PATH / Path("assets/login")
 
 
     def relative_to_assets(path: str) -> Path:
