@@ -18,7 +18,7 @@ from tkinter import (
 def reroll(received_messages):
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / Path(
-        r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/reroll_v0"
+        r"assets/reroll_v0"
     )
 
     def relative_to_assets(path: str) -> Path:
