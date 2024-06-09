@@ -3,7 +3,7 @@ from tkinter import Tk, Canvas, Button, PhotoImage
 from initial_gui.login_screen import login
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/start")
+ASSETS_PATH = OUTPUT_PATH / Path("assets/start")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
