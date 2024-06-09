@@ -1,5 +1,6 @@
 from pathlib import Path
 from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Tk, Canvas, Entry, Button, PhotoImage
+from reroll_screen import reroll
 
 def chat():
     OUTPUT_PATH = Path(__file__).parent
@@ -7,7 +8,14 @@ def chat():
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
-
+    
+    def reroll_response():
+        if len(messages) >= 2:
+            last_two_messages = [messages[-2][2], messages[-1][2]]  # Get the last two messages' text
+            window.destroy()
+            reroll(last_two_messages)
+            
+    
     window = Tk()
     window.geometry("1024x768")
 
@@ -78,7 +86,7 @@ def chat():
         rect_y2 = bbox[3] + padding
         rounded_rect = create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#333333")
         messages_canvas.tag_lower(rounded_rect, text_item)
-        messages.append((rounded_rect, text_item))
+        messages.append((rounded_rect, text_item, message))
 
         # Update scroll region and scroll to the bottom
         messages_canvas.config(scrollregion=messages_canvas.bbox("all"))
@@ -142,12 +150,25 @@ def chat():
     image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
     image_2 = canvas.create_image(304.66650390625, 40.0, image=image_image_2)
 
-    image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
-    image_3 = canvas.create_image(712.0, 40.0, image=image_image_3)
-
+    button_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
+    
+    button3_canvas = Canvas(
+        canvas,
+        width=button_image_3.width(),
+        height=button_image_3.height(),
+        bg="#3D3D3D",
+        bd=0,
+        highlightthickness=0,
+        relief="ridge"
+    )
+    button3_canvas.place(x=712.0 - button_image_3.width() // 2, y=40.0 - button_image_3.height() // 2)
+    button3_canvas.create_image(0, 0, anchor="nw", image=button_image_3)
+    
+    button3_canvas.bind("<Button-1>", lambda event: reroll_response())  # Bind the left mouse click to the reroll function
+    
     # Create the frame to hold the messages list and scrollbar
     messages_frame = Frame(window)
-    messages_frame.place(x=12, y=100, width=1000, height=520)
+    messages_frame.place(x=0, y=100, width=1022, height=530)
 
     scrollbar = Scrollbar(messages_frame, orient="vertical")
     scrollbar.pack(side=RIGHT, fill=Y)
@@ -167,3 +188,4 @@ def chat():
 
     window.resizable(False, False)
     window.mainloop()
+chat()
