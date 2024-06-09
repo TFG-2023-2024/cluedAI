@@ -33,7 +33,6 @@ def connect_db():
         locations_collection = db["locations"]
         users_collection = db["users"]
 
-        print(f"Connected to MongoDB database: {db_name}")
         return db, characters_collection, items_collection, locations_collection, users_collection
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
@@ -192,4 +191,4 @@ def start_day():
         random_location_id = random.choice(randomized_data["locations"])
         characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
 
-    return None
+    return randomized_data
