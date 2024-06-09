@@ -13,7 +13,7 @@ locations_by_id = [obtain_by_id(location_id, locations_collection) for location_
 day = int(os.getenv('DAY'))
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/select_v0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/select_v0")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)

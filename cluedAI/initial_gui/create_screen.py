@@ -5,7 +5,7 @@ from initial_gui.game_screen import chat
 
 def create(username):
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/create")
+    ASSETS_PATH = OUTPUT_PATH / Path("assets/create")
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)

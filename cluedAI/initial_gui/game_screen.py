@@ -1,6 +1,6 @@
 from pathlib import Path
 from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Tk, Canvas, Entry, Button, PhotoImage
-from reroll_screen import reroll
+from initial_gui.reroll_screen import reroll
 
 def chat():
     OUTPUT_PATH = Path(__file__).parent
@@ -188,4 +188,3 @@ def chat():
 
     window.resizable(False, False)
     window.mainloop()
-chat()
