@@ -91,7 +91,7 @@ def main():
         elif comando == "nuevo":
             id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
             asistente_nuevo = crear_asistente(id_nuevo)
-            hilo_nuevo = crear_hilo(asistente_nuevo)
+            hilo_nuevo = crear_hilo()
             asistentes[id_nuevo] = asistente_nuevo
             hilos[id_nuevo] = hilo_nuevo
             print(f"Asistente con ID {id_nuevo} y hilo creado.")
