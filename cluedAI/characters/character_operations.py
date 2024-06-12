@@ -1,5 +1,4 @@
 import openai
-import threading
 import os
 from dotenv import load_dotenv
 from db.db_operations import connect_db, obtain_by_id
@@ -39,5 +38,3 @@ def create_character(id):
     except Exception as e:
         print(f"Error creating character assistant: {e}")
         return None
-
-thread = client.beta.threads.create()

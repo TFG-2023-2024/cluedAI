@@ -40,12 +40,12 @@ def create(username):
     )
 
     canvas.place(x = 0, y = 0)
-    image_image_1 = PhotoImage(
-        file=relative_to_assets("image_1.png"))
-    image_1 = canvas.create_image(
+    image_bg = PhotoImage(
+        file=relative_to_assets("bg.png"))
+    canvas.create_image(
         515.0,
         403.0,
-        image=image_image_1
+        image=image_bg
     )
 
     canvas.create_text(
@@ -81,36 +81,36 @@ def create(username):
         font=("Sedan Regular", 52 * -1)
     )
 
-    image_image_2 = PhotoImage(
-        file=relative_to_assets("image_2.png"))
-    image_2 = canvas.create_image(
+    image_banner = PhotoImage(
+        file=relative_to_assets("banner.png"))
+    canvas.create_image(
         512.0,
         277.0,
-        image=image_image_2
+        image=image_banner
     )
 
-    image_image_3 = PhotoImage(
-        file=relative_to_assets("image_3.png"))
-    image_3 = canvas.create_image(
+    image_divider = PhotoImage(
+        file=relative_to_assets("divider.png"))
+    canvas.create_image(
         515.0,
         397.56201171875,
-        image=image_image_3
+        image=image_divider
     )
 
-    image_image_4 = PhotoImage(
-        file=relative_to_assets("image_4.png"))
-    image_4 = canvas.create_image(
+    entry_bg_1 = PhotoImage(
+        file=relative_to_assets("entry_bg_1.png"))
+    canvas.create_image(
         272.0,
         577.0,
-        image=image_image_4
+        image=entry_bg_1
     )
 
-    entry_image_1 = PhotoImage(
+    entry_1 = PhotoImage(
         file=relative_to_assets("entry_1.png"))
-    entry_bg_1 = canvas.create_image(
+    canvas.create_image(
         291.0,
         577.0,
-        image=entry_image_1
+        image=entry_1
     )
 
     def clear_default(event):
@@ -135,28 +135,24 @@ def create(username):
     )
 
 
-    image_image_5 = PhotoImage(
-        file=relative_to_assets("image_5.png"))
-    image_5 = canvas.create_image(
+    icon = PhotoImage(
+        file=relative_to_assets("icon.png"))
+    canvas.create_image(
         124.0,
         577.0,
-        image=image_image_5
+        image=icon
     )
 
-    image_image_6 = PhotoImage(
-        file=relative_to_assets("image_6.png"))
-    image_6 = canvas.create_image(
+    canvas.create_image(
         272.0,
         446.0,
-        image=image_image_6
+        image=entry_bg_1
     )
 
-    entry_image_2 = PhotoImage(
-        file=relative_to_assets("entry_2.png"))
-    entry_bg_2 = canvas.create_image(
+    canvas.create_image(
         291.0,
         446.0,
-        image=entry_image_2
+        image=entry_1
     )
 
     entry_name = Entry(
@@ -186,29 +182,24 @@ def create(username):
         font=("Inter", 13 * -1)
     )
 
-    image_image_7 = PhotoImage(
-        file=relative_to_assets("image_7.png"))
-    image_7 = canvas.create_image(
+    canvas.create_image(
         124.0,
         446.0,
-        image=image_image_7
+        image=icon
     )
 
-    image_image_8 = PhotoImage(
-        file=relative_to_assets("image_8.png"))
-    image_8 = canvas.create_image(
+    canvas.create_image(
         272.0,
         512.0,
-        image=image_image_8
+        image=entry_bg_1
     )
 
-    entry_image_3 = PhotoImage(
-        file=relative_to_assets("entry_3.png"))
-    entry_bg_3 = canvas.create_image(
+    canvas.create_image(
         291.0,
         512.0,
-        image=entry_image_3
+        image=entry_1
     )
+
     entry_age = Entry(
         bd=0,
         bg="#292929",
@@ -236,28 +227,27 @@ def create(username):
         font=("Inter", 13 * -1)
     )
 
-    image_image_9 = PhotoImage(
-        file=relative_to_assets("image_9.png"))
-    image_9 = canvas.create_image(
+    canvas.create_image(
         124.0,
         512.0,
-        image=image_image_9
+        image=icon
     )
 
-    image_image_10 = PhotoImage(
-        file=relative_to_assets("image_10.png"))
-    image_10 = canvas.create_image(
+    entry_bg_2 = PhotoImage(
+        file=relative_to_assets("entry_bg_2.png"))
+    canvas.create_image(
         751.0,
         512.0,
-        image=image_image_10
+        image=entry_bg_2
     )
 
-    entry_image_4 = PhotoImage(
-        file=relative_to_assets("entry_4.png"))
-    entry_bg_4 = canvas.create_image(
+    entry_2 = PhotoImage(
+        file=relative_to_assets("entry_2.png"))
+    
+    canvas.create_image(
         769.5,
         512.0,
-        image=entry_image_4
+        image=entry_2
     )
 
     entry_appearance = Entry(
@@ -287,27 +277,28 @@ def create(username):
         font=("Inter", 13 * -1)
     )
 
-    image_image_11 = PhotoImage(
-        file=relative_to_assets("image_11.png"))
-    image_11 = canvas.create_image(
+    canvas.create_image(
         601.0,
         513.0,
-        image=image_image_11
+        image=icon
     )
 
-    button_image_1 = PhotoImage(
-        file=relative_to_assets("button_1.png"))
-    button_1 = Button(
-        image=button_image_1,
+    submit_button_image = PhotoImage(
+        file=relative_to_assets("submit_button.png"))
+    
+    submit_button = Button(
+        image=submit_button_image,
         highlightthickness=0,
         command=submit_character,
         relief="flat"
     )
-    button_1.place(
+
+    submit_button.place(
         x=338.0,
         y=642.0,
         width=355.0,
         height=53.0
     )
+
     window.resizable(False, False)
     window.mainloop()

@@ -29,14 +29,14 @@ def start():
 
     canvas.place(x = 0, y = 0)
     image_image_1 = PhotoImage(
-        file=relative_to_assets("image_1.png"))
-    image_1 = canvas.create_image(
+        file=relative_to_assets("bg.png"))
+    canvas.create_image(
         512.0,
         349.0,
         image=image_image_1
     )
 
-    button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+    button_image_1 = PhotoImage(file=relative_to_assets("start_button.png"))
     button_1 = Button(
         image=button_image_1,
         highlightthickness=1,

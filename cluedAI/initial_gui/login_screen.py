@@ -1,17 +1,11 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
-from dotenv import load_dotenv
 from users.user_operations import log_user
 from initial_gui.create_screen import create
-import os
-
-#load_dotenv()
-#openai_api_key = os.getenv('OPENAI_API_KEY')
 
 def login():
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / Path("assets/login")
-
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
@@ -26,14 +20,16 @@ def login():
         
         if not api or not username or api=="Enter your API Key" or username=="Enter your username":
             messagebox.showerror(title='Error', message='Both fields must be completed.', icon="error")
-        elif api != "a":  
-            messagebox.showerror(title='Error', message='The API key is incorrect.', icon="error")
         else:
             log_user(username)
             window.destroy()
             create(username)
-
-
+        '''
+        EDITAR PARA MOSTRAR ERROR CORRECTO YA QUE NO VAMOS A COMPROBAR QUE SEA NUESTRA API KEY
+        elif api != "a":  
+            messagebox.showerror(title='Error', message='The API key is incorrect.', icon="error")
+        '''
+        
     canvas = Canvas(
         window,
         bg = "#202020",
@@ -45,32 +41,21 @@ def login():
     )
 
     canvas.place(x = 0, y = 0)
-    image_image_1 = PhotoImage(
-        file=relative_to_assets("image_1.png"))
+    image_bg = PhotoImage(
+        file=relative_to_assets("bg.png"))
     canvas.create_image(
         515.0,
         403.0,
-        image=image_image_1
+        image=image_bg
     )
 
-    button_image_1 = PhotoImage(
-        file=relative_to_assets("button_1.png"))
-    button_1 = Button(
-        image=button_image_1,
-        highlightthickness=0,
-        command=create_character,
-        relief="flat"
-    )
-    button_1.place(
-        x=334.0,
-        y=634.0,
-        width=355.0,
-        height=53.0
-    )
+    button_bg = PhotoImage(file=relative_to_assets("login_button.png"))
+    login_button = Button(image=button_bg, highlightthickness=0, command=create_character,relief="flat")
+    login_button.place(x=334.0, y=634.0, width=355.0, height=53.0)
 
     image_image_2 = PhotoImage(
-        file=relative_to_assets("image_2.png"))
-    image_2 = canvas.create_image(
+        file=relative_to_assets("entry_bg.png"))
+    canvas.create_image(
         511.0,
         546.0,
         image=image_image_2
@@ -80,50 +65,34 @@ def login():
         event.widget.delete(0, 'end')
         event.widget.unbind('<FocusIn>')
 
-    entry_image_1 = PhotoImage(
-        file=relative_to_assets("entry_1.png"))
-    entry_bg_1 = canvas.create_image(
-        531.0,
-        546.0,
-        image=entry_image_1
-    )
+    entry_bg = PhotoImage(file=relative_to_assets("entry.png"))
+    canvas.create_image(531.0, 546.0, image=entry_bg)
 
-    entry_key = Entry(
-        bd=0,
-        bg="#292929",
-        fg="#FFFFFF",
-        font=("Inter", 13 * -1),
-        highlightthickness=0
-    )
+    entry_key = Entry(bd=0,bg="#292929",fg="#FFFFFF",font=("Inter", 13 * -1),highlightthickness=0)
     entry_key.insert(0, "Enter your API Key")  # Insert default text
     entry_key.bind('<FocusIn>', clear_default)
     entry_key.bind("<Return>", create_character)
-    entry_key.place(
-        x=393.0,
-        y=520.0,
-        width=276.0,
-        height=51.0
-    )
+    entry_key.place(x=393.0,y=521.0,width=276.0,height=51.0)
 
-    image_image_3 = PhotoImage(
-        file=relative_to_assets("image_3.png"))
-    image_3 = canvas.create_image(
+    image_icon_1 = PhotoImage(
+        file=relative_to_assets("icon_1.png"))
+    canvas.create_image(
         365.0,
         546.0,
-        image=image_image_3
+        image=image_icon_1
     )
 
     image_image_4 = PhotoImage(
-        file=relative_to_assets("image_4.png"))
-    image_4 = canvas.create_image(
+        file=relative_to_assets("entry_bg.png"))
+    canvas.create_image(
         511.0,
         448.0,
         image=image_image_4
     )
 
     entry_image_2 = PhotoImage(
-        file=relative_to_assets("entry_2.png"))
-    entry_bg_2 = canvas.create_image(
+        file=relative_to_assets("entry.png"))
+    canvas.create_image(
         531.0,
         448.0,
         image=entry_image_2
@@ -153,12 +122,12 @@ def login():
         font=("Inter", 13 * -1)
     )
 
-    image_image_5 = PhotoImage(
-        file=relative_to_assets("image_5.png"))
-    image_5 = canvas.create_image(
+    image_icon_2 = PhotoImage(
+        file=relative_to_assets("icon_2.png"))
+    canvas.create_image(
         363.0,
         448.0,
-        image=image_image_5
+        image=image_icon_2
     )
 
     canvas.create_text(
@@ -194,12 +163,12 @@ def login():
         font=("Sedan Regular", 52 * -1)
     )
 
-    image_image_6 = PhotoImage(
-        file=relative_to_assets("image_6.png"))
-    image_6 = canvas.create_image(
+    image_banner = PhotoImage(
+        file=relative_to_assets("banner.png"))
+    canvas.create_image(
         512.0,
         277.0,
-        image=image_image_6
+        image=image_banner
     )
 
     window.resizable(False, False)

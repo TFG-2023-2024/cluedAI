@@ -6,20 +6,16 @@ from tkinter import (
     RIGHT,
     Y,
     Frame,
-    Label,
     Scrollbar,
     Tk,
     Canvas,
     Entry,
-    Button,
     PhotoImage,
 )
 
 def reroll(received_messages):
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(
-        r"assets/reroll_v0"
-    )
+    ASSETS_PATH = OUTPUT_PATH / Path(r"assets/reroll")
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
@@ -42,6 +38,28 @@ def reroll(received_messages):
     images["image_1"] = PhotoImage(file=relative_to_assets("image_1.png"))
     canvas.create_image(515.0, 403.0, image=images["image_1"])
 
+    def wrap_text(canvas, text, max_width):
+        words = text.split()
+        lines = []
+        current_line = ""
+
+        for word in words:
+            test_line = f"{current_line} {word}".strip()
+            text_item = canvas.create_text(0, 0, anchor="nw", text=test_line, font=("Inter", 13 * -1))
+            bbox = canvas.bbox(text_item)
+            canvas.delete(text_item)
+
+            if bbox[2] - bbox[0] <= max_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word
+
+        if current_line:
+            lines.append(current_line)
+
+        return "\n".join(lines)
+
     canvas.create_rectangle(0.0, 631.0, 1024.0, 768.0, fill="#292929", outline="")
 
     images["button_1"] = PhotoImage(file=relative_to_assets("button_1.png"))
@@ -58,47 +76,53 @@ def reroll(received_messages):
     button_canvas.place(x=916.0, y=663.0)
     button_canvas.create_image(0, 0, anchor="nw", image=images["button_1"])
 
-    def create_rounded_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
+    def create_local_rounded_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
         points = [
             x1 + radius, y1,
+            x1 + radius, y1,
+            x2 - radius, y1,
             x2 - radius, y1,
             x2, y1,
             x2, y1 + radius,
+            x2, y1 + radius,
+            x2, y2 - radius,
             x2, y2 - radius,
             x2, y2,
             x2 - radius, y2,
+            x2 - radius, y2,
+            x1 + radius, y2,
             x1 + radius, y2,
             x1, y2,
             x1, y2 - radius,
+            x1, y2 - radius,
             x1, y1 + radius,
-            x1, y1,
+            x1, y1 + radius,
+            x1, y1
         ]
         return messages_canvas.create_polygon(points, **kwargs, smooth=True)
 
     def display_message(message):
-        y_offset = (
-            10 if not messages else messages_canvas.bbox(messages[-1][1])[3] + 30
-        )  # Space between messages
-        x_position = 960 - 12  # Adjust to fit within the messages_frame
-        text_item = messages_canvas.create_text(
-            x_position,
-            y_offset,
-            anchor="ne",
-            text=message,
-            fill="#FFFFFF",
-            font=("Inter", 13 * -1),
-        )
+        max_width = 960 - 60  # Adjust to fit within the messages_frame with some padding
+        wrapped_message = wrap_text(messages_canvas, message, max_width)
+
+        y_offset = 10 if not messages else messages_canvas.bbox(messages[-1][1])[3] + 30  # Space between messages
+        x_position = 960 - 30  # Adjust to fit within the messages_frame, ensuring right alignment
+
+        # Create text item with anchor="ne" to align text to the right
+        text_item = messages_canvas.create_text(x_position, y_offset, anchor="ne", text=wrapped_message, fill="#FFFFFF", font=("Inter", 13 * -1))
         bbox = messages_canvas.bbox(text_item)
         padding = 10
+
+        # Create bounding box for the rounded rectangle
         rect_x1 = bbox[0] - padding
         rect_y1 = bbox[1] - padding
         rect_x2 = bbox[2] + padding
         rect_y2 = bbox[3] + padding
-        rounded_rect = create_rounded_rectangle(
-            rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#333333"
-        )
+
+        # Create the rounded rectangle
+        rounded_rect = create_local_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#333333")
         messages_canvas.tag_lower(rounded_rect, text_item)
-        messages.append((rounded_rect, text_item, message))
+        messages.append((rounded_rect, text_item, wrapped_message))
 
         # Update scroll region and scroll to the bottom
         messages_canvas.config(scrollregion=messages_canvas.bbox("all"))
@@ -107,7 +131,8 @@ def reroll(received_messages):
     def submit_reroll(event=None):
         message = entry.get()
         if message:
-            display_message(message)  # no sirve aquí, cambiar a posteriori
+            display_message(message)
+            entry.delete(0, END)
             # GO BACK TO CHAT WITH REROLLED RESPONSE
 
     button_canvas.bind("<Button-1>", submit_reroll)
@@ -142,8 +167,7 @@ def reroll(received_messages):
 
     # Create the "AI" text
     canvas.create_text(
-        454.0
-        + clued_width,  # Adjust x-coordinate to center "AI" text relative to "clued" text
+        454.0 + clued_width,  # Adjust x-coordinate to center "AI" text relative to "clued" text
         22.0,
         anchor="nw",
         text="AI",
@@ -159,7 +183,7 @@ def reroll(received_messages):
 
     # Create the frame to hold the messages list and scrollbar
     messages_frame = Frame(window)
-    messages_frame.place(x=0, y=100, width=1022, height=530)
+    messages_frame.place(x=32, y=100, width=990, height=530)
 
     scrollbar = Scrollbar(messages_frame, orient="vertical")
     scrollbar.pack(side=RIGHT, fill=Y)
@@ -185,7 +209,6 @@ def reroll(received_messages):
 
     # Display the last two messages when the window opens
     for message in received_messages:
-        print(message)
         display_message(message)
 
     # Create a canvas to hold the background image and text
@@ -221,3 +244,4 @@ def reroll(received_messages):
 
     window.resizable(False, False)
     window.mainloop()
+
