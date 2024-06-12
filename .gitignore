@@ -163,3 +163,9 @@ cython_debug/
 commit_template.txt
 
 .DS_Store
+dist/cluedAI/_internal/mongodb/bin/mongod.pdb
+dist/cluedAI/_internal/mongodb/bin/mongos.pdb
+dist/cluedAI/_internal/mongodb/data/journal/WiredTigerLog.0000000004
+cluedAI/mongodb/bin/mongod.exe
+cluedAI/mongodb/data/journal/WiredTigerLog.0000000003
+cluedAI/mongodb/data/journal/WiredTigerPreplog.0000000001
