@@ -2,6 +2,7 @@ from pathlib import Path
 from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Tk, Canvas, Entry, Button, PhotoImage
 from initial_gui.reroll_screen import reroll
 from initial_gui.select_screen import select
+import ai_operations as ai
 
 def chat():
     global day, day_label
@@ -11,7 +12,7 @@ def chat():
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
-
+    
     def reroll_response():
         if len(messages) >= 2:
             last_two_messages = [messages[-2][2], messages[-1][2]]  # Get the last two messages' text
@@ -47,6 +48,7 @@ def chat():
     def reset_chat():
         global day
         day += 1
+        #llamar aquí a start_day
         canvas.itemconfig(day_label, text=str(day))
         
         for item in messages + responses:
@@ -84,8 +86,8 @@ def chat():
 
     def display_responses(response):
         max_width = 960 - 60  # Adjust to fit within the responses_frame with some padding
-        wrapped_response = wrap_text(messages_canvas, response, max_width)
-
+        wrapped_response = wrap_text(messages_canvas, ''.join(response), max_width)
+    
         y_offset = 10 if not responses else messages_canvas.bbox(responses[-1][1])[3] + 30  # Space between responses
         x_position = 30  # Adjust to fit within the responses_frame
         text_item = messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill="#FFFFFF", font=("Inter", 13 * -1))
@@ -112,9 +114,15 @@ def chat():
         if message:
             display_message(message)
             entry.delete(0, END)
+            submit_response(message)
 
-    def submit_response(event=None):
-        response = entry.get()
+    hilo = ai.crear_hilo()
+    print(hilo)
+
+    def submit_response(message):
+        response = ai.conversar_en_hilo(hilo, message)
+        print(response)
+        #response = entry.get()
         if response:
             display_responses(response)
             entry.delete(0, END)
@@ -295,4 +303,3 @@ def chat():
     window.resizable(False, False)
     window.mainloop()
 
-chat()
