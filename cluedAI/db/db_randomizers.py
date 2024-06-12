@@ -49,23 +49,31 @@ def randomize_locations(locations_collection):
         print(f"Error randomizing locations: {e}")
         return []
 
-def randomize_items(items_collection, locations_ids):
+def randomize_items(items_collection, locations_collection, locations_ids):
     """
     Randomizes the list of items and assigns random location IDs from the provided list.
+    Updates the corresponding location documents with the item IDs.
 
     Args:
     - items_collection (pymongo.collection.Collection): The MongoDB collection containing item documents.
+    - locations_collection (pymongo.collection.Collection): The MongoDB collection containing location documents.
     - locations_ids (list): List of location IDs to choose from.
     """
     try:
+        # Clear existing item references in all locations
+        locations_collection.update_many({}, {"$set": {"Items": []}})
+
         for item in items_collection.find():
             # Randomly select a location ID
             random_location_id = random.choice(locations_ids)
             # Assign the random location ID to the item
             items_collection.update_one({"_id": item["_id"]}, {"$set": {"Location": random_location_id}})
-
+            # Update the corresponding location with the item ID
+            locations_collection.update_one(
+                {"_id": random_location_id},
+                {"$push": {"Items": item["_id"]}}
+            )
     
-
         return None
     except Exception as e:
         print(f"Error randomizing items: {e}")
