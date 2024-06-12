@@ -19,7 +19,6 @@ def start_mongodb():
 '''
 
 def main():
-    day = 0
     load_dotenv()
     '''
     mongodb_process = start_mongodb()  # Inicia MongoDB
@@ -28,7 +27,6 @@ def main():
     flush_db()
     setup_db()
     randomize()
-    #assistant = create_character(1)
     start_day()
     start()  # Llama a tu función de inicio de la GUI
     '''

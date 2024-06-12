@@ -1,4 +1,5 @@
 from pathlib import Path
+from initial_gui.starting_operations import create_window, relative_to_assets
 from tkinter import (
     BOTH,
     END,
@@ -14,29 +15,12 @@ from tkinter import (
 )
 
 def reroll(received_messages):
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets/reroll")
-
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
-
-    window = Tk()
-    window.geometry("1024x768")
-
-    canvas = Canvas(
-        window,
-        bg="#202020",
-        height=768,
-        width=1024,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge",
-    )
-    canvas.place(x=0, y=0)
+    window, canvas = create_window("assets/reroll")
+    text_font = "Inter Bold"
 
     images = {}
-    images["image_1"] = PhotoImage(file=relative_to_assets("image_1.png"))
-    canvas.create_image(515.0, 403.0, image=images["image_1"])
+    images["bg"] = PhotoImage(file=relative_to_assets("bg.png"))
+    canvas.create_image(515.0, 390.0, image=images["bg"])
 
     def wrap_text(canvas, text, max_width):
         words = text.split()
@@ -153,8 +137,8 @@ def reroll(received_messages):
     entry.bind("<Return>", submit_reroll)
     entry.place(x=56.0, y=675.0, width=810.0, height=49.0)
 
-    images["image_4"] = PhotoImage(file=relative_to_assets("image_4.png"))
-    canvas.create_image(510, 40, image=images["image_4"])
+    images["banner"] = PhotoImage(file=relative_to_assets("banner.png"))
+    canvas.create_image(510, 40, image=images["banner"])
 
     # Create the "clued" text
     clued_text = canvas.create_text(
@@ -175,11 +159,11 @@ def reroll(received_messages):
         font=("Inter", 30 * -1),
     )
 
-    images["image_2"] = PhotoImage(file=relative_to_assets("image_2.png"))
-    canvas.create_image(304.66650390625, 40.0, image=images["image_2"])
+    images["select_button"] = PhotoImage(file=relative_to_assets("select_button.png"))
+    canvas.create_image(304.66650390625, 40.0, image=images["select_button"])
 
-    images["image_3"] = PhotoImage(file=relative_to_assets("image_3.png"))
-    canvas.create_image(712.0, 40.0, image=images["image_3"])
+    images["pressed_button"] = PhotoImage(file=relative_to_assets("pressed_button.png"))
+    canvas.create_image(712.0, 40.0, image=images["pressed_button"])
 
     # Create the frame to hold the messages list and scrollbar
     messages_frame = Frame(window)
@@ -224,22 +208,22 @@ def reroll(received_messages):
     bg_text_canvas.place(x=80, y=550)
 
     # Set the background image
-    images["image_5"] = PhotoImage(file=relative_to_assets("image_5.png"))
-    bg_text_canvas.create_image(0, 0, anchor="nw", image=images["image_5"])
+    images["msg_bg"] = PhotoImage(file=relative_to_assets("msg_bg.png"))
+    bg_text_canvas.create_image(0, 0, anchor="nw", image=images["msg_bg"])
 
     # Create the first text on the bg_text_canvas
     first_text = bg_text_canvas.create_text(
-        55, 15, anchor="nw", text="This response will be ", fill="#FFFFFF", font=("Inter Bold", 18 * -1)
+        55, 15, anchor="nw", text="This response will be ", fill="#FFFFFF", font=(text_font, 18 * -1)
     )
 
     # Create the mid text on the bg_text_canvas
     mid_text = bg_text_canvas.create_text(
-        bg_text_canvas.bbox(first_text)[2], 15, anchor="nw", text="rerolled.", fill="#D71E1E", font=("Inter Bold", 18 * -1)
+        bg_text_canvas.bbox(first_text)[2], 15, anchor="nw", text="rerolled.", fill="#D71E1E", font=(text_font, 18 * -1)
     )
 
     # Create the end text on the bg_text_canvas
     bg_text_canvas.create_text(
-        bg_text_canvas.bbox(mid_text)[2] + 1, 15, anchor="nw", text="Please write down the reason why you requested the reroll.", fill="#FFFFFF", font=("Inter Bold", 18 * -1)
+        bg_text_canvas.bbox(mid_text)[2] + 1, 15, anchor="nw", text="Please write down the reason why you requested the reroll.", fill="#FFFFFF", font=(text_font, 18 * -1)
     )
 
     window.resizable(False, False)

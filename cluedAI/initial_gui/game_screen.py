@@ -2,16 +2,16 @@ from pathlib import Path
 from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Tk, Canvas, Entry, Button, PhotoImage
 from initial_gui.reroll_screen import reroll
 from initial_gui.select_screen import select
+import ai_operations as ai
+from initial_gui.starting_operations import create_window, relative_to_assets
 
 def chat():
+    window, canvas = create_window("assets/game")
+
     global day, day_label
     day = 0
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path("assets/game")
-
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
-
+    left_click = "<Button-1>"
+    
     def reroll_response():
         if len(messages) >= 2:
             last_two_messages = [messages[-2][2], messages[-1][2]]  # Get the last two messages' text
@@ -47,6 +47,7 @@ def chat():
     def reset_chat():
         global day
         day += 1
+        #llamar aquí a start_day
         canvas.itemconfig(day_label, text=str(day))
         
         for item in messages + responses:
@@ -84,8 +85,8 @@ def chat():
 
     def display_responses(response):
         max_width = 960 - 60  # Adjust to fit within the responses_frame with some padding
-        wrapped_response = wrap_text(messages_canvas, response, max_width)
-
+        wrapped_response = wrap_text(messages_canvas, ''.join(response), max_width)
+    
         y_offset = 10 if not responses else messages_canvas.bbox(responses[-1][1])[3] + 30  # Space between responses
         x_position = 30  # Adjust to fit within the responses_frame
         text_item = messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill="#FFFFFF", font=("Inter", 13 * -1))
@@ -112,29 +113,20 @@ def chat():
         if message:
             display_message(message)
             entry.delete(0, END)
+            submit_response(message)
 
-    def submit_response(event=None):
-        response = entry.get()
+    hilo = ai.crear_hilo()
+    print(hilo)
+
+    def submit_response(message):
+        response = ai.conversar_en_hilo(hilo, message)
+        print(response)
         if response:
             display_responses(response)
             entry.delete(0, END)
 
-    window = Tk()
-    window.geometry("1024x768")
-
-    canvas = Canvas(
-        window,
-        bg="#202020",
-        height=768,
-        width=1024,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge"
-    )
-    canvas.place(x=0, y=0)
-
-    image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
-    canvas.create_image(515.0, 403.0, image=image_image_1)
+    image_bg = PhotoImage(file=relative_to_assets("bg.png"))
+    canvas.create_image(515.0, 390.0, image=image_bg)
 
     canvas.create_rectangle(0.0, 631.0, 1024.0, 768.0, fill="#292929", outline="")
 
@@ -177,7 +169,7 @@ def chat():
         ]
         return canvas.create_polygon(points, **kwargs, smooth=True)
 
-    button_canvas.bind("<Button-1>", submit_message)
+    button_canvas.bind(left_click, submit_message)
 
     entry_image_1 = PhotoImage(file=relative_to_assets("entry_1.png"))
     canvas.create_image(461.0, 698.5, image=entry_image_1)
@@ -199,8 +191,8 @@ def chat():
     entry.bind("<Return>", submit_message)
     entry.place(x=56.0, y=675.0, width=810.0, height=49.0)
 
-    image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
-    canvas.create_image(510, 40, image=image_image_4)
+    image_banner = PhotoImage(file=relative_to_assets("banner.png"))
+    canvas.create_image(510, 40, image=image_banner)
 
     # Create the "clued" text
     clued_text = canvas.create_text(
@@ -238,37 +230,37 @@ def chat():
         font=("Inter", 24 * -1)
     )
 
-    button_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
+    button_select_button = PhotoImage(file=relative_to_assets("select_button.png"))
 
     button2_canvas = Canvas(
         canvas,
-        width=button_image_2.width(),
-        height=button_image_2.height(),
+        width=button_select_button.width(),
+        height=button_select_button.height(),
         bg="#3D3D3D",
         bd=0,
         highlightthickness=0,
         relief="ridge"
     )
-    button2_canvas.place(x=304.66650390625 - button_image_2.width() // 2, y=40.0 - button_image_2.height() // 2)
-    button2_canvas.create_image(0, 0, anchor="nw", image=button_image_2)
+    button2_canvas.place(x=304.66650390625 - button_select_button.width() // 2, y=40.0 - button_select_button.height() // 2)
+    button2_canvas.create_image(0, 0, anchor="nw", image=button_select_button)
 
-    button2_canvas.bind("<Button-1>", lambda event: selection())  # Bind the left mouse click to the select function
+    button2_canvas.bind(left_click, lambda event: selection())  # Bind the left mouse click to the select function
 
-    button_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
+    button_reroll_button = PhotoImage(file=relative_to_assets("reroll_button.png"))
 
     button3_canvas = Canvas(
         canvas,
-        width=button_image_3.width(),
-        height=button_image_3.height(),
+        width=button_reroll_button.width(),
+        height=button_reroll_button.height(),
         bg="#3D3D3D",
         bd=0,
         highlightthickness=0,
         relief="ridge"
     )
-    button3_canvas.place(x=712.0 - button_image_3.width() // 2, y=40.0 - button_image_3.height() // 2)
-    button3_canvas.create_image(0, 0, anchor="nw", image=button_image_3)
+    button3_canvas.place(x=712.0 - button_reroll_button.width() // 2, y=40.0 - button_reroll_button.height() // 2)
+    button3_canvas.create_image(0, 0, anchor="nw", image=button_reroll_button)
 
-    button3_canvas.bind("<Button-1>", lambda event: reroll_response())  # Bind the left mouse click to the reroll function
+    button3_canvas.bind(left_click, lambda event: reroll_response())  # Bind the left mouse click to the reroll function
 
     # Create the frame to hold the messages list and scrollbar
     messages_frame = Frame(window)
@@ -295,4 +287,3 @@ def chat():
     window.resizable(False, False)
     window.mainloop()
 
-chat()

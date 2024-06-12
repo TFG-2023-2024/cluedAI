@@ -19,9 +19,9 @@ def crear_asistente(id):
     assistant = create_character(id)
     return assistant
 
-def crear_hilo(asistente):
+def crear_hilo():
     thread = client.beta.threads.create()
-    return {"id": thread.id, "asistente": asistente}
+    return {"id": thread.id}
 
 def obtener_id_hilo(hilo):
     return hilo['id']
@@ -42,42 +42,35 @@ def recuperar_conversacion(hilo_id):
         conversacion.append(f"{role.capitalize()}: {content}")
     return conversacion
 
-def conversar_en_hilo(hilo_id, hilos):
-    hilo_encontrado = None
-    for hilo in hilos.values():
-        if hilo['id'] == hilo_id:
-            hilo_encontrado = hilo
-            break
-    
-    if not hilo_encontrado:
+def conversar_en_hilo(hilo, user_message):
+
+    if not hilo:
         print("Hilo no encontrado.")
         return
 
-    asistente = hilo_encontrado['asistente']
+    asistente = crear_asistente(1)
+    print(asistente)
 
-    while True:
-        mensaje_usuario = input("Tú: ")
-        if mensaje_usuario.lower() == "salir":
-            break
+    client.beta.threads.messages.create(
+        thread_id=hilo['id'],
+        role="user",
+        content=user_message,
+    )
 
-        client.beta.threads.messages.create(
-            thread_id=hilo_id,
-            role="user",
-            content=mensaje_usuario,
-        )
+    print("Asistente: ", end="", flush=True)
 
-        print("Asistente: ", end="", flush=True)
-
-        stream = client.beta.threads.runs.create(
-            thread_id=hilo_id,
-            assistant_id=asistente.id,
-            stream=True,
-        )
-
-        for event in stream:
-            if(event.event=='thread.message.delta'):
-                event_dict = event.data.delta.content[0].text.value
-                print(event_dict, end="", flush=True)
+    stream = client.beta.threads.runs.create(
+        thread_id=hilo['id'],
+        assistant_id=asistente.id,
+        stream=True,
+    )
+    response = ""
+    for event in stream:
+        if(event.event=='thread.message.delta'):
+            event_dict = event.data.delta.content[0].text.value
+            response+=event_dict
+    return response
+            #print(event_dict, end="", flush=True)
 
 #Codigo para comprobar su correcto funcionamiento
 def main():
@@ -88,7 +81,7 @@ def main():
     ids_seleccionados = rango_ids[:num_asistentes]
 
     asistentes = {str(id): crear_asistente(id) for id in ids_seleccionados}
-    hilos = {str(id): crear_hilo(asistente) for id, asistente in asistentes.items()}
+    hilos = {str(id): crear_hilo() for id, asistente in asistentes.items()}
 
     while True:
         comando = input("Ingrese un comando (nuevo, destruir, conversar, listar, salir, recuperar): ").strip().lower()
@@ -98,7 +91,7 @@ def main():
         elif comando == "nuevo":
             id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
             asistente_nuevo = crear_asistente(id_nuevo)
-            hilo_nuevo = crear_hilo(asistente_nuevo)
+            hilo_nuevo = crear_hilo()
             asistentes[id_nuevo] = asistente_nuevo
             hilos[id_nuevo] = hilo_nuevo
             print(f"Asistente con ID {id_nuevo} y hilo creado.")

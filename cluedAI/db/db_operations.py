@@ -149,7 +149,7 @@ def randomize():
     # Randomize locations
     randomized_data["locations"] = randomize_locations(locations_collection)
 
-    randomize_items(items_collection, randomized_data["locations"])
+    randomize_items(items_collection, locations_collection, randomized_data["locations"])
 
     return randomized_data
 
@@ -181,14 +181,22 @@ def start_day():
     - randomized_day (dict): The randomized data for the characters.
     """
     # Fetch all location IDs
-    _, characters_collection, _, _, _ = connect_db()
+    _, characters_collection, _, locations_collections, _ = connect_db()
 
     randomized_data = randomize()
-    random_location_id = random.choice(randomized_data["locations"])
+
+    # Temporary dictionary to hold characters assigned to each location
+    location_characters = {location: [] for location in randomized_data["locations"]}
 
     # Randomize character locations
     for character in characters_collection.find():
         random_location_id = random.choice(randomized_data["locations"])
         characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+        location_characters[random_location_id].append(character["_id"])
+
+    # Update the locations collection with the characters
+    for location_id, character_ids in location_characters.items():
+        locations_collections.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
 
     return randomized_data
+
