@@ -184,7 +184,6 @@ def start_day():
     _, characters_collection, _, locations_collections, _ = connect_db()
 
     randomized_data = randomize()
-    random_location_id = random.choice(randomized_data["locations"])
 
     # Temporary dictionary to hold characters assigned to each location
     location_characters = {location: [] for location in randomized_data["locations"]}

@@ -2,17 +2,12 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from users.user_operations import insert_character
 from initial_gui.game_screen import chat
+from initial_gui.starting_operations import create_window, relative_to_assets
 
 def create(username):
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path("assets/create")
-
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
-
-    window = Tk()
-
-    window.geometry("1024x768")
+    window, canvas = create_window("assets/create")
+    focus = '<FocusIn>'
+    back = "<Return>"
 
     def submit_character():
         data = {
@@ -29,17 +24,6 @@ def create(username):
             window.destroy()
             chat()
 
-    canvas = Canvas(
-        window,
-        bg = "#202020",
-        height = 768,
-        width = 1024,
-        bd = 0,
-        highlightthickness = 0,
-        relief = "ridge"
-    )
-
-    canvas.place(x = 0, y = 0)
     image_bg = PhotoImage(
         file=relative_to_assets("bg.png"))
     canvas.create_image(
@@ -115,7 +99,7 @@ def create(username):
 
     def clear_default(event):
             event.widget.delete(0, 'end')
-            event.widget.unbind('<FocusIn>')
+            event.widget.unbind(focus)
 
     entry_gender = Entry(
         bd=0,
@@ -125,8 +109,8 @@ def create(username):
         highlightthickness=0
     )
     entry_gender.insert(0, "Gender")
-    entry_gender.bind('<FocusIn>', clear_default)
-    entry_gender.bind("<Return>", submit_character)
+    entry_gender.bind(focus, clear_default)
+    entry_gender.bind(back, submit_character)
     entry_gender.place(
         x=152.0,
         y=551.0,
@@ -164,8 +148,8 @@ def create(username):
     )
 
     entry_name.insert(0, "Name")
-    entry_name.bind('<FocusIn>', clear_default)
-    entry_name.bind("<Return>", submit_character)
+    entry_name.bind(focus, clear_default)
+    entry_name.bind(back, submit_character)
     entry_name.place(
         x=152.0,
         y=420.0,
@@ -209,8 +193,8 @@ def create(username):
     )
 
     entry_age.insert(0, "Age")
-    entry_age.bind('<FocusIn>', clear_default)
-    entry_age.bind("<Return>", submit_character)
+    entry_age.bind(focus, clear_default)
+    entry_age.bind(back, submit_character)
     entry_age.place(
         x=152.0,
         y=486.0,
@@ -259,8 +243,8 @@ def create(username):
     )
 
     entry_appearance.insert(0, "Appearance")
-    entry_appearance.bind('<FocusIn>', clear_default)
-    entry_appearance.bind("<Return>", submit_character)
+    entry_appearance.bind(focus, clear_default)
+    entry_appearance.bind(back, submit_character)
     entry_appearance.place(
         x=629.0,
         y=421.0,

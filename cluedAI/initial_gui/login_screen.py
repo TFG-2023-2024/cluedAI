@@ -2,23 +2,18 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from users.user_operations import log_user
 from initial_gui.create_screen import create
+from initial_gui.starting_operations import create_window, relative_to_assets
 
 def login():
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path("assets/login")
-
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
-    
-    window = Tk()
-
-    window.geometry("1024x768")
+    window, canvas = create_window("assets/login")
+    focus = '<FocusIn>'
+    username_text = "Enter your username"
 
     def create_character():
         api = entry_key.get()
         username = entry_username.get()
         
-        if not api or not username or api=="Enter your API Key" or username=="Enter your username":
+        if not api or not username or api=="Enter your API Key" or username==username_text:
             messagebox.showerror(title='Error', message='Both fields must be completed.', icon="error")
         else:
             log_user(username)
@@ -30,17 +25,6 @@ def login():
             messagebox.showerror(title='Error', message='The API key is incorrect.', icon="error")
         '''
         
-    canvas = Canvas(
-        window,
-        bg = "#202020",
-        height = 768,
-        width = 1024,
-        bd = 0,
-        highlightthickness = 0,
-        relief = "ridge"
-    )
-
-    canvas.place(x = 0, y = 0)
     image_bg = PhotoImage(
         file=relative_to_assets("bg.png"))
     canvas.create_image(
@@ -63,14 +47,14 @@ def login():
 
     def clear_default(event):
         event.widget.delete(0, 'end')
-        event.widget.unbind('<FocusIn>')
+        event.widget.unbind(focus)
 
     entry_bg = PhotoImage(file=relative_to_assets("entry.png"))
     canvas.create_image(531.0, 546.0, image=entry_bg)
 
     entry_key = Entry(bd=0,bg="#292929",fg="#FFFFFF",font=("Inter", 13 * -1),highlightthickness=0)
     entry_key.insert(0, "Enter your API Key")  # Insert default text
-    entry_key.bind('<FocusIn>', clear_default)
+    entry_key.bind(focus, clear_default)
     entry_key.bind("<Return>", create_character)
     entry_key.place(x=393.0,y=521.0,width=276.0,height=51.0)
 
@@ -103,8 +87,8 @@ def login():
         fg="#FFFFFF",  # Set text color to white
         highlightthickness=0
     )
-    entry_username.insert(0, "Enter your username")  # Insert default text
-    entry_username.bind('<FocusIn>', clear_default)
+    entry_username.insert(0, username_text)  # Insert default text
+    entry_username.bind(focus, clear_default)
     entry_key.bind("<Return>", create_character)
     entry_username.place(
         x=393.0,
@@ -117,7 +101,7 @@ def login():
         397.0,
         440.0,
         anchor="nw",
-        text="Enter your username",
+        text=username_text,
         fill="#FFFFFF",
         font=("Inter", 13 * -1)
     )

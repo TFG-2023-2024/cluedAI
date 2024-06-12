@@ -1,14 +1,17 @@
-import os
 from pathlib import Path
 from tkinter import BOTH, LEFT, RIGHT, Y, Frame, Label, Scrollbar, Tk, Canvas, Button, PhotoImage
 from dotenv import load_dotenv
 from db.db_operations import start_day, obtain_by_id, connect_db
+from initial_gui.starting_operations import create_window, relative_to_assets
 
 def select():
+    window, canvas = create_window("assets/select")
     # Load the environment variables
     load_dotenv()
     _, characters_collection, items_collection, locations_collection, _ = connect_db()
     data = start_day()
+    label_font = "Inter Medium"
+    left_click = "<Button-1>"
 
     # Obtain locations by ID where "characters" is not empty
     locations_by_id = [
@@ -16,29 +19,6 @@ def select():
         for location_id in data["locations"]
         if locations_collection.find_one({"_id": location_id, "Characters": {"$exists": True, "$ne": []}})
     ]
-
-    day = int(os.getenv('DAY'))
-
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets/select_v0")
-
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
-
-    window = Tk()
-    window.geometry("1024x768")
-    window.configure(bg="#FFFFFF")
-
-    canvas = Canvas(
-        window,
-        bg="#202020",
-        height=768,
-        width=1024,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge"
-    )
-    canvas.place(x=0, y=0)
 
     # Lists to store PhotoImage references to prevent garbage collection
     image_refs = []
@@ -112,7 +92,7 @@ def select():
         text="Locations",
         bg="#202020",
         fg="#D71D1D",
-        font=("Inter Medium", 24 * -1)
+        font=(label_font, 24 * -1)
     )
     locations_label.place(x=106.0, y=50.0, anchor="nw")
 
@@ -137,7 +117,7 @@ def select():
                 text="Characters",
                 bg="#202020",
                 fg="#D71D1D",
-                font=("Inter Medium", 24 * -1)
+                font=(label_font, 24 * -1)
             )
             characters_label.place(x=106.0, y=50.0, anchor="nw")
 
@@ -168,7 +148,7 @@ def select():
                 character_button.create_image(0, 0, anchor="nw", image=button_image)
                 character_button.place(x=916, y=y_offset - 3)
 
-                character_button.bind("<Button-1>", lambda e, char_id=character_id: print(f"Character {char_id} clicked"))
+                character_button.bind(left_click, lambda e, char_id=character_id: print(f"Character {char_id} clicked"))
 
                 # Update offset for the next iteration
                 y_offset += 70  # Adjust this value to set the vertical gap between elements
@@ -180,7 +160,7 @@ def select():
                 text="Items",
                 bg="#202020",
                 fg="#D71D1D",
-                font=("Inter Medium", 24 * -1)
+                font=(label_font, 24 * -1)
             )
             items_label.place(x=106.0, y=y_offset + 20, anchor="nw")
 
@@ -213,7 +193,7 @@ def select():
                 item_button.create_image(0, 0, anchor="nw", image=button_image)
                 item_button.place(x=916, y=y_offset - 3)
 
-                item_button.bind("<Button-1>", lambda e, itm_id=item_id: print(f"Item {itm_id} clicked"))
+                item_button.bind(left_click, lambda e, itm_id=item_id: print(f"Item {itm_id} clicked"))
 
                 # Update offset for the next iteration
                 y_offset += 70  # Adjust this value to set the vertical gap between elements
@@ -253,7 +233,7 @@ def select():
         location_button.create_image(0, 0, anchor="nw", image=button_image)
         location_button.place(x=916, y=y_offset - 3)
 
-        location_button.bind("<Button-1>", lambda e, loc_id=location_id: display_characters_and_items(loc_id, selection_canvas))
+        location_button.bind(left_click, lambda e, loc_id=location_id: display_characters_and_items(loc_id, selection_canvas))
 
         # Update offset for the next iteration
         y_offset += 70  # Adjust this value to set the vertical gap between elements
