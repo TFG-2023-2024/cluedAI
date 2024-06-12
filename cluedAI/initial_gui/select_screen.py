@@ -35,7 +35,7 @@ def select():
     button_image_refs.append(button_image)
 
     image_bg = PhotoImage(file=relative_to_assets("bg.png"))
-    canvas.create_image(515.0, 403.0, image=image_bg)
+    canvas.create_image(515.0, 390.0, image=image_bg)
 
     image_banner = PhotoImage(file=relative_to_assets("banner.png"))
     canvas.create_image(510, 40, image=image_banner)

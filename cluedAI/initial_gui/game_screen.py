@@ -126,7 +126,7 @@ def chat():
             entry.delete(0, END)
 
     image_bg = PhotoImage(file=relative_to_assets("bg.png"))
-    canvas.create_image(515.0, 403.0, image=image_bg)
+    canvas.create_image(515.0, 390.0, image=image_bg)
 
     canvas.create_rectangle(0.0, 631.0, 1024.0, 768.0, fill="#292929", outline="")
 

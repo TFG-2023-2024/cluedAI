@@ -20,7 +20,7 @@ def reroll(received_messages):
 
     images = {}
     images["bg"] = PhotoImage(file=relative_to_assets("bg.png"))
-    canvas.create_image(515.0, 403.0, image=images["bg"])
+    canvas.create_image(515.0, 390.0, image=images["bg"])
 
     def wrap_text(canvas, text, max_width):
         words = text.split()

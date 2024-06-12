@@ -29,7 +29,7 @@ def login():
         file=relative_to_assets("bg.png"))
     canvas.create_image(
         515.0,
-        403.0,
+        390.0,
         image=image_bg
     )
 
