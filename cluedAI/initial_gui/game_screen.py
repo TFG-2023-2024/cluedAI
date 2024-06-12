@@ -4,7 +4,7 @@ from initial_gui.reroll_screen import reroll
 
 def chat():
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/aya/Documents/tfg/cluedAI/cluedAI/initial_gui/assets/game")
+    ASSETS_PATH = OUTPUT_PATH / Path("assets/game")
 
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
