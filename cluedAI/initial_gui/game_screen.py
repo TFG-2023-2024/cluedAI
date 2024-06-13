@@ -232,7 +232,7 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 20:
+        if len(self.messages) + len(self.responses) >= 2:
             self.reset_chat()
 
     def display_responses(self, response):
@@ -272,12 +272,12 @@ class ChatScreen:
     def reroll_response(self, event=None):
         if len(self.responses) >= 1:
             last_messages = [self.messages[-1][2], self.responses[-1][2]]
-            self.switch_to_reroll(self.day, last_messages)
+            self.switch_to_reroll(self.day, last_messages, self.id)
 
     def submit_response(self, message):
         if self.id:
             if self.type=="Character":
-                self.assistant = ai.create_assistant(id)
+                self.assistant = ai.create_assistant(self.id)
                 response = ai.chat_by_thread(self.assistant, self.hilo, message)
             elif self.type=="Item":
                 response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)

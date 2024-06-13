@@ -11,7 +11,7 @@ class ScreenManager:
         self.root = root
         self.root.geometry("1024x768")  # Set the window size
         self.current_screen = None
-        self.day = 0  # Example attribute, if needed
+        self.day = 1  # Example attribute, if needed
         
     def clear_screen(self):
         if self.current_screen:
@@ -66,7 +66,8 @@ def basic_window():
     root.iconbitmap('cluedAI\initial_gui\image.ico')    
 
     manager = ScreenManager(root)
-    manager.switch_to_chat(None, None)  # Start with the start screen
+    manager.switch_to_start()
+    #manager.switch_to_chat(None, None)  # Start with the start screen
 
     root.mainloop()  # Start the main loop here
 

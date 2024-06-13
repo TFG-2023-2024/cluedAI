@@ -1,10 +1,13 @@
 from tkinter import BOTH, LEFT, RIGHT, Y, Frame, Label, Scrollbar, Canvas, PhotoImage, Tk
 from dotenv import load_dotenv
-from db.db_operations import start_day, obtain_by_id, connect_db
+from db.db_operations import start_day, obtain_by_id, connect_db, start_day_0
 from initial_gui.starting_operations import create_window, relative_to_assets
 import ai_operations as ai
 
 class SelectScreen:
+    last_processed_day = None  # Class variable to keep track of the last processed day
+    cached_data = None  # Class variable to store cached data
+
     def __init__(self, root, switch_to_chat, day):
         self.root = root
         self.switch_to_chat = switch_to_chat
@@ -18,11 +21,24 @@ class SelectScreen:
         load_dotenv()
         global characters_collection, items_collection, locations_collection
         _, characters_collection, items_collection, locations_collection, _ = connect_db()
-        data = start_day()
+
+        # Check if the current day is different from the last processed day
+        if SelectScreen.last_processed_day != self.day:
+            # Call start_day or start_day_0 based on the current day
+            if self.day == 1:
+                data = start_day_0()
+            else:
+                data = start_day()
+
+            # Cache the data and update the last processed day
+            SelectScreen.cached_data = data
+            SelectScreen.last_processed_day = self.day
+        else:
+            data = SelectScreen.cached_data  # Reuse cached data
 
         self.locations_by_id = [
             obtain_by_id(location_id, locations_collection)
-            for location_id in data["locations"]
+            for location_id in data.get("locations", [])
             if locations_collection.find_one({"_id": location_id, "Characters": {"$exists": True, "$ne": []}})
         ]
 

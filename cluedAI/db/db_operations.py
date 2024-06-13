@@ -173,7 +173,7 @@ def obtain_by_id(id, collection):
         print(f"Error obtaining object by ID: {e}")
         return None
 
-def start_day():
+def start_day_0():
     """
     Randomizes the Location ID on both the character and item collection.
 
@@ -197,6 +197,37 @@ def start_day():
     # Update the locations collection with the characters
     for location_id, character_ids in location_characters.items():
         locations_collections.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
+
+    return randomized_data
+
+def start_day():
+    """
+    Randomizes the Location ID on both the character and item collection.
+
+    Returns:
+    - randomized_day (dict): The randomized data for the characters.
+    """
+    # Fetch all location IDs
+    _, characters_collection, items_collection, locations_collection, _ = connect_db()
+
+    # Randomize locations
+    randomized_data = {}
+    randomized_data["locations"] = randomize_locations(locations_collection)
+
+    randomize_items(items_collection, locations_collection, randomized_data["locations"])
+
+    # Temporary dictionary to hold characters assigned to each location
+    location_characters = {location: [] for location in randomized_data["locations"]}
+
+    # Randomize character locations
+    for character in characters_collection.find():
+        random_location_id = random.choice(randomized_data["locations"])
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+        location_characters[random_location_id].append(character["_id"])
+
+    # Update the locations collection with the characters
+    for location_id, character_ids in location_characters.items():
+        locations_collection.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
 
     return randomized_data
 
