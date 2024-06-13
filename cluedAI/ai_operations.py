@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 import random
 
-from characters.character_operations import create_character
+from characters.character_operations import create_character, create_narrator
 
 
 # Cargar la clave de API de OpenAI
@@ -39,20 +39,20 @@ def recuperar_conversacion(hilo_id):
     for message in messages:
         role = message.role
         content = message.content[0].text.value
-        conversacion.append(f"{role.capitalize()}: {content}")
+        conversacion.append(f"{role}: {content}")
+    conversacion.reverse()
     return conversacion
 
-def conversar_en_hilo(hilo, user_message):
+def conversar_en_hilo(hilo_id, user_message):
 
-    if not hilo:
-        print("Hilo no encontrado.")
+    if not hilo_id:
+        print("hilo_id no encontrado.")
         return
 
     asistente = crear_asistente(1)
-    print(asistente)
 
     client.beta.threads.messages.create(
-        thread_id=hilo['id'],
+        thread_id=hilo_id,
         role="user",
         content=user_message,
     )
@@ -60,7 +60,7 @@ def conversar_en_hilo(hilo, user_message):
     print("Asistente: ", end="", flush=True)
 
     stream = client.beta.threads.runs.create(
-        thread_id=hilo['id'],
+        thread_id=hilo_id,
         assistant_id=asistente.id,
         stream=True,
     )
@@ -72,9 +72,38 @@ def conversar_en_hilo(hilo, user_message):
     return response
             #print(event_dict, end="", flush=True)
 
+#Codigo destinada al narrador
+def crear_narrator(): #A eliminar
+    assistant = create_narrator()
+    return assistant
+
+def conversar_narrador(type_information, information):
+
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": '''You will be the narrator of a mystery game about a murder, you must respond in a mysterious way.
+            The prompts that will be given to you will have the following structure: information_type: information
+            These are the different types of information that exist, along with the information:
+            - Item: Information about an item
+            - Location: Information about a location
+            - Event: Description of an event
+            Remember to respond in a mysterious way but sticking to the information given without inventing anything'''},
+        {"role": "user", "content": f"{type_information}: {information}"},
+        ]
+    )
+    return response.choices[0].message.content
+
+#Codigo destinada al notetaker
+def obtener_resumen(hilo_id):
+    instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
+        As an example, if you talked about being accused of murder and you had a fight with Manuel, you should respond in the following way: You had a fight with Manuel because he accused you of murder and it made you feel bad.'''
+    response = conversar_en_hilo(hilo_id,instruction)
+
+    return response
+
 #Codigo para comprobar su correcto funcionamiento
 def main():
-    # Crear asistentes y hilos
     num_asistentes = 5
     rango_ids = list(range(1, 11))
     random.shuffle(rango_ids)
@@ -101,11 +130,14 @@ def main():
         elif comando == "recuperar":
             id_recuperar = input("Ingrese el ID del hilo del que quieres obtener la conversacion: ")
             print(recuperar_conversacion(id_recuperar))
+        elif comando == "resumen":
+            id_resumir = input("Ingrese el ID del hilo del que quieres obtener el resumen: ")
+            print(obtener_resumen(id_resumir))
         elif comando == "conversar":
             id_conversar = input("Ingrese el ID del hilo con el que desea conversar: ")
             if any(hilo['id'] == id_conversar for hilo in hilos.values()):
-                print(f"Conversando con el hilo {id_conversar}. Escriba 'salir' para finalizar la conversación.")
-                conversar_en_hilo(id_conversar, hilos)
+                msg = input("msg: ")
+                print(conversar_en_hilo(id_conversar, msg))
             else:
                 print("ID de hilo no válido.")
         elif comando == "listar":
