@@ -40,9 +40,12 @@ class ScreenManager:
         self.current_screen.show()
         self.update_focus()
     
-    def switch_to_chat(self):
+    def switch_to_chat(self, reroll=None):
         self.clear_screen()
-        self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day)
+        if reroll:
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, reroll)
+        else:
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day)
         self.update_focus()
     
     def switch_to_select(self, day):

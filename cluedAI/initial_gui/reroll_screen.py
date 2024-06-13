@@ -37,7 +37,7 @@ class RerollScreen:
         self.create_header()
         self.setup_message_frame()
         self.setup_bg_text()
-        self.display_response()
+        self.display_received()
 
     def setup_canvas(self):
         # Set background image
@@ -104,6 +104,7 @@ class RerollScreen:
         self.window.bind_all("<MouseWheel>", on_mouse_wheel)
 
         self.messages = []
+        self.responses = []
 
     def setup_entry(self):
         self.canvas.create_image(461.0, 698.5, image=self.images["entry_1"])
@@ -168,17 +169,29 @@ class RerollScreen:
 
         button_canvas.bind("<Button-1>", self.submit_reroll)
 
-    def display_response(self):
-        # Display any received messages initially
-        for message in self.response:
-            self.display_message(message)
+    def get_y_offset(self):
+        if not self.messages and not self.responses:
+            return 10
+        last_message_bbox = self.messages_canvas.bbox(self.messages[-1][1]) if self.messages else None
+        last_response_bbox = self.messages_canvas.bbox(self.responses[-1][1]) if self.responses else None
+
+        if last_message_bbox and last_response_bbox:
+            return max(last_message_bbox[3], last_response_bbox[3]) + 30
+        elif last_message_bbox:
+            return last_message_bbox[3] + 30
+        elif last_response_bbox:
+            return last_response_bbox[3] + 30
+        return 10
+
+    def display_received(self):
+        self.display_message(self.response[0])
+        self.display_response(self.response[1])
 
     def display_message(self, message):
-        # Display a new message in the messages_canvas
         max_width = 960 - 12  # Adjust to fit within the messages_frame with some padding
         wrapped_message = self.wrap_text(self.messages_canvas, message, max_width)
 
-        y_offset = 10 if not self.messages else self.messages_canvas.bbox(self.messages[-1][1])[3] + 30  # Space between messages
+        y_offset = self.get_y_offset()
         x_position = 960 - 30  # Adjust to fit within the messages_frame, ensuring right alignment
 
         # Create text item with anchor="ne" to align text to the right
@@ -201,6 +214,26 @@ class RerollScreen:
         self.messages_canvas.tag_lower(rounded_rect, text_item)
         self.messages.append((rounded_rect, text_item, wrapped_message))
 
+        # Update scroll region and scroll to the bottom
+        self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
+        self.messages_canvas.yview_moveto(1.0)
+
+    def display_response(self, response):
+        max_width = 960 - 60
+        wrapped_response = self.wrap_text(self.messages_canvas, response, max_width)
+
+        y_offset = self.get_y_offset()
+        x_position = 30
+        text_item = self.messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill="#FFFFFF", font=("Inter", 13))
+        bbox = self.messages_canvas.bbox(text_item)
+        padding = 10
+        rect_x1 = bbox[0] - padding
+        rect_y1 = bbox[1] - padding
+        rect_x2 = bbox[2] + padding
+        rect_y2 = bbox[3] + padding
+        rounded_rect = self.create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#D71E1E")
+        self.messages_canvas.tag_lower(rounded_rect, text_item)
+        
         # Update scroll region and scroll to the bottom
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
@@ -260,7 +293,8 @@ class RerollScreen:
         if message:
             self.display_message(message)
             self.entry.delete(0, END)
-            self.switch_to_chat()  # Example function call to switch back to chat screen
+            # Call switch_to_chat with reroll data if needed
+            self.switch_to_chat(message)
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas

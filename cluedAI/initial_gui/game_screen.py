@@ -3,12 +3,14 @@ import ai_operations as ai
 from initial_gui.starting_operations import create_window, relative_to_assets
 
 class ChatScreen:
-    def __init__(self, root, switch_to_select, switch_to_reroll, day):
+    def __init__(self, root, switch_to_select, switch_to_reroll, day, reroll=None):
         self.root = root
         self.switch_to_select = switch_to_select
         self.switch_to_reroll = switch_to_reroll
         self.day = day
+        self.reroll = reroll  # Store reroll data if provided
         self.left_click = "<Button-1>"
+        self.hilo = ai.crear_hilo()
 
         # Create window and canvas
         self.window, self.canvas = create_window("assets/game", existing_root=root)
@@ -19,7 +21,7 @@ class ChatScreen:
 
         # Initialize UI components
         self.initialize_ui()
-
+    
     def initialize_ui(self):
         self.load_images()  # Load all images
         self.create_background()
@@ -27,6 +29,14 @@ class ChatScreen:
         self.create_entry()
         self.create_header()
         self.create_message_frame()
+        self.process_reroll()
+
+    def process_reroll(self):
+        if self.reroll:
+            reroll_message = self.reroll
+            reroll_response = ai.reroll(self.hilo, reroll_message)
+            if reroll_response:
+                self.display_responses(reroll_response)
 
     def load_images(self):
         self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
@@ -257,11 +267,9 @@ class ChatScreen:
             self.switch_to_reroll(self.day, last_messages)
 
     def submit_response(self, message):
-        hilo = ai.crear_hilo()
-        response = ai.conversar_en_hilo(hilo, message)
+        response = ai.conversar_en_hilo(self.hilo, message)
         if response:
             self.display_responses(response)
-            self.entry.delete(0, END)
 
     def on_mouse_wheel(self, event):
         self.messages_canvas.yview_scroll(-1 * event.delta, 'units')
@@ -293,4 +301,3 @@ class ChatScreen:
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas
-
