@@ -1,401 +1,264 @@
-import os
-from pathlib import Path
-from tkinter import BOTH, LEFT, RIGHT, VERTICAL, Y, Frame, Label, Scrollbar, Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import BOTH, LEFT, RIGHT, Y, Frame, Label, Scrollbar, Canvas, PhotoImage, Tk
 from dotenv import load_dotenv
 from db.db_operations import start_day, obtain_by_id, connect_db
+from initial_gui.starting_operations import create_window, relative_to_assets
+import ai_operations as ai
 
-def select():
-    # Load the environment variables
-    load_dotenv()
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
-    data = start_day()
-    # Obtain locations by ID
-    locations_by_id = [obtain_by_id(location_id, locations_collection) for location_id in data["locations"]]
-    day = int(os.getenv('DAY'))
+class SelectScreen:
+    def __init__(self, root, switch_to_chat, day):
+        self.root = root
+        self.switch_to_chat = switch_to_chat
+        self.day = day
+        self.label_font = "Inter Medium"
+        self.left_click = "<Button-1>"
+        self.window, self.canvas = create_window("assets/select", existing_root=root)
+        self.setup_ui()
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets/select_v0")
+    def setup_ui(self):
+        load_dotenv()
+        global characters_collection, items_collection, locations_collection
+        _, characters_collection, items_collection, locations_collection, _ = connect_db()
+        data = start_day()
 
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
+        self.locations_by_id = [
+            obtain_by_id(location_id, locations_collection)
+            for location_id in data["locations"]
+            if locations_collection.find_one({"_id": location_id, "Characters": {"$exists": True, "$ne": []}})
+        ]
 
-    window = Tk()
-    window.geometry("1024x768")
-    window.configure(bg="#FFFFFF")
+        # Load images once to use them multiple times
+        self.calendar_image = PhotoImage(file=relative_to_assets("calendar.png"))
+        self.background_image = PhotoImage(file=relative_to_assets("item_bg.png"))
+        self.icon_image = PhotoImage(file=relative_to_assets("icon.png"))
+        self.button_image = PhotoImage(file=relative_to_assets("button_1.png"))
+        self.pressed_button_image = PhotoImage(file=relative_to_assets("pressed_button.png"))
+        self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
+        self.image_banner = PhotoImage(file=relative_to_assets("banner.png"))
 
-    canvas = Canvas(
-        window,
-        bg="#202020",
-        height=768,
-        width=1024,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge"
-    )
-    canvas.place(x=0, y=0)
+        # Store references to prevent garbage collection
+        self.image_refs = [
+            self.calendar_image, self.background_image, self.icon_image, self.image_bg, self.image_banner
+        ]
+        self.button_image_refs = [
+            self.button_image, self.pressed_button_image
+        ]
 
-    image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
-    image_1 = canvas.create_image(515.0, 403.0, image=image_image_1)
+        self.create_canvas_elements()
 
-    image_image_0 = PhotoImage(file=relative_to_assets("image_0.png"))
-    image_0 = canvas.create_image(510, 40, image=image_image_0)
+    def create_canvas_elements(self):
+        self.canvas.create_image(515.0, 390.0, image=self.image_bg)
+        self.canvas.create_image(510, 40, image=self.image_banner)
+        self.canvas.create_image(304.66650390625, 40.0, image=self.pressed_button_image)
 
-    image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
-    image_2 = canvas.create_image(304.66650390625, 40.0, image=image_image_2)
-
-    # Create the "Clued" text
-    clued_text = canvas.create_text(
-        454.0,
-        22.0,
-        anchor="nw",
-        text="Clued",
-        fill="#F4F4F4",
-        font=("Inter", 30 * -1)
-    )
-
-    # Calculate the width of the "Clued" text
-    clued_bbox = canvas.bbox(clued_text)
-    clued_width = clued_bbox[2] - clued_bbox[0]
-
-    # Create the "AI" text
-    canvas.create_text(
-        454.0 + clued_width,  # Adjust x-coordinate to center "AI" text relative to "Clued" text
-        22.0,
-        anchor="nw",
-        text="AI",
-        fill="#D71E1E",
-        font=("Inter", 30 * -1)
-    )
-
-    ###################################################################################################
-    # Create the frame to hold the selections and scrollbar
-    selection_frame = Frame(window)
-    selection_frame.place(x=0, y=100, width=1024, height=658)
-
-    scrollbar = Scrollbar(selection_frame, orient="vertical")
-    scrollbar.pack(side=RIGHT, fill=Y)
-
-    selection_canvas = Canvas(selection_frame, bg="#202020", bd=0, highlightthickness=0, yscrollcommand=scrollbar.set)
-    selection_canvas.pack(side=LEFT, fill=BOTH, expand=True)
-
-    scrollbar.config(command=selection_canvas.yview)
-
-    def on_mouse_wheel(event):
-        selection_canvas.yview_scroll(-1 * event.delta, 'units')
-
-    # Bind mouse wheel events for Windows and MacOS
-    window.bind_all("<MouseWheel>", on_mouse_wheel)
-
-    if day >= 1:
-        # Create Characters text label
-        characters_label = Label(
-            selection_frame,
-            text="Characters",
-            bg="#202020",
-            fg="#D71D1D",
-            font=("Inter Medium", 24 * -1)
+        clued_text = self.canvas.create_text(
+            454.0,
+            22.0,
+            anchor="nw",
+            text="Clued",
+            fill="#F4F4F4",
+            font=("Inter", 30 * -1)
         )
-        characters_label.place(x=106.0, y=126.0, anchor="nw")
 
-        # Create Objects text label
-        objects_label = Label(
-            selection_frame,
-            text="Objects",
-            bg="#202020",
-            fg="#D71D1D",
-            font=("Inter Medium", 24 * -1)
+        clued_bbox = self.canvas.bbox(clued_text)
+        clued_width = clued_bbox[2] - clued_bbox[0]
+
+        self.canvas.create_text(
+            454.0 + clued_width,
+            22.0,
+            anchor="nw",
+            text="AI",
+            fill="#D71E1E",
+            font=("Inter", 30 * -1)
         )
-        objects_label.place(x=106.0, y=556.4456787109375, anchor="nw")
 
-        # Create Locations text label
+        self.canvas.create_image(38, 60.0 - self.calendar_image.height() // 2, image=self.calendar_image)
+        self.day_label = self.canvas.create_text(
+            31.0,
+            28.0,
+            anchor="nw",
+            text=str(self.day),
+            fill="#D71E1E",
+            font=("Inter", 24)
+        )
+
+        self.create_selection_frame()
+
+    def create_selection_frame(self):
+        selection_frame = Frame(self.window, bg="#202020")
+        selection_frame.place(x=0, y=100, width=1024, height=658)
+
+        scrollbar = Scrollbar(selection_frame, orient="vertical")
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        selection_canvas = Canvas(selection_frame, bg="#202020", bd=0, highlightthickness=0, yscrollcommand=scrollbar.set)
+        selection_canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        scrollbar.config(command=selection_canvas.yview)
+
+        def on_mouse_wheel(event):
+            selection_canvas.yview_scroll(-1 * event.delta, 'units')
+
+        self.window.bind_all("<MouseWheel>", on_mouse_wheel)
+
+        self.selection_canvas = selection_canvas
+        self.display_locations()
+
+    def display_locations(self):
+        for widget in self.selection_canvas.winfo_children():
+            widget.destroy()
+
+        y_offset = 70
+
         locations_label = Label(
-            selection_frame,
+            self.selection_canvas,
             text="Locations",
             bg="#202020",
             fg="#D71D1D",
-            font=("Inter Medium", 24 * -1)
+            font=(self.label_font, 24 * -1)
         )
-        locations_label.place(x=106.0, y=317.0, anchor="nw")
-    else:
-        # Create Locations text label
-        locations_label = Label(
-            selection_frame,
-            text="Locations",
-            bg="#202020",
-            fg="#D71D1D",
-            font=("Inter Medium", 24 * -1)
-        )
-        locations_label.place(x=106.0, y=50.0, anchor="nw")
-        # Adjust the initial coordinates for each element
-        x_offset = 105
-        y_offset = 110
+        locations_label.pack(anchor="nw", padx=106, pady=(0, 50))
 
-    def select_op():
-        pass
+        for location in self.locations_by_id:
+            location_id = location["_id"]
 
-    # Lists to store PhotoImage references to prevent garbage collection
-    image_refs = []
-    button_image_refs = []
+            background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
+            background_label.place(x=80, y=y_offset - 15)
 
-    # Load images once to use them multiple times
-    background_image = PhotoImage(file=relative_to_assets("image_5.png"))
-    location_image = PhotoImage(file=relative_to_assets("image_4.png"))
-    button_image = PhotoImage(file=relative_to_assets("button_1.png"))
+            icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
+            icon_label.place(x=105, y=y_offset)
 
-    # Store references to prevent garbage collection
-    image_refs.append(background_image)
-    image_refs.append(location_image)
-    button_image_refs.append(button_image)
+            text_label = Label(self.selection_canvas, text=location['Room'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+            text_label.place(x=189, y=y_offset)
 
-    # Iterate over each location and create corresponding elements
-    for location in locations_by_id:
-        
-        # Create background image first (so it appears behind other elements)
-        background_label = Label(selection_frame, image=background_image, bg="#202020", bd=0)
-        background_label.place(x=80, y=y_offset - 15)
+            location_button = Canvas(
+                self.selection_canvas,
+                width=self.button_image.width(),
+                height=self.button_image.height(),
+                bg="#292929",
+                bd=0,
+                highlightthickness=0,
+                relief="flat"
+            )
+            location_button.create_image(0, 0, anchor="nw", image=self.button_image)
+            location_button.place(x=916, y=y_offset - 3)
 
-        # Create image
-        location_label = Label(selection_frame, image=location_image, bg="#292929", bd=0)
-        location_label.place(x=105, y=y_offset)
+            location_button.bind(self.left_click, lambda e, loc_id=location_id: self.display_characters_and_items(loc_id))
 
-        # Create text
-        text_label = Label(selection_frame, text=location['Room'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
-        text_label.place(x=189, y=y_offset)
+            y_offset += 70
 
-        location_button = Canvas(
-            selection_frame,
-            width=button_image.width(),
-            height=button_image.height(),
-            bg="#292929",
+        self.selection_canvas.update_idletasks()
+        self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
+
+    def display_characters_and_items(self, location_id):
+        for widget in self.selection_canvas.winfo_children():
+            widget.destroy()
+
+        location_data = obtain_by_id(location_id, locations_collection)
+        characters = location_data.get("Characters", [])
+        items = location_data.get("Items", [])
+
+        y_offset = 70
+
+        if characters:
+            characters_label = Label(
+                self.selection_canvas,
+                text="Characters",
+                bg="#202020",
+                fg="#D71D1D",
+                font=(self.label_font, 24 * -1)
+            )
+            characters_label.pack(anchor="nw", padx=106, pady=(0, 20))
+
+            for character_id in characters:
+                character = characters_collection.find_one({"_id": character_id})
+
+                background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
+                background_label.place(x=80, y=y_offset - 15)
+
+                icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
+                icon_label.place(x=105, y=y_offset)
+
+                text_label = Label(self.selection_canvas, text=character['Name'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+                text_label.place(x=189, y=y_offset)
+
+                character_button = Canvas(
+                    self.selection_canvas,
+                    width=self.button_image.width(),
+                    height=self.button_image.height(),
+                    bg="#292929",
+                    bd=0,
+                    highlightthickness=0,
+                    relief="flat"
+                )
+                character_button.create_image(0, 0, anchor="nw", image=self.button_image)
+                character_button.place(x=916, y=y_offset - 3)
+
+                character_button.bind(self.left_click, lambda e, char_id=character_id: self.select_character(char_id))
+
+                y_offset += 70
+
+        if items:
+            y_offset += 20
+
+            items_label = Label(
+                self.selection_canvas,
+                text="Items",
+                bg="#202020",
+                fg="#D71D1D",
+                font=(self.label_font, 24 * -1)
+            )
+            items_label.place(x=106, y=y_offset)
+
+            y_offset += 60
+
+            for item_id in items:
+                item = items_collection.find_one({"_id": item_id})
+
+                background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
+                background_label.place(x=80, y=y_offset - 15)
+
+                icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
+                icon_label.place(x=105, y=y_offset)
+
+                text_label = Label(self.selection_canvas, text=item['Name'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+                text_label.place(x=189, y=y_offset)
+
+                item_button = Canvas(
+                    self.selection_canvas,
+                    width=self.button_image.width(),
+                    height=self.button_image.height(),
+                    bg="#292929",
+                    bd=0,
+                    highlightthickness=0,
+                    relief="flat"
+                )
+                item_button.create_image(0, 0, anchor="nw", image=self.button_image)
+                item_button.place(x=916, y=y_offset - 3)
+
+                item_button.bind(self.left_click, lambda e, itm_id=item_id: print(f"Item {itm_id} clicked"))
+
+                y_offset += 70
+
+        button_canvas = Canvas(
+            self.canvas,
+            width=self.pressed_button_image.width(),
+            height=self.pressed_button_image.height(),
+            bg="#3D3D3D",
             bd=0,
             highlightthickness=0,
-            relief="flat"
+            relief="ridge"
         )
-        location_button.create_image(0, 0, anchor="nw", image=button_image)
-        location_button.place(x=916, y=y_offset - 3)
+        button_canvas.place(x=304.66650390625 - self.pressed_button_image.width() // 2, y=40.0 - self.pressed_button_image.height() // 2)
+        button_canvas.create_image(0, 0, anchor="nw", image=self.pressed_button_image)
 
-        location_button.bind("<Button-1>", select_op)
+        button_canvas.bind(self.left_click, lambda event: self.display_locations())
 
-        
-        # Update offset for the next iteration
-        y_offset += 70  # Adjust this value to set the vertical gap between elements
+        self.selection_canvas.update_idletasks()
+        self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
-    # Update the scroll region of the canvas to encompass the frame
-    selection_frame.update_idletasks()
-    canvas.config(scrollregion=canvas.bbox("all"))
+    def select_character(self, id, event=None):
+        # Handle selection of character
+        self.switch_to_chat(id)
 
-    ###################################################################################################
-
-
-    """ canvas.create_rectangle(
-        71.0,
-        235.0,
-        961.0,
-        287.9945640563965,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
-    button_2 = Button(
-        image=button_image_2,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_2 clicked"),
-        relief="flat"
-    )
-    button_2.place(
-        x=906.0,
-        y=240.7391357421875,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_5 = canvas.create_image(105.0, 261.7391357421875, image=image_image_4)
-
-    canvas.create_text(
-        189.0,
-        252.7391357421875,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    )
-
-    canvas.create_rectangle(
-        71.0,
-        355.0,
-        961.0,
-        407.9945640563965,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
-    button_3 = Button(
-        image=button_image_3,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_3 clicked"),
-        relief="flat"
-    )
-    button_3.place(
-        x=906.0,
-        y=360.7391357421875,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_6 = canvas.create_image(105.0, 381.7391357421875, image=image_image_4)
-
-    canvas.create_text(
-        189.0,
-        372.7391357421875,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    )
-
-    canvas.create_rectangle(
-        71.0,
-        486.0,
-        961.0,
-        538.9945640563965,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_4 = PhotoImage(file=relative_to_assets("button_4.png"))
-    button_4 = Button(
-        image=button_image_4,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_4 clicked"),
-        relief="flat"
-    )
-    button_4.place(
-        x=906.0,
-        y=491.7391357421875,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_7 = canvas.create_image(105.0, 512.7391357421875, image=image_image_4)
-
-    canvas.create_text(
-        189.0,
-        503.7391357421875,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    )
-
-    canvas.create_rectangle(
-        71.0,
-        420.7391357421875,
-        961.0,
-        473.733699798584,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_5 = PhotoImage(file=relative_to_assets("button_5.png"))
-    button_5 = Button(
-        image=button_image_5,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_5 clicked"),
-        relief="flat"
-    )
-    button_5.place(
-        x=906.0,
-        y=426.478271484375,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_8 = canvas.create_image(105.0, 447.478271484375, image=image_image_4)
-
-    canvas.create_text(
-        189.0,
-        438.478271484375,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    )
-
-    canvas.create_rectangle(
-        67.0,
-        593.0,
-        957.0,
-        645.9945640563965,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_6 = PhotoImage(file=relative_to_assets("button_6.png"))
-    button_6 = Button(
-        image=button_image_6,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_6 clicked"),
-        relief="flat"
-    )
-    button_6.place(
-        x=902.0,
-        y=598.7391357421875,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_9 = canvas.create_image(101.0, 619.7391357421875, image=image_image_4)
-
-    canvas.create_text(
-        185.0,
-        610.7391357421875,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    )
-
-    canvas.create_rectangle(
-        67.0,
-        658.7391357421875,
-        957.0,
-        711.733699798584,
-        fill="#292929",
-        outline=""
-    )
-
-    button_image_7 = PhotoImage(file=relative_to_assets("button_7.png"))
-    button_7 = Button(
-        image=button_image_7,
-        borderwidth=0,
-        highlightthickness=0,
-        command=lambda: print("button_7 clicked"),
-        relief="flat"
-    )
-    button_7.place(
-        x=902.0,
-        y=664.478271484375,
-        width=42.0,
-        height=41.999977111816406
-    )
-
-    image_10 = canvas.create_image(101.0, 685.478271484375, image=image_image_4)
-
-    canvas.create_text(
-        185.0,
-        676.478271484375,
-        anchor="nw",
-        text="Who Is Richest Person?",
-        fill="#FFFFFF",
-        font=("Inter", 13 * -1)
-    ) """
-
-    window.resizable(False, False)
-    window.mainloop()
+    def hide(self):
+        self.canvas.pack_forget()  # Hide canvas

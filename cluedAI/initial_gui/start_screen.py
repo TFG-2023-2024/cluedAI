@@ -1,91 +1,97 @@
-from pathlib import Path
-from tkinter import Tk, Canvas, Button, PhotoImage
-from initial_gui.login_screen import login
+from tkinter import Button, PhotoImage
+from initial_gui.starting_operations import create_window, relative_to_assets
 
-def start():
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path("assets/start")
+class StartScreen:
+    def __init__(self, root, switch_to_login):
+        self.root = root
+        self.switch_to_login = switch_to_login
+        self.window, self.canvas = create_window("assets/start", existing_root=root)
+        self.image_refs = []  # List to hold references to images
 
-    def relative_to_assets(path: str) -> Path:
-        return ASSETS_PATH / Path(path)
+    def show(self):
+        # Load images and keep references
+        image_bg = PhotoImage(file=relative_to_assets("bg.png"))
+        button_image_1 = PhotoImage(file=relative_to_assets("start_button.png"))
 
-    def open_login():
-        window.destroy()
-        login()
+        # Store images in a list to prevent garbage collection
+        self.image_refs.extend([image_bg, button_image_1])
 
-    window = Tk()
+        # Create background image
+        self.canvas.create_image(
+            512.0,
+            349.0,
+            image=image_bg
+        )
 
-    window.geometry("1024x768")
+        # Create start button
+        button_1 = Button(
+            image=button_image_1,
+            highlightthickness=1,
+            command=self.open_login,
+            relief="flat"
+        )
+        button_1.place(
+            x=334.0,
+            y=667.0,
+            width=355.0,
+            height=53.0
+        )
 
-    canvas = Canvas(
-        window,
-        bg = "#000000",
-        height = 768,
-        width = 1024,
-        bd = 0,
-        highlightthickness = 0,
-        relief = "ridge"
-    )
+        # Create text elements
+        clued_text = self.canvas.create_text(
+            288.5,  # Center horizontally
+            325.0,
+            anchor="nw",
+            text="clued",
+            fill="#FFFFFF",
+            font=("Inter SemiBold", 140 * -1)
+        )
 
-    canvas.place(x = 0, y = 0)
-    image_image_1 = PhotoImage(
-        file=relative_to_assets("bg.png"))
-    canvas.create_image(
-        512.0,
-        349.0,
-        image=image_image_1
-    )
+        clued_bbox = self.canvas.bbox(clued_text)
+        clued_width = clued_bbox[2] - clued_bbox[0]
 
-    button_image_1 = PhotoImage(file=relative_to_assets("start_button.png"))
-    button_1 = Button(
-        image=button_image_1,
-        highlightthickness=1,
-        command=open_login,
-        relief="flat"
-    )
-    button_1.place(
-        x=334.0,
-        y=667.0,
-        width=355.0,
-        height=53.0
-    )
+        self.canvas.create_text(
+            288.5 + clued_width,
+            325.0,
+            anchor="nw",
+            text="AI",
+            fill="#D71E1E",
+            font=("Inter Bold", 140 * -1)
+        )
 
-    # Create the "clued" text
-    clued_text = canvas.create_text(
-        288.5,  # Center horizontally
-        325.0,
-        anchor="nw",
-        text="clued",
-        fill="#FFFFFF",
-        font=("Inter SemiBold", 140 * -1)
-    )
+        self.canvas.create_text(
+            267.0,
+            483.0,
+            anchor="nw",
+            text="Embark on an enthralling journey through CluedAI, a murder" +
+            "\nmystery interactive visual novel powered by generative AI. Delve" +
+            "\ninto a meticulously crafted narrative where every decision shapes" +
+            "\nthe investigation's outcome. Uncover clues, interrogate suspects," +
+            "\nand navigate through twists and turns as you strive to solve the crime.",
+            fill="#FFFFFF",
+            font=("Inter", 18 * -1)
+        )
 
-    # Calculate the width of the "clued" text
-    clued_bbox = canvas.bbox(clued_text)
-    clued_width = clued_bbox[2] - clued_bbox[0]
+    def open_login(self):
+        self.switch_to_login()
 
-    # Create the "AI" text
-    canvas.create_text(
-        288.5 + clued_width,  # Adjust x-coordinate to center "AI" text relative to "clued" text
-        325.0,
-        anchor="nw",
-        text="AI",
-        fill="#D71E1E",
-        font=("Inter Bold", 140 * -1)
-    )
+    def clear(self):
+        # Clear canvas items
+        if self.canvas:
+            self.canvas.delete("all")
+        # Clear references to images to prevent garbage collection
+        self.image_refs = []
 
-    canvas.create_text(
-        267.0,
-        483.0,
-        anchor="nw",
-        text="Embark on an enthralling journey through CluedAI, a murder" + 
-        "\nmystery interactive visual novel powered by generative AI. Delve" + 
-        "\ninto a meticulously crafted narrative where every decision shapes" + 
-        "\nthe investigation's outcome. Uncover clues, interrogate suspects," +
-        "\nand navigate through twists and turns as you strive to solve the crime.",
-        fill="#FFFFFF",
-        font=("Inter", 18 * -1)
-    )
+    def hide(self):
+        self.canvas.pack_forget()  # Hide canvas
 
-    window.resizable(False, False)
-    window.mainloop()
+    def destroy(self):
+        # Clear canvas items
+        if self.canvas:
+            self.canvas.delete("all")
+        # Clear references to images to prevent garbage collection
+        self.image_refs = []
+        self.canvas.destroy()  # Destroy canvas and all elements
+
+    def get_window(self):
+        return self.window

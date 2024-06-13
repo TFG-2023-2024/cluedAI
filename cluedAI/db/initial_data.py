@@ -298,76 +298,106 @@ initial_locations = [
     {
         "_id": 1,
         "Room": "Drawing Room",
-        "Description": "A formal and elegantly decorated room for socializing, often furnished with comfortable seating and artwork."
+        "Description": "A formal and elegantly decorated room for socializing, often furnished with comfortable seating and artwork.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 2,
         "Room": "Library",
-        "Description": "A room filled with shelves of books, often adorned with leather furniture, providing a quiet space for reading."
+        "Description": "A room filled with shelves of books, often adorned with leather furniture, providing a quiet space for reading.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 3,
         "Room": "Dining Hall",
-        "Description": "A large and ornate room for formal dining, featuring a grand dining table, chandeliers, and elaborate decor."
+        "Description": "A large and ornate room for formal dining, featuring a grand dining table, chandeliers, and elaborate decor.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 4,
         "Room": "Conservatory",
-        "Description": "A glass-enclosed room filled with plants, used for cultivating exotic flowers and creating a serene atmosphere."
+        "Description": "A glass-enclosed room filled with plants, used for cultivating exotic flowers and creating a serene atmosphere.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 5,
         "Room": "Ballroom",
-        "Description": "An expansive room designed for hosting dances and grand events, typically adorned with crystal chandeliers."
+        "Description": "An expansive room designed for hosting dances and grand events, typically adorned with crystal chandeliers.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 6,
         "Room": "Study",
-        "Description": "A private room for intellectual pursuits, featuring a desk, bookshelves, and possibly scientific instruments."
+        "Description": "A private room for intellectual pursuits, featuring a desk, bookshelves, and possibly scientific instruments.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 7,
         "Room": "Servants' Quarters",
-        "Description": "A section of the mansion dedicated to rooms for household staff, including bedrooms, a common area, and kitchens."
+        "Description": "A section of the mansion dedicated to rooms for household staff, including bedrooms, a common area, and kitchens.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 8,
         "Room": "Billiard Room",
-        "Description": "A recreational room with a billiard table, often decorated with rich wood paneling, plush seating, and artwork."
+        "Description": "A recreational room with a billiard table, often decorated with rich wood paneling, plush seating, and artwork.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 9,
         "Room": "Music Room",
-        "Description": "A space designed for musical performances, equipped with instruments, comfortable seating, and excellent acoustics."
+        "Description": "A space designed for musical performances, equipped with instruments, comfortable seating, and excellent acoustics.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 10,
         "Room": "Gallery",
-        "Description": "An art gallery or exhibition space showcasing the mansion owner's collection of paintings, sculptures, or artifacts."
+        "Description": "An art gallery or exhibition space showcasing the mansion owner's collection of paintings, sculptures, or artifacts.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 11,
         "Room": "Bedroom",
-        "Description": "A private sleeping quarters, usually adorned with antique furniture, drapes, and personal touches reflecting the occupant's style."
+        "Description": "A private sleeping quarters, usually adorned with antique furniture, drapes, and personal touches reflecting the occupant's style.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 12,
         "Room": "Kitchen",
-        "Description": "The space designated for cooking and food preparation, equipped with stoves, ovens, and sometimes a large hearth."
+        "Description": "The space designated for cooking and food preparation, equipped with stoves, ovens, and sometimes a large hearth.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 13,
         "Room": "Sitting Room",
-        "Description": "A more casual and intimate space for relaxation, featuring comfortable seating, smaller tables, and a cozy fireplace."
+        "Description": "A more casual and intimate space for relaxation, featuring comfortable seating, smaller tables, and a cozy fireplace.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 14,
         "Room": "Trophy Room",
-        "Description": "A room used to display hunting trophies, artifacts, or other collections, showcasing the owner's interests and achievements."
+        "Description": "A room used to display hunting trophies, artifacts, or other collections, showcasing the owner's interests and achievements.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 15,
         "Room": "Bathroom",
-        "Description": "A private room for personal hygiene, equipped with a bathtub, sink, and a toilet, decorated in a style consistent with the mansion's overall design."
+        "Description": "A private room for personal hygiene, equipped with a bathtub, sink, and a toilet, decorated in a style consistent with the mansion's overall design.",
+        "Characters": None,
+        "Items": None
     }
 ]
