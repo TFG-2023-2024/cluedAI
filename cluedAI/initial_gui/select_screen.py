@@ -235,7 +235,7 @@ class SelectScreen:
                 item_button.create_image(0, 0, anchor="nw", image=self.button_image)
                 item_button.place(x=916, y=y_offset - 3)
 
-                item_button.bind(self.left_click, lambda e, itm_id=item_id: print(f"Item {itm_id} clicked"))
+                item_button.bind(self.left_click, lambda e, it_id=item_id: self.select_item(it_id))
 
                 y_offset += 70
 
@@ -258,7 +258,11 @@ class SelectScreen:
 
     def select_character(self, id, event=None):
         # Handle selection of character
-        self.switch_to_chat(id)
+        self.switch_to_chat(id, type="Character")
+
+    def select_item(self, id, event=None):
+        # Handle selection of item
+        self.switch_to_chat(id, type="Item")
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas

@@ -40,12 +40,12 @@ class ScreenManager:
         self.current_screen.show()
         self.update_focus()
     
-    def switch_to_chat(self, id, reroll=None):
+    def switch_to_chat(self, id, type, reroll=None):
         self.clear_screen()
         if reroll:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, reroll)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, type, reroll)
         else:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, None)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, type, None)
         self.update_focus()
 
     
@@ -59,17 +59,16 @@ class ScreenManager:
         self.current_screen = RerollScreen(self.root, self.switch_to_chat, day, response, id)
         self.update_focus()
 
-    def basic_window():
-        root = tk.Tk()  # Create the Tk instance here
-        root.geometry("1024x768")  # Set window size if needed
-        root.title("cluedAI")
-        root.iconbitmap('cluedAI\initial_gui\image.ico')
-        
+def basic_window():
+    root = tk.Tk()  # Create the Tk instance here
+    root.geometry("1024x768")  # Set window size if needed
+    root.title("cluedAI")
+    root.iconbitmap('cluedAI\initial_gui\image.ico')    
 
-        manager = ScreenManager(root)
-        manager.switch_to_chat(None)  # Start with the start screen
+    manager = ScreenManager(root)
+    manager.switch_to_chat(None, None)  # Start with the start screen
 
-        root.mainloop()  # Start the main loop here
+    root.mainloop()  # Start the main loop here
 
 if __name__ == "__main__":
-    ScreenManager.basic_window()
+    basic_window()

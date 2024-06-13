@@ -72,7 +72,7 @@ def chat_by_thread(assistant, hilo, user_message):
             #print(event_dict, end="", flush=True)
 
 #Codigo destinada al narrador
-def chat_narrator(type_information, information):
+def chat_narrator(type_information, information, user_message):
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -84,7 +84,7 @@ def chat_narrator(type_information, information):
             - Location: Information about a location
             - Event: Description of an event
             Remember to respond in a mysterious way but sticking to the information given without inventing anything'''},
-        {"role": "user", "content": f"{type_information}: {information}"},
+        {"role": "user", "content": f"{type_information}: {information}. User query: {user_message}"},
         ]
     )
     return response.choices[0].message.content
