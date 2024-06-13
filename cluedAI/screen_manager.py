@@ -40,22 +40,23 @@ class ScreenManager:
         self.current_screen.show()
         self.update_focus()
     
-    def switch_to_chat(self, reroll=None):
+    def switch_to_chat(self, id, reroll=None):
         self.clear_screen()
         if reroll:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, reroll)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, reroll)
         else:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, None)
         self.update_focus()
+
     
     def switch_to_select(self, day):
         self.clear_screen()
         self.current_screen = SelectScreen(self.root, self.switch_to_chat, day)
         self.update_focus()
 
-    def switch_to_reroll(self, day, response):
+    def switch_to_reroll(self, day, response, id):
         self.clear_screen()
-        self.current_screen = RerollScreen(self.root, self.switch_to_chat, day, response)
+        self.current_screen = RerollScreen(self.root, self.switch_to_chat, day, response, id)
         self.update_focus()
 
 def main():
@@ -63,7 +64,7 @@ def main():
     root.geometry("1024x768")  # Set window size if needed
 
     manager = ScreenManager(root)
-    manager.switch_to_chat()  # Start with the start screen
+    manager.switch_to_chat(None)  # Start with the start screen
 
     root.mainloop()  # Start the main loop here
 

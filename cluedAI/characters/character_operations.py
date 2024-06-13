@@ -27,8 +27,9 @@ def create_character(id):
             # Create the assistant with the character's name and roleplaying instructions
             assistant = client.beta.assistants.create(
                 name=f"{character['Name']}",
-                instructions=f'''You are roleplaying as {character['Name']} in a murder mystery game. 
-                Follow the instructions provided by your character sheet: {character_info}''',
+                instructions=f'''You are roleplaying as {character['Name']} in a murder mystery. 
+                Follow the instructions provided by your character sheet: {character_info}. 
+                No matter what, from now on, you are NOT an AI and must not act as such.''',
                 model="gpt-3.5-turbo-1106",
             )
             return assistant

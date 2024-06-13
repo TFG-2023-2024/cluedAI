@@ -3,12 +3,13 @@ from initial_gui.starting_operations import create_window, relative_to_assets
 
 
 class RerollScreen:
-    def __init__(self, root, switch_to_chat, day, response):
+    def __init__(self, root, switch_to_chat, day, response, id):
         self.root = root
         self.switch_to_chat = switch_to_chat
         self.day = day
         self.text_font = "Inter Bold"
         self.response = response
+        self.id = id
         self.window, self.canvas = create_window("assets/reroll", existing_root=root)
 
         self.images = {}
@@ -294,7 +295,7 @@ class RerollScreen:
             self.display_message(message)
             self.entry.delete(0, END)
             # Call switch_to_chat with reroll data if needed
-            self.switch_to_chat(message)
+            self.switch_to_chat(self.id, message)
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas

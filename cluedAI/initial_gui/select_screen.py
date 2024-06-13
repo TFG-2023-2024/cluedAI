@@ -2,6 +2,7 @@ from tkinter import BOTH, LEFT, RIGHT, Y, Frame, Label, Scrollbar, Canvas, Photo
 from dotenv import load_dotenv
 from db.db_operations import start_day, obtain_by_id, connect_db
 from initial_gui.starting_operations import create_window, relative_to_assets
+import ai_operations as ai
 
 class SelectScreen:
     def __init__(self, root, switch_to_chat, day):
@@ -192,7 +193,7 @@ class SelectScreen:
                 character_button.create_image(0, 0, anchor="nw", image=self.button_image)
                 character_button.place(x=916, y=y_offset - 3)
 
-                character_button.bind(self.left_click, lambda e, char_id=character_id: print(f"Character {char_id} clicked"))
+                character_button.bind(self.left_click, lambda e, char_id=character_id: self.select_character(char_id))
 
                 y_offset += 70
 
@@ -255,8 +256,9 @@ class SelectScreen:
         self.selection_canvas.update_idletasks()
         self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
+    def select_character(self, id, event=None):
+        # Handle selection of character
+        self.switch_to_chat(id)
+
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas
-
-    def switch_to_chat_screen(self):
-        self.switch_to_chat()

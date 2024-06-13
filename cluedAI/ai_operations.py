@@ -8,25 +8,28 @@ load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI()
 
-def crear_asistente(id):
+def create_assistant(id):
     assistant = create_character(id)
     return assistant
 
-def crear_hilo():
+def create_thread():
     thread = client.beta.threads.create()
     return {"id": thread.id}
 
-def obtener_id_hilo(hilo):
+def obtain_thread_id(hilo):
     return hilo['id']
 
-def destruir_hilo(hilo_id, hilos):
+def obtain_assistant_id(assistant):
+    return assistant.id
+
+def destroy_thread(hilo_id, hilos):
     for key, hilo in list(hilos.items()):
         if hilo['id'] == hilo_id:
             del hilos[key]
             return f"Hilo {hilo_id} destruido."
     return f"Hilo {hilo_id} no encontrado."
 
-def recuperar_conversacion(hilo_id):
+def obtain_conversation(hilo_id):
     messages = client.beta.threads.messages.list(thread_id=hilo_id)
     conversacion = []
     for message in messages:
@@ -35,18 +38,15 @@ def recuperar_conversacion(hilo_id):
         conversacion.append(f"{role.capitalize()}: {content}")
     return conversacion
 
-def reroll(hilo, reroll_message):
+def reroll(id, hilo, reroll_message):
     message = f"Rewrite your last response. The reason for rewrite is: {reroll_message}"
-    response = conversar_en_hilo(hilo, message)
+    response = chat_by_thread(id, hilo, message)
     return response
 
-def conversar_en_hilo(hilo, user_message):
+def chat_by_thread(assistant, hilo, user_message):
     if not hilo:
         print("Hilo no encontrado.")
         return
-
-    asistente = crear_asistente(1)
-    print(asistente)
 
     client.beta.threads.messages.create(
         thread_id=hilo['id'],
@@ -56,7 +56,7 @@ def conversar_en_hilo(hilo, user_message):
 
     stream = client.beta.threads.runs.create(
         thread_id=hilo['id'],
-        assistant_id=asistente.id,
+        assistant_id=assistant.id,
         stream=True,
     )
     response = ""

@@ -3,14 +3,17 @@ import ai_operations as ai
 from initial_gui.starting_operations import create_window, relative_to_assets
 
 class ChatScreen:
-    def __init__(self, root, switch_to_select, switch_to_reroll, day, reroll=None):
+    def __init__(self, root, switch_to_select, switch_to_reroll, day, id, reroll=None):
         self.root = root
         self.switch_to_select = switch_to_select
         self.switch_to_reroll = switch_to_reroll
         self.day = day
         self.reroll = reroll  # Store reroll data if provided
+        self.id = id  # Store id if provided
+        if id:
+            self.assistant = ai.create_assistant(id)
         self.left_click = "<Button-1>"
-        self.hilo = ai.crear_hilo()
+        self.hilo = ai.create_thread()
 
         # Create window and canvas
         self.window, self.canvas = create_window("assets/game", existing_root=root)
@@ -34,7 +37,7 @@ class ChatScreen:
     def process_reroll(self):
         if self.reroll:
             reroll_message = self.reroll
-            reroll_response = ai.reroll(self.hilo, reroll_message)
+            reroll_response = ai.reroll(self.id, self.hilo, reroll_message)
             if reroll_response:
                 self.display_responses(reroll_response)
 
@@ -267,7 +270,8 @@ class ChatScreen:
             self.switch_to_reroll(self.day, last_messages)
 
     def submit_response(self, message):
-        response = ai.conversar_en_hilo(self.hilo, message)
+        print(self.assistant)
+        response = ai.chat_by_thread(self.assistant, self.hilo, message)
         if response:
             self.display_responses(response)
 
