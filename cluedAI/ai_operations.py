@@ -53,7 +53,7 @@ def chat_by_thread(assistant, hilo, user_message):
         return
 
     client.beta.threads.messages.create(
-        thread_id=hilo_id,
+        thread_id=hilo['id'],
         role="user",
         content=user_message,
     )
@@ -72,11 +72,7 @@ def chat_by_thread(assistant, hilo, user_message):
             #print(event_dict, end="", flush=True)
 
 #Codigo destinada al narrador
-def crear_narrator(): #A eliminar
-    assistant = create_narrator()
-    return assistant
-
-def conversar_narrador(type_information, information):
+def chat_narrator(type_information, information):
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -94,10 +90,10 @@ def conversar_narrador(type_information, information):
     return response.choices[0].message.content
 
 #Codigo destinada al notetaker
-def obtener_resumen(hilo_id):
+def obtain_summary(hilo_id):
     instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
         As an example, if you talked about being accused of murder and you had a fight with Manuel, you should respond in the following way: You had a fight with Manuel because he accused you of murder and it made you feel bad.'''
-    response = conversar_en_hilo(hilo_id,instruction)
+    response = chat_by_thread(hilo_id,instruction)
 
     return response
 
@@ -108,8 +104,8 @@ def main():
     random.shuffle(rango_ids)
     ids_seleccionados = rango_ids[:num_asistentes]
 
-    asistentes = {str(id): crear_asistente(id) for id in ids_seleccionados}
-    hilos = {str(id): crear_hilo() for id, asistente in asistentes.items()}
+    asistentes = {str(id): create_assistant(id) for id in ids_seleccionados}
+    hilos = {str(id): create_thread() for id, asistente in asistentes.items()}
 
     while True:
         comando = input("Ingrese un comando (nuevo, destruir, conversar, listar, salir, recuperar): ").strip().lower()
@@ -118,25 +114,26 @@ def main():
             break
         elif comando == "nuevo":
             id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
-            asistente_nuevo = crear_asistente(id_nuevo)
-            hilo_nuevo = crear_hilo(asistente_nuevo)
+            asistente_nuevo = create_assistant(id_nuevo)
+            hilo_nuevo = create_thread(asistente_nuevo)
             asistentes[id_nuevo] = asistente_nuevo
             hilos[id_nuevo] = hilo_nuevo
             print(f"Asistente con ID {id_nuevo} y hilo creado.")
         elif comando == "destruir":
             id_destruir = input("Ingrese el ID del hilo a destruir: ")
-            print(destruir_hilo(id_destruir, hilos))
+            print(destroy_thread(id_destruir, hilos))
         elif comando == "recuperar":
             id_recuperar = input("Ingrese el ID del hilo del que quieres obtener la conversacion: ")
-            print(recuperar_conversacion(id_recuperar))
+            print(obtain_conversation(id_recuperar))
         elif comando == "resumen":
             id_resumir = input("Ingrese el ID del hilo del que quieres obtener el resumen: ")
-            print(obtener_resumen(id_resumir))
+            print(obtain_summary(id_resumir))
         elif comando == "conversar":
             id_conversar = input("Ingrese el ID del hilo con el que desea conversar: ")
+            asistente_nuevo = create_assistant(2)
             if any(hilo['id'] == id_conversar for hilo in hilos.values()):
                 msg = input("msg: ")
-                print(conversar_en_hilo(id_conversar, msg))
+                print(chat_by_thread(asistente_nuevo,hilo, msg))
             else:
                 print("ID de hilo no válido.")
         elif comando == "listar":
