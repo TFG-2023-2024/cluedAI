@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from initial_gui.reroll_screen import RerollScreen
 from initial_gui.start_screen import StartScreen
@@ -63,7 +64,13 @@ class ScreenManager:
         root = tk.Tk()  # Create the Tk instance here
         root.geometry("1024x768")  # Set window size if needed
         root.title("cluedAI")
-        root.iconbitmap('cluedAI\initial_gui\image.ico')
+
+        # Obtener la ruta absoluta del directorio actual
+        ruta_actual = os.path.dirname(__file__)
+
+        # Construir la ruta del archivo de ícono
+        ruta_icono = os.path.join(ruta_actual, "initial_gui", "image.ico")
+        root.iconbitmap(ruta_icono)
         
 
         manager = ScreenManager(root)
