@@ -64,7 +64,13 @@ def basic_window():
     root = tk.Tk()  # Create the Tk instance here
     root.geometry("1024x768")  # Set window size if needed
     root.title("cluedAI")
+def basic_window():
+    root = tk.Tk()  # Create the Tk instance here
+    root.geometry("1024x768")  # Set window size if needed
+    root.title("cluedAI")
 
+    # Obtener la ruta absoluta del directorio actual
+    ruta_actual = os.path.dirname(__file__)
     # Obtener la ruta absoluta del directorio actual
     ruta_actual = os.path.dirname(__file__)
 
@@ -76,7 +82,11 @@ def basic_window():
     manager = ScreenManager(root)
     manager.switch_to_start()
     #manager.switch_to_chat(None, None)  # Start with the start screen
+    manager = ScreenManager(root)
+    manager.switch_to_start()
+    #manager.switch_to_chat(None, None)  # Start with the start screen
 
+    root.mainloop()  # Start the main loop here
     root.mainloop()  # Start the main loop here
 
 
