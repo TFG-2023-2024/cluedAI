@@ -3,7 +3,7 @@ import os
 import time
 from dotenv import load_dotenv
 from db.db_operations import flush_db, setup_db, randomize, start_day
-from initial_gui.start_screen import start
+from screen_manager import basic_window
 
 '''
 def start_mongodb():
@@ -26,9 +26,7 @@ def main():
     '''
     flush_db()
     setup_db()
-    randomize()
-    start_day()
-    start()  # Llama a tu función de inicio de la GUI
+    basic_window()  # Llama a tu función de inicio de la GUI
     '''
     finally:
         # Asegúrate de cerrar MongoDB cuando la aplicación termine

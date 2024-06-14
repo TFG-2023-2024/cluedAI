@@ -1,19 +1,24 @@
 from tkinter import BOTH, END, LEFT, RIGHT, Y, Frame, Scrollbar, Canvas, Entry, Button, PhotoImage, Tk
 import ai_operations as ai
 from initial_gui.starting_operations import create_window, relative_to_assets
+from dotenv import load_dotenv
+from db.db_operations import obtain_by_id, connect_db
 
 class ChatScreen:
-    def __init__(self, root, switch_to_select, switch_to_reroll, day, id, reroll=None):
+    def __init__(self, root, switch_to_select, switch_to_reroll, day, id, type, reroll=None):
         self.root = root
         self.switch_to_select = switch_to_select
         self.switch_to_reroll = switch_to_reroll
         self.day = day
         self.reroll = reroll  # Store reroll data if provided
         self.id = id  # Store id if provided
-        if id:
-            self.assistant = ai.create_assistant(id)
+        self.type = type
         self.left_click = "<Button-1>"
         self.hilo = ai.create_thread()
+
+        load_dotenv()
+        global items_collection
+        _, _, items_collection, _, _ = connect_db()
 
         # Create window and canvas
         self.window, self.canvas = create_window("assets/game", existing_root=root)
@@ -227,7 +232,7 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 20:
+        if len(self.messages) + len(self.responses) >= 2:
             self.reset_chat()
 
     def display_responses(self, response):
@@ -267,11 +272,15 @@ class ChatScreen:
     def reroll_response(self, event=None):
         if len(self.responses) >= 1:
             last_messages = [self.messages[-1][2], self.responses[-1][2]]
-            self.switch_to_reroll(self.day, last_messages)
+            self.switch_to_reroll(self.day, last_messages, self.id)
 
     def submit_response(self, message):
-        print(self.assistant)
-        response = ai.chat_by_thread(self.assistant, self.hilo, message)
+        if self.id:
+            if self.type=="Character":
+                self.assistant = ai.create_assistant(self.id)
+                response = ai.chat_by_thread(self.assistant, self.hilo, message)
+            elif self.type=="Item":
+                response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
         if response:
             self.display_responses(response)
 
