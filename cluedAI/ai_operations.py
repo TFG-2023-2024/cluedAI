@@ -4,16 +4,13 @@ from dotenv import load_dotenv
 import random
 
 from characters.character_operations import create_character
+from db.db_operations import connect_db, obtain_by_id
 
 
 # Cargar la clave de API de OpenAI
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI()
-
-def create_assistant(id):
-    assistant = create_character(id)
-    return assistant
 
 def create_thread():
     thread = client.beta.threads.create()
@@ -29,7 +26,24 @@ def obtain_assistant_id(assistant):
     return assistant.id
 
 def obtein_assistant_by_id(id):
-    return client.beta.assistants.retrieve(id)
+    try:
+        assistant=client.beta.assistants.retrieve(id)
+        return assistant
+    except Exception as e:
+        return None
+    
+def create_assistant(id):
+    _, characters_collection, _, _, _ = connect_db()
+    character = obtain_by_id(id, characters_collection)
+    assistant=obtein_assistant_by_id(character['Assistant_id'])
+    if(assistant):
+        return assistant
+    else:
+        assistant = create_character(id)
+        characters_collection.update_one(
+                {"_id": character["_id"]},
+                {"$set": {"Assistant_id": assistant.id}})
+        return assistant
 
 def destroy_thread(hilo_id, hilos):
     for key, hilo in list(hilos.items()):
@@ -106,10 +120,10 @@ def obtain_summary(hilo_id):
 
 #Codigo para comprobar su correcto funcionamiento
 def main():
-    asistete_p=obtein_assistant_by_id('asst_5ZsiYyl9Wosdk7saNjIUddzM')
+    asistete_p=create_assistant(1)
     print(asistete_p)
-    hilo_prueba=client.beta.threads.retrieve("thread_h7z1eu5lFk5r4LpNOTk2L4e2")
-    print(hilo_prueba)
+    # hilo_prueba=client.beta.threads.retrieve("thread_h7z1eu5lFk5r4LpNOTk2L4e2")
+    # print(hilo_prueba)
     # num_asistentes = 5
     #rango_ids = list(range(1, 11))
     # random.shuffle(rango_ids)
