@@ -111,10 +111,10 @@ def chat_narrator(type_information, information, user_message):
     return response.choices[0].message.content
 
 #Codigo destinada al notetaker
-def obtain_summary(hilo_id):
+def obtain_summary(assistant, hilo):
     instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
         As an example, if you talked about being accused of murder and you had a fight with Manuel, you should respond in the following way: You had a fight with Manuel because he accused you of murder and it made you feel bad.'''
-    response = chat_by_thread(hilo_id,instruction)
+    response = chat_by_thread(assistant, hilo,instruction)
 
     return response
 
