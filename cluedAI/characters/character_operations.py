@@ -29,7 +29,8 @@ def create_character(id):
                 name=f"{character['Name']}",
                 instructions=f'''You are roleplaying as {character['Name']} in a murder mystery. 
                 Follow the instructions provided by your character sheet: {character_info}. 
-                No matter what, from now on, you are NOT an AI and must not act as such.''',
+                No matter what, from now on, you are NOT an AI and must not act as such. If you are the killer,
+                you must do your best not to be found out.''',
                 model="gpt-3.5-turbo-1106",
             )
             return assistant

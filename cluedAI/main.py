@@ -26,7 +26,7 @@ def main():
     '''
     flush_db()
     setup_db()
-    basic_window()  # Llama a tu función de inicio de la GUI
+    basic_window()  # Llama a la función de inicio de la GUI
     '''
     finally:
         # Asegúrate de cerrar MongoDB cuando la aplicación termine

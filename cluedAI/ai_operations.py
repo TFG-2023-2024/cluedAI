@@ -1,7 +1,6 @@
 import openai
 import os
 from dotenv import load_dotenv
-import random
 
 from characters.character_operations import create_character
 
@@ -89,6 +88,23 @@ def chat_narrator(type_information, information, user_message):
     )
     return response.choices[0].message.content
 
+#Codigo destinado a la historia inicial
+def start_story(type_information, information):
+    response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": '''You will be the narrator of a mystery game about a murder, you must respond in a mysterious way.
+            The prompts that will be given to you will have the following structure: information_type: information
+            These are the different types of information that exist, along with the information:
+            - Item: Information about an item
+            - Location: Information about a location
+            - Event: Description of an event
+            Remember to respond in a mysterious way but sticking to the information given without inventing anything'''},
+        {"role": "user", "content": f"{type_information}: {information}."},
+        ]
+    )
+    return response.choices[0].message.content
+
 #Codigo destinada al notetaker
 def obtain_summary(hilo_id):
     instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
@@ -97,6 +113,7 @@ def obtain_summary(hilo_id):
 
     return response
 
+'''
 #Codigo para comprobar su correcto funcionamiento
 def main():
     num_asistentes = 5
@@ -145,4 +162,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+'''
