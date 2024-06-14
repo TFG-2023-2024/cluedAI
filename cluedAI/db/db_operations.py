@@ -140,11 +140,11 @@ def randomize():
     """
 
     # CONNECT TO DATABASE
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
+    _, _, items_collection, locations_collection, _ = connect_db()
     randomized_data = {}
 
     # Randomize character archetypes and update 
-    randomize_archetypes(characters_collection)
+    #randomize_archetypes(characters_collection)
 
     # Randomize locations
     randomized_data["locations"] = randomize_locations(locations_collection)

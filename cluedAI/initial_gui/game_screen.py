@@ -3,6 +3,8 @@ import ai_operations as ai
 from initial_gui.starting_operations import create_window, relative_to_assets
 from dotenv import load_dotenv
 from db.db_operations import obtain_by_id, connect_db
+from db.db_operations import connect_db
+from db.db_randomizers import randomize_archetypes
 
 class ChatScreen:
     def __init__(self, root, switch_to_select, switch_to_reroll, day, id, type, reroll=None):
@@ -15,6 +17,8 @@ class ChatScreen:
         self.type = type
         self.left_click = "<Button-1>"
         self.hilo = ai.create_thread()
+        global characters_collection
+        _, characters_collection, _, _, _ = connect_db()
 
         load_dotenv()
         global items_collection
@@ -37,6 +41,7 @@ class ChatScreen:
         self.create_entry()
         self.create_header()
         self.create_message_frame()
+        self.start_game()
         self.process_reroll()
 
     def process_reroll(self):
@@ -45,6 +50,17 @@ class ChatScreen:
             reroll_response = ai.reroll(self.id, self.hilo, reroll_message)
             if reroll_response:
                 self.display_responses(reroll_response)
+
+    def start_game(self):
+        if self.day == 0:
+            welcome_message = "a"
+            self.display_responses(welcome_message)
+            tutorial_message = "b"
+            self.display_responses(tutorial_message)
+            randomize_archetypes(characters_collection)
+            starting_message = ai.start_story()
+            self.display_responses(starting_message)
+        #Block the writing in the entry/sending of the button
 
     def load_images(self):
         self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
@@ -190,6 +206,9 @@ class ChatScreen:
         self.day += 1
         self.canvas.itemconfig(self.day_label, text=str(self.day))
 
+        if self.day == 5: #Se puede cambiar a una semana, que era la idea inicial, pero por coste la dejamos así de momento
+            self.switch_to_select(self.day)
+
         for item in self.messages + self.responses:
             self.messages_canvas.delete(item[0])
             self.messages_canvas.delete(item[1])
@@ -232,7 +251,7 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 2:
+        if len(self.messages) + len(self.responses) >= 20:
             self.reset_chat()
 
     def display_responses(self, response):
