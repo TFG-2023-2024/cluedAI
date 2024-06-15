@@ -19,7 +19,7 @@ def create_character(id):
     """
     try:
         # Obtain the character from the database
-        _, characters_collection, _, _, _ = connect_db()
+        _, characters_collection, _, _, _, _ = connect_db()
         character = obtain_by_id(id, characters_collection)
         if character:
             # Convert the character object to a string format

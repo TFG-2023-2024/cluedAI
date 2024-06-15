@@ -15,7 +15,7 @@ def log_user(username):
     """
     try:
         # Connect to the users collection in the database
-        _, _, _, _, users_collection = connect_db()
+        _, _, _, _, users_collection, _ = connect_db()
 
         # Create a unique index on the 'username' field
         users_collection.create_index([('username', pymongo.ASCENDING)], unique=True)
@@ -44,7 +44,7 @@ def insert_character(username, data):
     """
     try:
         # Connect to the users collection in the database
-        _, _, _, _, users_collection = connect_db()
+        _, _, _, _, users_collection, _ = connect_db()
 
         # Find the user by username
         user_query = {"username": username}

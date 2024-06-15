@@ -3,7 +3,7 @@ import ai_operations as ai
 from initial_gui.starting_operations import create_window, relative_to_assets
 from dotenv import load_dotenv
 from db.db_operations import obtain_by_id, connect_db
-from db.db_operations import connect_db
+from db.db_operations import connect_db, start_day, start_day_0
 from db.db_randomizers import randomize_archetypes
 
 class ChatScreen:
@@ -12,17 +12,17 @@ class ChatScreen:
         self.switch_to_select = switch_to_select
         self.switch_to_reroll = switch_to_reroll
         self.day = day
+        self.data = None
         self.reroll = reroll  # Store reroll data if provided
         self.id = id  # Store id if provided
         self.type = type
         self.left_click = "<Button-1>"
         self.hilo = ai.create_thread()
-        global characters_collection
-        _, characters_collection, _, _, _ = connect_db()
+        self.assistant = None
 
         load_dotenv()
-        global items_collection
-        _, _, items_collection, _, _ = connect_db()
+        global characters_collection, items_collection, locations_collection
+        _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
 
         # Create window and canvas
         self.window, self.canvas = create_window("assets/game", existing_root=root)
@@ -35,6 +35,12 @@ class ChatScreen:
         self.initialize_ui()
     
     def initialize_ui(self):
+        # Call start_day or start_day_0 based on the current day
+        if self.day == 0:
+            self.data = start_day_0()
+        elif self.day > 1:
+            self.data = start_day()
+
         self.load_images()  # Load all images
         self.create_background()
         self.create_buttons()
@@ -53,14 +59,51 @@ class ChatScreen:
 
     def start_game(self):
         if self.day == 0:
-            welcome_message = "a"
+            # Block the button until the tutorial finishes
+            self.block_button()
+
+            # Display welcome message
+            welcome_message = ("Welcome to CluedAI, an AI-based murder mystery game created for a thesis project." + 
+                               " In this game, you will chat with various characters to uncover the mystery.")
             self.display_responses(welcome_message)
-            tutorial_message = "b"
-            self.display_responses(tutorial_message)
-            randomize_archetypes(characters_collection)
-            starting_message = ai.start_story()
-            self.display_responses(starting_message)
-        #Block the writing in the entry/sending of the button
+            self.root.after(3000, self.display_tutorial)
+
+    def display_tutorial(self):
+        tutorial_message = ("In this game, you can interact with the environment using buttons. " +
+                            "The left button is used to select a location, character, or item, while the right button allows you to reroll a response." +
+                            "If you understand, write something and press the send button to start your story!")
+        self.display_responses(tutorial_message)
+        # Unblock the button after the tutorial finishes
+        self.unblock_button()
+
+    def complete_tutorial(self):
+        randomize_archetypes(characters_collection)
+        
+        # Collect all characters
+        all_characters = characters_collection.find()
+        characters_info = "Characters:\n" + "\n".join([f"Name: {character['Name']}, Role: {character['Archetype']}" for character in all_characters])
+
+        # Collect all items
+        all_items = items_collection.find()
+        items_info = "Items:\n" + "\n".join([f"Name: {item['Name']}, Description: {item['Definition']}" for item in all_items])
+
+        # Collect all locations
+        all_locations = locations_collection.find()
+        locations_info = "Locations:\n" + "\n".join([f"Room: {location['Room']}, Description: {location['Description']}" for location in all_locations])
+
+        # Concatenate all information into one string
+        information = f"{characters_info}\n\n{items_info}\n\n{locations_info}"
+
+        starting_message = ai.start_story(information)
+        self.display_responses(starting_message)
+        
+    def block_button(self):
+        # Block the button (disable interaction)
+        self.submit_button_canvas.config(state="disabled")
+
+    def unblock_button(self):
+        # Unblock the button (enable interaction)
+        self.submit_button_canvas.config(state="normal")
 
     def load_images(self):
         self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
@@ -76,7 +119,7 @@ class ChatScreen:
         self.canvas.create_rectangle(0.0, 631.0, 1024.0, 768.0, fill="#292929", outline="")
 
     def create_buttons(self):
-        button_canvas = Canvas(
+        self.submit_button_canvas = Canvas(
             self.canvas,
             width=self.button_image_1.width(),
             height=self.button_image_1.height(),
@@ -85,9 +128,9 @@ class ChatScreen:
             highlightthickness=0,
             relief="ridge"
         )
-        button_canvas.place(x=916.0, y=663.0)
-        button_canvas.create_image(0, 0, anchor="nw", image=self.button_image_1)
-        button_canvas.bind(self.left_click, self.submit_message)
+        self.submit_button_canvas.place(x=916.0, y=663.0)
+        self.submit_button_canvas.create_image(0, 0, anchor="nw", image=self.button_image_1)
+        self.submit_button_canvas.bind(self.left_click, self.submit_message)
 
         button2_canvas = Canvas(
             self.canvas,
@@ -100,7 +143,7 @@ class ChatScreen:
         )
         button2_canvas.place(x=304.66650390625 - self.button_select_button.width() // 2, y=40.0 - self.button_select_button.height() // 2)
         button2_canvas.create_image(0, 0, anchor="nw", image=self.button_select_button)
-        button2_canvas.bind(self.left_click, lambda event: self.switch_to_select(self.day))
+        button2_canvas.bind(self.left_click, lambda event: self.select(self.day, self.data))
 
         button3_canvas = Canvas(
             self.canvas,
@@ -205,9 +248,12 @@ class ChatScreen:
     def reset_chat(self):
         self.day += 1
         self.canvas.itemconfig(self.day_label, text=str(self.day))
-
-        if self.day == 5: #Se puede cambiar a una semana, que era la idea inicial, pero por coste la dejamos así de momento
-            self.switch_to_select(self.day)
+        
+        #if self.day > 0: #ARREGLAR
+            #ai.obtain_summary(self.assistant, self.hilo)
+        
+        if self.day == 7:
+            self.switch_to_select(self.day, self.data)
 
         for item in self.messages + self.responses:
             self.messages_canvas.delete(item[0])
@@ -259,7 +305,7 @@ class ChatScreen:
         wrapped_response = self.wrap_text(''.join(response), max_width)
 
         y_offset = self.get_y_offset()
-        x_position = 30
+        x_position = 40
         text_item = self.messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill="#FFFFFF", font=("Inter", 13))
         bbox = self.messages_canvas.bbox(text_item)
         padding = 10
@@ -282,7 +328,13 @@ class ChatScreen:
         if message:
             self.display_message(message)
             self.entry.delete(0, END)
-            self.submit_response(message)
+            if self.day > 0:
+                self.submit_response(message)
+            else:
+                wait_msg = "Please wait a few seconds to start..."
+                self.submit_response(wait_msg)
+                self.root.after(2000, self.complete_tutorial)
+                
 
     def clear_default(self, event):
         event.widget.delete(0, 'end')
@@ -300,6 +352,8 @@ class ChatScreen:
                 response = ai.chat_by_thread(self.assistant, self.hilo, message)
             elif self.type=="Item":
                 response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
+        else:
+            response = message
         if response:
             self.display_responses(response)
 
@@ -330,6 +384,11 @@ class ChatScreen:
             x1, y1
         ]
         return self.messages_canvas.create_polygon(points, **kwargs, smooth=True)
+    
+    def select(self, day, data):
+        if day == 0:
+            self.reset_chat()
+        self.switch_to_select(day, data)
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas

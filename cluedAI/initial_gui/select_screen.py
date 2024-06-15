@@ -8,37 +8,23 @@ class SelectScreen:
     last_processed_day = None  # Class variable to keep track of the last processed day
     cached_data = None  # Class variable to store cached data
 
-    def __init__(self, root, switch_to_chat, day):
+    def __init__(self, root, switch_to_chat, day, data):
         self.root = root
         self.switch_to_chat = switch_to_chat
         self.day = day
+        self.data = data
         self.label_font = "Inter Medium"
         self.left_click = "<Button-1>"
         self.window, self.canvas = create_window("assets/select", existing_root=root)
+        load_dotenv()
+        global characters_collection, items_collection, locations_collection
+        _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
         self.setup_ui()
 
     def setup_ui(self):
-        load_dotenv()
-        global characters_collection, items_collection, locations_collection
-        _, characters_collection, items_collection, locations_collection, _ = connect_db()
-
-        # Check if the current day is different from the last processed day
-        if SelectScreen.last_processed_day != self.day:
-            # Call start_day or start_day_0 based on the current day
-            if self.day == 1:
-                data = start_day_0()
-            else:
-                data = start_day()
-
-            # Cache the data and update the last processed day
-            SelectScreen.cached_data = data
-            SelectScreen.last_processed_day = self.day
-        else:
-            data = SelectScreen.cached_data  # Reuse cached data
-
         self.locations_by_id = [
             obtain_by_id(location_id, locations_collection)
-            for location_id in data.get("locations", [])
+            for location_id in self.data.get("locations", [])
             if locations_collection.find_one({"_id": location_id, "Characters": {"$exists": True, "$ne": []}})
         ]
 

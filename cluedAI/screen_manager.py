@@ -12,7 +12,7 @@ class ScreenManager:
         self.root = root
         self.root.geometry("1024x768")  # Set the window size
         self.current_screen = None
-        self.day = 1  # Example attribute, if needed
+        self.day = 0 
         
     def clear_screen(self):
         if self.current_screen:
@@ -50,9 +50,9 @@ class ScreenManager:
         self.update_focus()
 
     
-    def switch_to_select(self, day):
+    def switch_to_select(self, day, data):
         self.clear_screen()
-        self.current_screen = SelectScreen(self.root, self.switch_to_chat, day)
+        self.current_screen = SelectScreen(self.root, self.switch_to_chat, day, data)
         self.update_focus()
 
     def switch_to_reroll(self, day, response, id):
@@ -69,8 +69,6 @@ def basic_window():
     root.geometry("1024x768")  # Set window size if needed
     root.title("cluedAI")
 
-    # Obtener la ruta absoluta del directorio actual
-    ruta_actual = os.path.dirname(__file__)
     # Obtener la ruta absoluta del directorio actual
     ruta_actual = os.path.dirname(__file__)
 

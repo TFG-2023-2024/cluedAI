@@ -32,8 +32,9 @@ def connect_db():
         items_collection = db["items"]
         locations_collection = db["locations"]
         users_collection = db["users"]
+        story_collection = db["story"]
 
-        return db, characters_collection, items_collection, locations_collection, users_collection
+        return db, characters_collection, items_collection, locations_collection, users_collection, story_collection
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
         return None
@@ -72,7 +73,7 @@ def setup_db():
     - None
     """
     # CONNECT TO DATABASE
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
+    _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
 
     # Insert initial data
     insert_data(initial_characters, characters_collection)
@@ -94,13 +95,14 @@ def flush_db():
     """
     try:
         # Connect to MongoDB
-        db, _, _, _, _ = connect_db()
+        db, _, _, _, _, _ = connect_db()
 
         # Drop collections
         db["characters"].drop()
         db["items"].drop()
         db["locations"].drop()
         db["users"].drop()
+        db["story"].drop()
 
         print("Database flushed successfully.")
     except Exception as e:
@@ -140,7 +142,7 @@ def randomize():
     """
 
     # CONNECT TO DATABASE
-    _, _, items_collection, locations_collection, _ = connect_db()
+    _, _, items_collection, locations_collection, _, _ = connect_db()
     randomized_data = {}
 
     # Randomize character archetypes and update 
@@ -181,7 +183,7 @@ def start_day_0():
     - randomized_day (dict): The randomized data for the characters.
     """
     # Fetch all location IDs
-    _, characters_collection, _, locations_collections, _ = connect_db()
+    _, characters_collection, _, locations_collections, _, _ = connect_db()
 
     randomized_data = randomize()
 
@@ -208,7 +210,7 @@ def start_day():
     - randomized_day (dict): The randomized data for the characters.
     """
     # Fetch all location IDs
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
+    _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
 
     # Randomize locations
     randomized_data = {}
