@@ -35,10 +35,7 @@ class ChatScreen:
         self.initialize_ui()
     
     def initialize_ui(self):
-        # Call start_day or start_day_0 based on the current day
-        if self.day == 0:
-            self.data = start_day_0()
-        elif self.day > 1:
+        if self.day > 1:
             self.data = start_day()
 
         self.load_images()  # Load all images
@@ -78,14 +75,19 @@ class ChatScreen:
 
     def complete_tutorial(self):
         randomize_archetypes(characters_collection)
+        # Call start_day or start_day_0 based on the current day
+        if self.day == 0:
+            self.data = start_day_0()
         
         # Collect all characters
         all_characters = characters_collection.find()
-        characters_info = "Characters:\n" + "\n".join([f"Name: {character['Name']}, Role: {character['Archetype']}" for character in all_characters])
+        characters_info = "Characters:\n" + "\n".join([f"Name: {character['Name']}, Role: {character['Archetype']}, " + 
+            f"Location: {character['Location']}" for character in all_characters])
 
         # Collect all items
         all_items = items_collection.find()
-        items_info = "Items:\n" + "\n".join([f"Name: {item['Name']}, Description: {item['Definition']}" for item in all_items])
+        items_info = "Items:\n" + "\n".join([f"Name: {item['Name']}, Description: {item['Definition']}, " + 
+                        f"Location: {item['Location']}" for item in all_items])
 
         # Collect all locations
         all_locations = locations_collection.find()
@@ -93,7 +95,8 @@ class ChatScreen:
 
         # Concatenate all information into one string
         information = f"{characters_info}\n\n{items_info}\n\n{locations_info}"
-
+        print(locations_info)
+        print(information)
         starting_message = ai.start_story(information)
         self.display_responses(starting_message)
         
@@ -143,7 +146,7 @@ class ChatScreen:
         )
         button2_canvas.place(x=304.66650390625 - self.button_select_button.width() // 2, y=40.0 - self.button_select_button.height() // 2)
         button2_canvas.create_image(0, 0, anchor="nw", image=self.button_select_button)
-        button2_canvas.bind(self.left_click, lambda event: self.select(self.day, self.data))
+        button2_canvas.bind(self.left_click, lambda event: self.select(self.data))
 
         button3_canvas = Canvas(
             self.canvas,
@@ -385,10 +388,13 @@ class ChatScreen:
         ]
         return self.messages_canvas.create_polygon(points, **kwargs, smooth=True)
     
-    def select(self, day, data):
-        if day == 0:
+    def select(self, data):
+        if self.day == 0:
             self.reset_chat()
-        self.switch_to_select(day, data)
+            self.root.after(100, lambda: self.switch_to_select(self.day, data))  # 100 ms delay
+        else:
+            self.switch_to_select(self.day, data)
+
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas

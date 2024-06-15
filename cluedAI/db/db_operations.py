@@ -130,6 +130,26 @@ def insert_column_data(column_data, column_name, collection):
         print(f"Error inserting data into {column_name} column: {e}")
         return None
 
+def obtain_by_id(id, collection):
+    """
+    Fetches a database object by its ID from the given collection.
+
+    Args:
+    - id (any): The ID of the object to fetch.
+    - collection (pymongo.collection.Collection): The MongoDB collection to search in.
+
+    Returns:
+    - db_object (dict): The database object corresponding to the provided ID.
+                        Returns None if the object is not found.
+    """
+    try:
+        # Find the object in the collection by its ID
+        db_object = collection.find_one({"_id": id})
+        return db_object
+    except Exception as e:
+        print(f"Error obtaining object by ID: {e}")
+        return None
+
 def randomize():
     """
     Randomizes character archetypes, locations, and items.
@@ -152,28 +172,11 @@ def randomize():
     randomized_data["locations"] = randomize_locations(locations_collection)
 
     randomize_items(items_collection, locations_collection, randomized_data["locations"])
-
+    for item in items_collection.find():
+            # Assign the random location name to the item, instead of id
+            items_collection.update_one({"_id": item["_id"]}, {"$set": {"Location": obtain_by_id(item['Location'], locations_collection)['Room']}})
+            
     return randomized_data
-
-def obtain_by_id(id, collection):
-    """
-    Fetches a database object by its ID from the given collection.
-
-    Args:
-    - id (any): The ID of the object to fetch.
-    - collection (pymongo.collection.Collection): The MongoDB collection to search in.
-
-    Returns:
-    - db_object (dict): The database object corresponding to the provided ID.
-                        Returns None if the object is not found.
-    """
-    try:
-        # Find the object in the collection by its ID
-        db_object = collection.find_one({"_id": id})
-        return db_object
-    except Exception as e:
-        print(f"Error obtaining object by ID: {e}")
-        return None
 
 def start_day_0():
     """
@@ -183,7 +186,7 @@ def start_day_0():
     - randomized_day (dict): The randomized data for the characters.
     """
     # Fetch all location IDs
-    _, characters_collection, _, locations_collections, _, _ = connect_db()
+    _, characters_collection, _, locations_collection, _, _ = connect_db()
 
     randomized_data = randomize()
 
@@ -193,12 +196,12 @@ def start_day_0():
     # Randomize character locations
     for character in characters_collection.find():
         random_location_id = random.choice(randomized_data["locations"])
-        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": obtain_by_id(random_location_id, locations_collection)['Room']}})
         location_characters[random_location_id].append(character["_id"])
 
     # Update the locations collection with the characters
     for location_id, character_ids in location_characters.items():
-        locations_collections.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
+        locations_collection.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
 
     return randomized_data
 
@@ -224,7 +227,7 @@ def start_day():
     # Randomize character locations
     for character in characters_collection.find():
         random_location_id = random.choice(randomized_data["locations"])
-        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": obtain_by_id(random_location_id, locations_collection)['Room']}})
         location_characters[random_location_id].append(character["_id"])
 
     # Update the locations collection with the characters

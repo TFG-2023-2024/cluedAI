@@ -143,6 +143,7 @@ def start_story(information):
                 "role": "system",
                 "content": '''Your task is to create a story using the 3-act structure based on the provided information about characters, items, and locations.
                 Generate a part of the story for each day (7 days) based on this structure. 
+                Do write out who is the victim and their manner of death, but not their murderer on day 1. 
                 You must take into account that this story is subject to change, as the player's actions are unknown.
                 This story shall serve as a base, and needs to shape characters' interactions with the player.
                 Format the response in the following way:
@@ -175,7 +176,8 @@ def start_story(information):
             {
                 "role": "system",
                 "content": '''Create a starting message in second person to a chat-based murder mystery game acting as a narrator for the story.
-                Do not mention the game, and stay in character. Do not mention who's the murderer or red herring. 
+                Do not mention the game, and stay in character. Do not mention who's the murderer, the red herring or the reluctant participant.
+                Do write out who is the victim and their manner of death, but not their murderer. 
                 The starting location for the player is the entrance of the mansion.
                 You must use the information for the day provided to build the story, but can invent everything else.
                 Add this sentence at the end: To start, you should probably go somewhere more interesting.
@@ -195,7 +197,7 @@ def start_story(information):
 def obtain_summary(assistant, hilo):
     instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
         As an example, if you talked about being accused of murder and you had a fight with Manuel, you should respond in the following way: You had a fight with Manuel because he accused you of murder and it made you feel bad.'''
-    response = chat_by_thread(assistant, hilo,instruction)
+    response = chat_by_thread(assistant, hilo, instruction)
 
     return response
 
