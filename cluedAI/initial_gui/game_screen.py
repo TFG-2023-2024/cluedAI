@@ -7,8 +7,13 @@ from db.db_operations import connect_db, start_day, start_day_0
 from db.db_randomizers import randomize_archetypes
 
 class ChatScreen:
-    last_processed_data = None  # Class variable to keep track of the last processed day
-    cached_data = None  # Class variable to store cached data
+    # Class variables to keep track of the cached data
+    cached_day_data = None  # Cache for start_day_0 data
+    cached_data = None
+    cached_day = None  # Cache for the day
+    cached_messages = []
+    characters_spoken_to = {}
+    
     def __init__(self, root, switch_to_select, switch_to_reroll, day, id, type, reroll=None):
         self.root = root
         self.switch_to_select = switch_to_select
@@ -19,7 +24,6 @@ class ChatScreen:
         self.id = id  # Store id if provided
         self.type = type
         self.left_click = "<Button-1>"
-        self.hilo = ai.create_thread()
         self.assistant = None
 
         load_dotenv()
@@ -38,7 +42,30 @@ class ChatScreen:
     
     def initialize_ui(self):
         if self.day > 1:
-            self.data = start_day()
+            if ChatScreen.cached_day_data is None or ChatScreen.cached_day != self.day:
+                ChatScreen.cached_day_data = start_day()
+                ChatScreen.cached_messages.clear()
+                ChatScreen.cached_day = self.day
+            self.data = ChatScreen.cached_day_data
+        elif self.day == 1:
+            self.data = ChatScreen.cached_day_data
+
+       # Check if the character has been spoken to today
+        if self.day in ChatScreen.characters_spoken_to:
+            spoken_to_today = any(char[0] == self.id for char in ChatScreen.characters_spoken_to[self.day])
+        else:
+            spoken_to_today = False
+
+        if spoken_to_today:
+            self.thread = ai.obtain_thread_by_id(ChatScreen.characters_spoken_to[self.day][0][1])
+            print(self.thread)
+        else:
+            self.thread = ai.create_thread()
+            print(self.thread)
+            if self.day not in ChatScreen.characters_spoken_to:
+                ChatScreen.characters_spoken_to[self.day] = []
+            ChatScreen.characters_spoken_to[self.day].append([self.id, self.thread.id])
+            print(ChatScreen.characters_spoken_to)
 
         self.load_images()  # Load all images
         self.create_background()
@@ -52,12 +79,13 @@ class ChatScreen:
     def process_reroll(self):
         if self.reroll:
             reroll_message = self.reroll
-            reroll_response = ai.reroll(self.id, self.hilo, reroll_message)
+            reroll_response = ai.reroll(self.id, self.thread, reroll_message)
             if reroll_response:
                 self.display_responses(reroll_response)
 
     def start_game(self):
         if self.day == 0:
+            self.thread = ai.create_thread()
             # Block the button until the tutorial finishes
             self.block_button()
 
@@ -80,7 +108,9 @@ class ChatScreen:
         randomize_archetypes(characters_collection)
         # Call start_day or start_day_0 based on the current day
         if self.day == 0:
-            self.data = start_day_0()
+            if ChatScreen.cached_day_data is None:
+                ChatScreen.cached_day_data = start_day_0()
+            self.data = ChatScreen.cached_day_data
         
         # Collect all characters
         all_characters = characters_collection.find()
@@ -98,7 +128,6 @@ class ChatScreen:
 
         # Concatenate all information into one string
         information = f"{characters_info}\n\n{items_info}\n\n{locations_info}"
-        print(locations_info)
         print(information)
         starting_message = ai.start_story(information)
         self.display_responses(starting_message)
@@ -260,7 +289,7 @@ class ChatScreen:
         self.canvas.itemconfig(self.day_label, text=str(self.day))
         
         #if self.day > 0: #ARREGLAR
-            #ai.obtain_summary(self.assistant, self.hilo)
+            #ai.obtain_summary(self.assistant, self.thread)
         
         if self.day == 7:
             self.switch_to_select(self.day, self.data)
@@ -304,6 +333,7 @@ class ChatScreen:
         rounded_rect = self.create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#333333")
         self.messages_canvas.tag_lower(rounded_rect, text_item)
         self.messages.append((rounded_rect, text_item, wrapped_message))
+        ChatScreen.cached_messages.append(message)
 
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
@@ -331,7 +361,7 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 20:
+        if len(self.messages) + len(self.responses) >= 20 or len(ChatScreen.cached_messages) >= 10:
             self.reset_chat()
 
     def submit_message(self, event=None):
@@ -360,7 +390,7 @@ class ChatScreen:
         if self.id:
             if self.type=="Character":
                 self.assistant = ai.create_assistant(self.id)
-                response = ai.chat_by_thread(self.assistant, self.hilo, message)
+                response = ai.chat_by_thread(self.assistant, self.thread, message)
             elif self.type=="Item":
                 response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
         else:

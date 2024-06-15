@@ -18,10 +18,7 @@ ai_model="gpt-3.5-turbo"
 
 def create_thread():
     thread = client.beta.threads.create()
-    return {"id": thread.id}
-
-def obtain_thread_id(hilo):
-    return hilo['id']
+    return thread
     
 def obtain_thread_by_id(id):
     return client.beta.threads.retrieve(id)
@@ -76,13 +73,13 @@ def chat_by_thread(assistant, hilo, user_message):
         return
 
     client.beta.threads.messages.create(
-        thread_id=hilo['id'],
+        thread_id=hilo.id,
         role="user",
         content=user_message,
     )
 
     stream = client.beta.threads.runs.create(
-        thread_id=hilo['id'],
+        thread_id=hilo.id,
         assistant_id=assistant.id,
         stream=True,
     )
