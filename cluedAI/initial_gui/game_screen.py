@@ -8,9 +8,9 @@ from db.db_randomizers import randomize_archetypes
 
 class ChatScreen:
     # Class variables to keep track of the cached data
-    cached_day_data = None  # Cache for start_day_0 data
+    cached_day_data = None 
     cached_data = None
-    cached_day = None  # Cache for the day
+    cached_day = None
     cached_messages = []
     characters_spoken_to = {}
     
@@ -20,11 +20,12 @@ class ChatScreen:
         self.switch_to_reroll = switch_to_reroll
         self.day = day
         self.data = None
-        self.reroll = reroll  # Store reroll data if provided
-        self.id = id  # Store id if provided
+        self.reroll = reroll  
+        self.id = id 
         self.type = type
         self.left_click = "<Button-1>"
         self.assistant = None
+        self.response_submitted = False  # Flag to track if submit_response has been called
 
         load_dotenv()
         global characters_collection, items_collection, locations_collection
@@ -55,7 +56,6 @@ class ChatScreen:
             spoken_to_today = any(char[0] == self.id for char in ChatScreen.characters_spoken_to[self.day])
         else:
             spoken_to_today = False
-
         if spoken_to_today:
             self.thread = ai.obtain_thread_by_id(ChatScreen.characters_spoken_to[self.day][0][1])
             print(self.thread)
@@ -291,7 +291,7 @@ class ChatScreen:
         #if self.day > 0: #ARREGLAR
             #ai.obtain_summary(self.assistant, self.thread)
         
-        if self.day == 7:
+        if self.day == 5:
             self.switch_to_select(self.day, self.data)
 
         for item in self.messages + self.responses:
@@ -364,13 +364,29 @@ class ChatScreen:
         if len(self.messages) + len(self.responses) >= 20 or len(ChatScreen.cached_messages) >= 10:
             self.reset_chat()
 
+
+    def summarize(self):
+        if self.type == "Character" and not self.responses:
+            self.assistant = ai.create_assistant(self.id)
+            if self.day == 1:
+                print(ai.obtain_summary(self.assistant, self.thread, self.day))
+            else:
+                for sublist in ChatScreen.characters_spoken_to[self.day]:
+                    if sublist[0] == self.id:
+                        thread = ai.obtain_thread_by_id(sublist[1])
+                print(ai.obtain_summary(self.assistant, thread, self.day))
+
     def submit_message(self, event=None):
         message = self.entry.get()
         if message:
             self.display_message(message)
             self.entry.delete(0, END)
             if self.day > 0:
+                self.summarize()
                 self.submit_response(message)
+                if self.type=="Item":
+                    response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
+                    self.submit_response(response)
             else:
                 wait_msg = "Please wait a few seconds to start..."
                 self.submit_response(wait_msg)
@@ -389,11 +405,12 @@ class ChatScreen:
     def submit_response(self, message):
         if self.id:
             if self.type=="Character":
-                self.assistant = ai.create_assistant(self.id)
                 response = ai.chat_by_thread(self.assistant, self.thread, message)
             elif self.type=="Item":
-                response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
+                response = message
         else:
+            if self.responses and not self.response_submitted:
+                self.response_submitted = True
             response = message
         if response:
             self.display_responses(response)

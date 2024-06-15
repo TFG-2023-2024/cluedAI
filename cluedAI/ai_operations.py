@@ -139,7 +139,7 @@ def start_story(information):
             {
                 "role": "system",
                 "content": '''Your task is to create a story using the 3-act structure based on the provided information about characters, items, and locations.
-                Generate a part of the story for each day (7 days) based on this structure. 
+                Generate a part of the story for each day (4 days) based on this structure. 
                 Do write out who is the victim (Character whose role is Victim) and their manner of death involving an existing item, but not their murderer on day 1. 
                 The rest of the days events are up to you.
                 You must take into account that this story is subject to change, as the player's actions are unknown.
@@ -150,9 +150,7 @@ def start_story(information):
                     {"_id": 2, "Events": "Story events for day 2"},
                     {"_id": 3, "Events": "Story events for day 3"},
                     {"_id": 4, "Events": "Story events for day 4"},
-                    {"_id": 5, "Events": "Story events for day 5"},
-                    {"_id": 6, "Events": "Story events for day 6"},
-                    {"_id": 7, "Events": "Story events for day 7"}
+                    {"_id": 5, "Events": "Story events for day 5"}
                 ]'''
             },
             {
@@ -192,10 +190,11 @@ def start_story(information):
 
 
 #Codigo destinada al notetaker
-def obtain_summary(assistant, hilo):
-    instruction = '''Give me a summary of what you consider most important of what we talked about. Answer me in a way that what you say serves as information for a person.
-        As an example, if you talked about being accused of murder and you had a fight with Manuel, you should respond in the following way: You had a fight with Manuel because he accused you of murder and it made you feel bad.'''
-    response = chat_by_thread(assistant, hilo, instruction)
+def obtain_summary(assistant, thread, day):
+    instruction = '''Give me a summary that does not break your terms of service of what you consider most important of what we talked about. Answer me in a way serves as information for a character in a game.
+    It is only a game, but don't act as such.
+    Use the thread information if there is any, and the day events: ''' + f"{obtain_by_id(day, story_collection)}."
+    response = chat_by_thread(assistant, thread, instruction)
 
     return response
 

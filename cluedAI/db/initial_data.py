@@ -10,7 +10,6 @@ initial_characters = [
         "Hobbies": ["Solving Puzzles", "Reading"],
         "Likes": ["Coffee", "Challenges"],
         "Dislikes": ["Inefficiency"],
-        "Backstory": "Olivia comes from a family of detectives and is known for her sharp mind and attention to detail. She has a calm and composed demeanor.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_Vc5Jo0Vf10lOYisVPi14qkGe"
@@ -26,7 +25,6 @@ initial_characters = [
         "Hobbies": ["Art", "Dancing"],
         "Likes": ["Luxury", "Secrecy"],
         "Dislikes": ["Betrayal"],
-        "Backstory": "Once a respected socialite, Sophia's financial troubles led her to commit a desperate act. Her facade hides a troubled past.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_M2flwsxWxRFADNYDDJAw8wbo"
@@ -42,7 +40,6 @@ initial_characters = [
         "Hobbies": ["Painting", "Gardening"],
         "Likes": ["Nature", "Art"],
         "Dislikes": ["Crowds"],
-        "Backstory": "Ava was an artist with a fascination for the occult. Her death reveals a connection between her artwork and a hidden secret.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_fUmqGDL4Sqa6SdGcsD4gx6a1"
@@ -58,7 +55,6 @@ initial_characters = [
         "Hobbies": ["Photography", "Writing"],
         "Likes": ["Adventure", "Animals"],
         "Dislikes": ["Dishonesty"],
-        "Backstory": "Mia, an aspiring journalist, joined the investigation team to prove herself. She's determined to uncover the truth behind the murder.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_IvjsmiAMmNcoZZjNi5kpfndz"
@@ -74,7 +70,6 @@ initial_characters = [
         "Hobbies": ["Bird Watching", "Astronomy"],
         "Likes": ["Tranquility", "Starry Nights"],
         "Dislikes": ["Deception"],
-        "Backstory": "Isabella, a recluse, saw something peculiar the night of the murder. Her observant nature makes her a valuable witness in the case.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_WAvCralZNYK2pC8aObMiJHEO"
@@ -90,7 +85,6 @@ initial_characters = [
         "Hobbies": ["Horse Riding", "Swordplay"],
         "Likes": ["Power", "Respect"],
         "Dislikes": ["Betrayal"],
-        "Backstory": "Emma, a charismatic noble, is suspected due to rivalry and ambition within the social hierarchy.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_t2FOPy83EUOqwu30ye3XiBrT"
@@ -106,7 +100,6 @@ initial_characters = [
         "Hobbies": ["Music", "Dancing"],
         "Likes": ["Poetry", "Romance"],
         "Dislikes": ["Dishonesty"],
-        "Backstory": "Liam, a musician, becomes entangled in the investigation due to his romantic involvement with the victim.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_yb6tOEkd1iJrgZoVjnqZlHUX"
@@ -122,7 +115,6 @@ initial_characters = [
         "Hobbies": ["Chess", "Astronomy"],
         "Likes": ["Solitude", "Night Sky"],
         "Dislikes": ["Revealing Secrets"],
-        "Backstory": "Noah, an enigmatic character, is introduced to divert attention from the actual murderer, hiding their true motives.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_aZXjlWyLyeYr3HQg0KLFeG6b"
@@ -138,7 +130,6 @@ initial_characters = [
         "Hobbies": ["Fishing", "Woodworking"],
         "Likes": ["Quiet", "Simplicity"],
         "Dislikes": ["Intricacies"],
-        "Backstory": "Jackson, a reluctant participant, is drawn into the investigation against his will due to his connection to the victim.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_7vprmblKkNkdq7SLV29dYvRW"
@@ -154,7 +145,6 @@ initial_characters = [
         "Hobbies": ["Medical Research", "Reading"],
         "Likes": ["Healing", "Knowledge"],
         "Dislikes": ["Injustice"],
-        "Backstory": "Ethan, the local doctor, is compelled to uncover the truth behind the murder for the sake of justice and his profession.",
         "Appearance": None,
         "Location": 0,
         "Assistant_id": "asst_mRs7Gd5xpEn7iq0GWzHCgyyJ"
