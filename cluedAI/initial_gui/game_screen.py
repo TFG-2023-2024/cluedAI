@@ -7,6 +7,8 @@ from db.db_operations import connect_db, start_day, start_day_0
 from db.db_randomizers import randomize_archetypes
 
 class ChatScreen:
+    last_processed_data = None  # Class variable to keep track of the last processed day
+    cached_data = None  # Class variable to store cached data
     def __init__(self, root, switch_to_select, switch_to_reroll, day, id, type, reroll=None):
         self.root = root
         self.switch_to_select = switch_to_select
@@ -61,13 +63,14 @@ class ChatScreen:
 
             # Display welcome message
             welcome_message = ("Welcome to CluedAI, an AI-based murder mystery game created for a thesis project." + 
-                               " In this game, you will chat with various characters to uncover the mystery.")
+                               " In this game, you will chat with various characters to work through the mystery.")
             self.display_responses(welcome_message)
             self.root.after(3000, self.display_tutorial)
 
     def display_tutorial(self):
-        tutorial_message = ("In this game, you can interact with the environment using buttons. " +
-                            "The left button is used to select a location, character, or item, while the right button allows you to reroll a response." +
+        tutorial_message = ("You can interact with the environment using buttons. " +
+                            "The left button is used to select a location, character, or item, while the right button allows you to reroll a response. " +
+                            "You have 10 messages per day. Use them wisely to uncover the truth. " +
                             "If you understand, write something and press the send button to start your story!")
         self.display_responses(tutorial_message)
         # Unblock the button after the tutorial finishes
@@ -102,11 +105,15 @@ class ChatScreen:
         
     def block_button(self):
         # Block the button (disable interaction)
-        self.submit_button_canvas.config(state="disabled")
+        self.submit_button_canvas.unbind(self.left_click)
+        self.button2_canvas.unbind(self.left_click)
+        self.button3_canvas.unbind(self.left_click)
 
     def unblock_button(self):
         # Unblock the button (enable interaction)
-        self.submit_button_canvas.config(state="normal")
+        self.submit_button_canvas.bind(self.left_click, self.submit_message)
+        self.button2_canvas.bind(self.left_click, lambda event: self.select())
+        self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
 
     def load_images(self):
         self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
@@ -135,7 +142,7 @@ class ChatScreen:
         self.submit_button_canvas.create_image(0, 0, anchor="nw", image=self.button_image_1)
         self.submit_button_canvas.bind(self.left_click, self.submit_message)
 
-        button2_canvas = Canvas(
+        self.button2_canvas = Canvas(
             self.canvas,
             width=self.button_select_button.width(),
             height=self.button_select_button.height(),
@@ -144,11 +151,11 @@ class ChatScreen:
             highlightthickness=0,
             relief="ridge"
         )
-        button2_canvas.place(x=304.66650390625 - self.button_select_button.width() // 2, y=40.0 - self.button_select_button.height() // 2)
-        button2_canvas.create_image(0, 0, anchor="nw", image=self.button_select_button)
-        button2_canvas.bind(self.left_click, lambda event: self.select(self.data))
+        self.button2_canvas.place(x=304.66650390625 - self.button_select_button.width() // 2, y=40.0 - self.button_select_button.height() // 2)
+        self.button2_canvas.create_image(0, 0, anchor="nw", image=self.button_select_button)
+        self.button2_canvas.bind(self.left_click, lambda event: self.select())
 
-        button3_canvas = Canvas(
+        self.button3_canvas = Canvas(
             self.canvas,
             width=self.button_reroll_button.width(),
             height=self.button_reroll_button.height(),
@@ -157,9 +164,9 @@ class ChatScreen:
             highlightthickness=0,
             relief="ridge"
         )
-        button3_canvas.place(x=712.0 - self.button_reroll_button.width() // 2, y=40.0 - self.button_reroll_button.height() // 2)
-        button3_canvas.create_image(0, 0, anchor="nw", image=self.button_reroll_button)
-        button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
+        self.button3_canvas.place(x=712.0 - self.button_reroll_button.width() // 2, y=40.0 - self.button_reroll_button.height() // 2)
+        self.button3_canvas.create_image(0, 0, anchor="nw", image=self.button_reroll_button)
+        self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
 
     def create_entry(self):
         self.canvas.create_image(461.0, 698.5, image=self.entry_image_1)
@@ -265,6 +272,7 @@ class ChatScreen:
         self.messages.clear()
         self.responses.clear()
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
+        self.root.after(100, lambda: self.switch_to_select(self.day, self.data))  # 100 ms delay
 
     def get_y_offset(self):
         if not self.messages and not self.responses:
@@ -388,12 +396,12 @@ class ChatScreen:
         ]
         return self.messages_canvas.create_polygon(points, **kwargs, smooth=True)
     
-    def select(self, data):
+    def select(self):
         if self.day == 0:
             self.reset_chat()
-            self.root.after(100, lambda: self.switch_to_select(self.day, data))  # 100 ms delay
+            self.root.after(100, lambda: self.switch_to_select(self.day, self.data))  # 100 ms delay
         else:
-            self.switch_to_select(self.day, data)
+            self.switch_to_select(self.day, self.data)
 
 
     def hide(self):

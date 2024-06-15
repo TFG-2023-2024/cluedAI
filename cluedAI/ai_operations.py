@@ -143,7 +143,8 @@ def start_story(information):
                 "role": "system",
                 "content": '''Your task is to create a story using the 3-act structure based on the provided information about characters, items, and locations.
                 Generate a part of the story for each day (7 days) based on this structure. 
-                Do write out who is the victim and their manner of death, but not their murderer on day 1. 
+                Do write out who is the victim (Character whose role is Victim) and their manner of death involving an existing item, but not their murderer on day 1. 
+                The rest of the days events are up to you.
                 You must take into account that this story is subject to change, as the player's actions are unknown.
                 This story shall serve as a base, and needs to shape characters' interactions with the player.
                 Format the response in the following way:

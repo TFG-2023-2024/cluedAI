@@ -94,7 +94,7 @@ class CreateScreen:
             messagebox.showerror(title='Error', message='All fields must be completed.')
         else:
             insert_character(self.username, data)
-            self.switch_to_chat(None, None)
+            self.switch_to_chat(0, None, None)
 
     def clear(self):
         self.canvas.delete("all")

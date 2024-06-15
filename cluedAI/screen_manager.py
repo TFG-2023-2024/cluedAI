@@ -12,7 +12,6 @@ class ScreenManager:
         self.root = root
         self.root.geometry("1024x768")  # Set the window size
         self.current_screen = None
-        self.day = 0 
         
     def clear_screen(self):
         if self.current_screen:
@@ -41,12 +40,12 @@ class ScreenManager:
         self.current_screen.show()
         self.update_focus()
     
-    def switch_to_chat(self, id, type, reroll=None):
+    def switch_to_chat(self, day, id, type, reroll=None):
         self.clear_screen()
         if reroll:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, type, reroll)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, day, id, type, reroll)
         else:
-            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, self.day, id, type, None)
+            self.current_screen = ChatScreen(self.root, self.switch_to_select, self.switch_to_reroll, day, id, type, None)
         self.update_focus()
 
     

@@ -5,9 +5,6 @@ from initial_gui.starting_operations import create_window, relative_to_assets
 import ai_operations as ai
 
 class SelectScreen:
-    last_processed_day = None  # Class variable to keep track of the last processed day
-    cached_data = None  # Class variable to store cached data
-
     def __init__(self, root, switch_to_chat, day, data):
         self.root = root
         self.switch_to_chat = switch_to_chat
@@ -161,7 +158,9 @@ class SelectScreen:
 
         y_offset = 70
 
-        if characters:
+        non_victim_characters = [character_id for character_id in characters if characters_collection.find_one({"_id": character_id})['Archetype'] != "Victim"]
+
+        if non_victim_characters:
             characters_label = Label(
                 self.selection_canvas,
                 text="Characters",
@@ -171,7 +170,8 @@ class SelectScreen:
             )
             characters_label.pack(anchor="nw", padx=106, pady=(0, 20))
 
-            for character_id in characters:
+            y_offset = 50  # Initial y_offset for the first character entry
+            for character_id in non_victim_characters:
                 character = characters_collection.find_one({"_id": character_id})
 
                 background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
@@ -197,7 +197,7 @@ class SelectScreen:
 
                 character_button.bind(self.left_click, lambda e, char_id=character_id: self.select_character(char_id))
 
-                y_offset += 70
+                y_offset += 70  # Increment y_offset for the next character entry
 
         if items:
             y_offset += 20
@@ -260,11 +260,11 @@ class SelectScreen:
 
     def select_character(self, id, event=None):
         # Handle selection of character
-        self.switch_to_chat(id, type="Character")
+        self.switch_to_chat(self.day, id, type="Character")
 
     def select_item(self, id, event=None):
         # Handle selection of item
-        self.switch_to_chat(id, type="Item")
+        self.switch_to_chat(self.day, id, type="Item")
 
     def hide(self):
         self.canvas.pack_forget()  # Hide canvas
