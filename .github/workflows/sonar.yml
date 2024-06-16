@@ -35,6 +35,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+
+      - name: Verify Java version
+        run: java -version
           
       - name: Install SonarScanner
         run: |
@@ -63,6 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          JAVA_HOME: /opt/hostedtoolcache/Java_Adopt_jdk/11.x.x/x64
         run: |
           sonar-scanner \
             -Dsonar.projectKey=TFG-2023-2024_cluedAI \
