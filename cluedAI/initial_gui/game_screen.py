@@ -141,8 +141,6 @@ class ChatScreen:
     def unblock_button(self):
         # Unblock the button (enable interaction)
         self.submit_button_canvas.bind(self.left_click, self.submit_message)
-        self.button2_canvas.bind(self.left_click, lambda event: self.select())
-        self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
 
     def load_images(self):
         self.image_bg = PhotoImage(file=relative_to_assets("bg.png"))
@@ -363,6 +361,10 @@ class ChatScreen:
 
         if len(self.messages) + len(self.responses) >= 20 or len(ChatScreen.cached_messages) >= 10:
             self.reset_chat()
+
+        if self.day == 0:
+            self.button2_canvas.bind(self.left_click, lambda event: self.select())
+            self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
 
 
     def summarize(self):
