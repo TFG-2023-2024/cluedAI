@@ -68,7 +68,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           JAVA_HOME: /opt/hostedtoolcache/Java_Adopt_jdk/11.x.x/x64
         run: |
-          sonar-scanner \
+          sonar-scanner -X\
             -Dsonar.projectKey=TFG-2023-2024_cluedAI \
             -Dsonar.organization=tfg-2023-2024 \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
