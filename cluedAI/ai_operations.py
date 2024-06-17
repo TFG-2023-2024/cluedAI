@@ -25,7 +25,7 @@ def obtain_thread_by_id(id):
 def obtain_assistant_id(assistant):
     return assistant.id
 
-def obtein_assistant_by_id(id):
+def obtain_assistant_by_id(id):
     try:
         assistant=client.beta.assistants.retrieve(id)
         return assistant
@@ -33,16 +33,33 @@ def obtein_assistant_by_id(id):
         return None
     
 def create_assistant(id):
-    character = obtain_by_id(id, characters_collection)
-    assistant=obtein_assistant_by_id(character['Assistant_id'])
-    if(assistant):
-        return assistant
-    else:
+    try:
+        character = obtain_by_id(id, characters_collection)
+        
+        # Check if the character already has an assistant assigned
+        assistant_id = character.get('Assistant_id')
+        if assistant_id:
+            assistant = obtain_assistant_by_id(assistant_id)
+            if assistant:
+                return assistant
+        
+        # If no assistant or assistant not found, create a new one
         assistant = create_character(id)
-        characters_collection.update_one(
+        if assistant:
+            # Use update_one with upsert=True to insert if not exists, update if exists
+            characters_collection.update_one(
                 {"_id": character["_id"]},
-                {"$set": {"Assistant_id": assistant.id}})
-        return assistant
+                {"$set": {"Assistant_id": assistant.id}},
+                upsert=True
+            )
+            return assistant
+        else:
+            print("Failed to create assistant.")
+            return None
+        
+    except Exception as e:
+        print(f"Error creating assistant: {e}")
+        return None
 
 def destroy_thread(hilo_id, hilos):
     for key, hilo in list(hilos.items()):
@@ -190,6 +207,7 @@ def start_story(information):
 #Codigo destinada al notetaker
 def obtain_summary(assistant, thread, day):
     character = obtain_by_id(obtain_assistant_id(assistant), characters_collection)
+    print(character)
     if character:
         # Filter out only the 'Assistant_id' field
         filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}

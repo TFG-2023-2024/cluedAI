@@ -25,7 +25,6 @@ def create_character(id):
             # Filter out the 'Location' and 'Assistant_id' fields
             filtered_character = {k: v for k, v in character.items() if k not in ['Location', 'Assistant_id']}
             # Convert the filtered character object to a string format
-            print(character_info)
             character_info = str(filtered_character)
             # Create the assistant with the character's name and roleplaying instructions
             assistant = client.beta.assistants.create(
@@ -47,3 +46,4 @@ def create_character(id):
     except Exception as e:
         print(f"Error creating character assistant: {e}")
         return None
+

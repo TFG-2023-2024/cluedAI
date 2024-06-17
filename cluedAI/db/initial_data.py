@@ -11,8 +11,7 @@ initial_characters = [
         "Likes": ["Coffee", "Challenges"],
         "Dislikes": ["Inefficiency"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 2,
@@ -26,8 +25,7 @@ initial_characters = [
         "Likes": ["Luxury", "Secrecy"],
         "Dislikes": ["Betrayal"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 3,
@@ -41,8 +39,7 @@ initial_characters = [
         "Likes": ["Nature", "Art"],
         "Dislikes": ["Crowds"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 4,
@@ -56,8 +53,7 @@ initial_characters = [
         "Likes": ["Adventure", "Animals"],
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 5,
@@ -71,8 +67,7 @@ initial_characters = [
         "Likes": ["Tranquility", "Starry Nights"],
         "Dislikes": ["Deception"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 6,
@@ -86,8 +81,7 @@ initial_characters = [
         "Likes": ["Power", "Respect"],
         "Dislikes": ["Betrayal"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 7,
@@ -101,8 +95,7 @@ initial_characters = [
         "Likes": ["Poetry", "Romance"],
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 8,
@@ -116,8 +109,7 @@ initial_characters = [
         "Likes": ["Solitude", "Night Sky"],
         "Dislikes": ["Revealing Secrets"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 9,
@@ -131,8 +123,7 @@ initial_characters = [
         "Likes": ["Quiet", "Simplicity"],
         "Dislikes": ["Intricacies"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     },
     {
         "_id": 10,
@@ -146,8 +137,7 @@ initial_characters = [
         "Likes": ["Healing", "Knowledge"],
         "Dislikes": ["Injustice"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": None
+        "Location": 0
     }
 ]
 

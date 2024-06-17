@@ -139,7 +139,7 @@ class SelectScreen:
             icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
             icon_label.place(x=105, y=y_offset)
 
-            text_label = Label(self.selection_canvas, text=character['Name'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+            text_label = Label(self.selection_canvas, text=f"{character['Name']} {character['Surname']}", bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
             text_label.place(x=189, y=y_offset)
 
             character_button = Canvas(
@@ -239,7 +239,7 @@ class SelectScreen:
                 icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
                 icon_label.place(x=105, y=y_offset)
 
-                text_label = Label(self.selection_canvas, text=character['Name'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+                text_label = Label(self.selection_canvas, text=f"{character['Name']} {character['Surname']}", bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
                 text_label.place(x=189, y=y_offset)
 
                 character_button = Canvas(
