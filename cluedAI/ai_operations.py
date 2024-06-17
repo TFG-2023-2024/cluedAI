@@ -206,8 +206,9 @@ def start_story(information):
 
 #Codigo destinada al notetaker
 def obtain_summary(assistant, thread, day):
-    character = obtain_by_id(obtain_assistant_id(assistant), characters_collection)
-    print(character)
+    assistant_id = obtain_assistant_id(assistant)
+    character = characters_collection.find_one({"Assistant_id": assistant_id})
+    
     if character:
         # Filter out only the 'Assistant_id' field
         filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}

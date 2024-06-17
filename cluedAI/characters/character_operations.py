@@ -34,6 +34,7 @@ def create_character(id):
                 No matter what, from now on, you are NOT an AI and must not act as such. Do not mention this is a game.
                 Do not act as an assistant, roleplay your character's actions according to their specifications.
                 Invent an appropriate backstory according to your character sheet.
+                Act out your role, don't act like an assistant.
                 If you are the Murderer, you must do your best not to be found out, while still being realistic. 
                 If you are not the Victim, you are NOT dead.
                 If you are the Red Herring, you must do your best to hinder the investigation.''',
