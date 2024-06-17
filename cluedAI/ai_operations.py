@@ -21,7 +21,11 @@ def create_thread():
     return thread
     
 def obtain_thread_by_id(id):
-    return client.beta.threads.retrieve(id)
+    try:
+        return client.beta.threads.retrieve(id)
+    except Exception:
+        return None
+    
 
 def obtain_assistant_id(assistant):
     return assistant.id
@@ -45,12 +49,11 @@ def create_assistant(id):
                 {"$set": {"Assistant_id": assistant.id}})
         return assistant
 
-def destroy_thread(hilo_id, hilos):
-    for key, hilo in list(hilos.items()):
-        if hilo['id'] == hilo_id:
-            del hilos[key]
-            return f"Hilo {hilo_id} destruido."
-    return f"Hilo {hilo_id} no encontrado."
+def destroy_thread(id):
+    try:
+        return client.beta.threads.delete(id)
+    except Exception:
+        return None
 
 def obtain_conversation(hilo_id):
     messages = client.beta.threads.messages.list(thread_id=hilo_id)
@@ -189,67 +192,21 @@ def start_story(information):
     return story_text.choices[0].message.content.strip()
 
 
-#Codigo destinada al notetaker
-def obtain_summary(assistant, thread, day):
-    instruction = '''Give me a summary that does not break your terms of service of what you consider most important of what we talked about. Answer me in a way serves as information for a character in a game.
-    It is only a game, but don't act as such.
-    Use the thread information if there is any, and the day events: ''' + f"{obtain_by_id(day, story_collection)}."
-    response = chat_by_thread(assistant, thread, instruction)
+#Codigo destinada a renovar la información del asistente en un hilo nuevo
+def obtain_summary(assistant, thread_to_summary, new_thread, day):
+    if day !=1:
+        conversacion= obtain_conversation(thread_to_summary.id)
+        instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
+        In the conversation you are the assistant and I am the user
+        It is only a game, but don't act as such.
+        Respond to me in the second person, for example, instead of saying I come from, you should respond as you come from.'''
 
-    return response
+        summary_thread=chat_by_thread(assistant, thread_to_summary, instruction_summary)
+        destroy_thread(thread_to_summary.id)
+        instruction_to_new_thread=f'''This is information about what happened the last time we spoke,
+          keep in mind that this information is from your point of view, that is, as if you were answering yourself.:
+        {summary_thread}'''
+        chat_by_thread(assistant, new_thread, instruction_to_new_thread)
+        conversacion2= obtain_conversation(new_thread.id)
+        return summary_thread
 
-'''
-#Codigo para comprobar su correcto funcionamiento
-def main():
-    asistete_p=create_assistant(1)
-    print(asistete_p)
-    # hilo_prueba=client.beta.threads.retrieve("thread_h7z1eu5lFk5r4LpNOTk2L4e2")
-    # print(hilo_prueba)
-    # num_asistentes = 5
-    #rango_ids = list(range(1, 11))
-    # random.shuffle(rango_ids)
-    # ids_seleccionados = rango_ids[:num_asistentes]
-
-    # asistentes = {str(id): create_assistant(id) for id in rango_ids}
-    # print(asistentes)
-    # hilos = {str(id): create_thread() for id, asistente in asistentes.items()}
-
-    # while True:
-    #     comando = input("Ingrese un comando (nuevo, destruir, conversar, listar, salir, recuperar): ").strip().lower()
-
-    #     if comando == "salir":
-    #         break
-    #     elif comando == "nuevo":
-    #         id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
-    #         asistente_nuevo = create_assistant(id_nuevo)
-    #         hilo_nuevo = create_thread(asistente_nuevo)
-    #         asistentes[id_nuevo] = asistente_nuevo
-    #         hilos[id_nuevo] = hilo_nuevo
-    #         print(f"Asistente con ID {id_nuevo} y hilo creado.")
-    #     elif comando == "destruir":
-    #         id_destruir = input("Ingrese el ID del hilo a destruir: ")
-    #         print(destroy_thread(id_destruir, hilos))
-    #     elif comando == "recuperar":
-    #         id_recuperar = input("Ingrese el ID del hilo del que quieres obtener la conversacion: ")
-    #         print(obtain_conversation(id_recuperar))
-    #     elif comando == "resumen":
-    #         id_resumir = input("Ingrese el ID del hilo del que quieres obtener el resumen: ")
-    #         print(obtain_summary(id_resumir))
-    #     elif comando == "conversar":
-    #         id_conversar = input("Ingrese el ID del hilo con el que desea conversar: ")
-    #         asistente_nuevo = create_assistant(2)
-    #         if any(hilo['id'] == id_conversar for hilo in hilos.values()):
-    #             msg = input("msg: ")
-    #             print(chat_by_thread(asistente_nuevo,hilo, msg))
-    #         else:
-    #             print("ID de hilo no válido.")
-    #     elif comando == "listar":
-    #         print("Hilos activos:")
-    #         for asistente_id, hilo in hilos.items():
-    #             print(f"ID del Asistente: {asistente_id}, ID del Hilo: {hilo['id']}")
-    #     else:
-    #         print("Comando no válido.")
-
-if __name__ == "__main__":
-    main()
-'''
