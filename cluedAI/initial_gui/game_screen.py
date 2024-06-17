@@ -340,8 +340,9 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.responses) >= 10:
+        if len(self.responses) == 10:
             self.display_responses("DAY OVER, continuing in 5 seconds...")
+            self.responses.clear()
             self.root.after(5000, self.reset_chat)
 
     def display_responses(self, response):
@@ -364,8 +365,10 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.responses) >= 10 or len(ChatScreen.cached_messages) >= 10:
+        if len(self.responses) == 10 or len(ChatScreen.cached_messages) == 10:
             self.display_responses("DAY OVER, continuing in 5 seconds...")
+            self.responses.clear()
+            ChatScreen.cached_messages.clear()
             self.root.after(5000, self.reset_chat)
 
         if self.day == 0:

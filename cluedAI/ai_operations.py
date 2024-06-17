@@ -178,6 +178,8 @@ def start_story(information):
     response_content = response.choices[0].message.content.strip()
     story_list = parse_story_content(response_content)
     # Insert the data into the collection
+    print(response_content)
+    print(story_list)
     insert_data(story_list, story_collection)
     day_1 = obtain_by_id(1, story_collection)
 
@@ -214,7 +216,7 @@ def obtain_summary(assistant, thread, day):
         filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}
         # Convert the filtered character object to a string format
         character_info = str(filtered_character)
-        print(character_info)
+        print(obtain_by_id(day, story_collection))
     
     summary = client.chat.completions.create(
         model=ai_model,
