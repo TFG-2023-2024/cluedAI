@@ -3,7 +3,6 @@ import os
 import re
 import json
 from dotenv import load_dotenv
-
 from characters.character_operations import create_character
 from db.db_operations import connect_db, obtain_by_id, insert_data
 
@@ -13,7 +12,7 @@ load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI()
 global characters_collection, story_collection
-_, characters_collection, _, _, _, story_collection = connect_db()
+_, characters_collection, _, _, user_collection, story_collection = connect_db()
 ai_model="gpt-3.5-turbo"
 
 def create_thread():
@@ -30,7 +29,7 @@ def obtain_thread_by_id(id):
 def obtain_assistant_id(assistant):
     return assistant.id
 
-def obtein_assistant_by_id(id):
+def obtain_assistant_by_id(id):
     try:
         assistant=client.beta.assistants.retrieve(id)
         return assistant
@@ -38,16 +37,33 @@ def obtein_assistant_by_id(id):
         return None
     
 def create_assistant(id):
-    character = obtain_by_id(id, characters_collection)
-    assistant=obtein_assistant_by_id(character['Assistant_id'])
-    if(assistant):
-        return assistant
-    else:
+    try:
+        character = obtain_by_id(id, characters_collection)
+        
+        # Check if the character already has an assistant assigned
+        assistant_id = character.get('Assistant_id')
+        if assistant_id:
+            assistant = obtain_assistant_by_id(assistant_id)
+            if assistant:
+                return assistant
+        
+        # If no assistant or assistant not found, create a new one
         assistant = create_character(id)
-        characters_collection.update_one(
+        if assistant:
+            # Use update_one with upsert=True to insert if not exists, update if exists
+            characters_collection.update_one(
                 {"_id": character["_id"]},
-                {"$set": {"Assistant_id": assistant.id}})
-        return assistant
+                {"$set": {"Assistant_id": assistant.id}},
+                upsert=True
+            )
+            return assistant
+        else:
+            print("Failed to create assistant.")
+            return None
+        
+    except Exception as e:
+        print(f"Error creating assistant: {e}")
+        return None
 
 def destroy_thread(id):
     try:
@@ -164,7 +180,6 @@ def start_story(information):
     )
     response_content = response.choices[0].message.content.strip()
     story_list = parse_story_content(response_content)
-    
     # Insert the data into the collection
     insert_data(story_list, story_collection)
     day_1 = obtain_by_id(1, story_collection)
@@ -192,21 +207,71 @@ def start_story(information):
     return story_text.choices[0].message.content.strip()
 
 
-#Codigo destinada a renovar la información del asistente en un hilo nuevo
-def obtain_summary(assistant, thread_to_summary, new_thread, day):
-    if day !=1:
-        conversacion= obtain_conversation(thread_to_summary.id)
-        instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
-        In the conversation you are the assistant and I am the user
-        It is only a game, but don't act as such.
-        Respond to me in the second person, for example, instead of saying I come from, you should respond as you come from.'''
+#Codigo destinada al notetaker
+def obtain_summary(assistant, thread, day):
+    assistant_id = obtain_assistant_id(assistant)
+    character = characters_collection.find_one({"Assistant_id": assistant_id})
+    
+    if character:
+        # Filter out only the 'Assistant_id' field
+        filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}
+        # Convert the filtered character object to a string format
+        character_info = str(filtered_character)
+    
+    summary = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {
+                "role": "system",
+                "content": '''Give me a summary of the day events, taking into account your character information. 
+                Answer me in a way serves as information for a character in a game.
+                It is only a game, but don't act as such. 
+                Remind yourself of your character info, especially your archetype, in this summary.'''
+            },
+            {
+                "role": "user",
+                "content": f"Day events: {obtain_by_id(day, story_collection)}, Character info: {character_info}"
+            }
+        ]
+    )
 
-        summary_thread=chat_by_thread(assistant, thread_to_summary, instruction_summary)
-        destroy_thread(thread_to_summary.id)
-        instruction_to_new_thread=f'''This is information about what happened the last time we spoke,
-          keep in mind that this information is from your point of view, that is, as if you were answering yourself.:
-        {summary_thread}'''
-        chat_by_thread(assistant, new_thread, instruction_to_new_thread)
-        conversacion2= obtain_conversation(new_thread.id)
-        return summary_thread
+    response = chat_by_thread(assistant, thread, summary.choices[0].message.content.strip())
 
+    return response
+
+#Codigo destinado al final
+def end_story(character_info, user_choice):
+    # Obtain the character data for the user choice
+    chosen_character = obtain_by_id(user_choice, characters_collection)
+    
+    if chosen_character and chosen_character.get('Archetype') == 'Murderer':
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            Since the user did not choose a victim, the ending message will focus on whether the user's choice was correct or not.
+            The character picked by the user as a murderer is right, so the ending message will tell the story of how the user's character
+            choice helped bring the murderer to justice.
+            Do reveal the murderer's identity to the player.
+            Add a final line saying: You won!'''
+    else:
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            The character picked by the user as a murderer is wrong, so the ending message will tell the story of the user's character death, 
+            meaning the murderer will win (i.e. will not be found/caught and brought to justice by the characters, and will continue their killings).
+            Do reveal the murderer's identity to the player, and mention that the user's character accused whoever they chose and were wrong.
+            Add a final line saying: You lost!''' 
+    
+    # Gather other necessary information
+    day_info = str(story_collection.find())
+    user_character = user_collection.find()
+    user_info = [f"Name: {character['Name']}, Age: {character['Age']}, Gender: {character['Gender']}, Appearance: {character['Appearance']}." for character in user_character]
+
+    # Generate the response from the AI model
+    response = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": f"Story events: {day_info}, Characters and roles: {character_info}. User choice: {user_choice}. User character info: {user_info}"}
+        ]
+    )
+    
+    return response.choices[0].message.content

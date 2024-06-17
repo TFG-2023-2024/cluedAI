@@ -11,8 +11,7 @@ initial_characters = [
         "Likes": ["Coffee", "Challenges"],
         "Dislikes": ["Inefficiency"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_Vc5Jo0Vf10lOYisVPi14qkGe"
+        "Location": 0
     },
     {
         "_id": 2,
@@ -26,8 +25,7 @@ initial_characters = [
         "Likes": ["Luxury", "Secrecy"],
         "Dislikes": ["Betrayal"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_M2flwsxWxRFADNYDDJAw8wbo"
+        "Location": 0
     },
     {
         "_id": 3,
@@ -41,8 +39,7 @@ initial_characters = [
         "Likes": ["Nature", "Art"],
         "Dislikes": ["Crowds"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_fUmqGDL4Sqa6SdGcsD4gx6a1"
+        "Location": 0
     },
     {
         "_id": 4,
@@ -56,8 +53,7 @@ initial_characters = [
         "Likes": ["Adventure", "Animals"],
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_IvjsmiAMmNcoZZjNi5kpfndz"
+        "Location": 0
     },
     {
         "_id": 5,
@@ -71,8 +67,7 @@ initial_characters = [
         "Likes": ["Tranquility", "Starry Nights"],
         "Dislikes": ["Deception"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_WAvCralZNYK2pC8aObMiJHEO"
+        "Location": 0
     },
     {
         "_id": 6,
@@ -86,8 +81,7 @@ initial_characters = [
         "Likes": ["Power", "Respect"],
         "Dislikes": ["Betrayal"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_t2FOPy83EUOqwu30ye3XiBrT"
+        "Location": 0
     },
     {
         "_id": 7,
@@ -101,8 +95,7 @@ initial_characters = [
         "Likes": ["Poetry", "Romance"],
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_yb6tOEkd1iJrgZoVjnqZlHUX"
+        "Location": 0
     },
     {
         "_id": 8,
@@ -116,8 +109,7 @@ initial_characters = [
         "Likes": ["Solitude", "Night Sky"],
         "Dislikes": ["Revealing Secrets"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_aZXjlWyLyeYr3HQg0KLFeG6b"
+        "Location": 0
     },
     {
         "_id": 9,
@@ -131,8 +123,7 @@ initial_characters = [
         "Likes": ["Quiet", "Simplicity"],
         "Dislikes": ["Intricacies"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_7vprmblKkNkdq7SLV29dYvRW"
+        "Location": 0
     },
     {
         "_id": 10,
@@ -146,8 +137,7 @@ initial_characters = [
         "Likes": ["Healing", "Knowledge"],
         "Dislikes": ["Injustice"],
         "Appearance": None,
-        "Location": 0,
-        "Assistant_id": "asst_mRs7Gd5xpEn7iq0GWzHCgyyJ"
+        "Location": 0
     }
 ]
 

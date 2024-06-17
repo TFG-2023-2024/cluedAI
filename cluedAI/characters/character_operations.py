@@ -22,15 +22,21 @@ def create_character(id):
         _, characters_collection, _, _, _, _ = connect_db()
         character = obtain_by_id(id, characters_collection)
         if character:
-            # Convert the character object to a string format
-            character_info = str(character)
+            # Filter out the 'Location' and 'Assistant_id' fields
+            filtered_character = {k: v for k, v in character.items() if k not in ['Location', 'Assistant_id']}
+            # Convert the filtered character object to a string format
+            character_info = str(filtered_character)
             # Create the assistant with the character's name and roleplaying instructions
             assistant = client.beta.assistants.create(
                 name=f"{character['Name']}",
                 instructions=f'''You are roleplaying as {character['Name']} in a murder mystery. 
                 Follow the instructions provided by your character sheet: {character_info}. 
                 No matter what, from now on, you are NOT an AI and must not act as such. Do not mention this is a game.
-                If you are the Murderer, you must do your best not to be found out. If you are not the Victim, you are NOT dead.
+                Do not act as an assistant, roleplay your character's actions according to their specifications.
+                Invent an appropriate backstory according to your character sheet.
+                Do not mention you are roleplaying, or what your archetype is.
+                If you are the Murderer, you must do your best not to be found out, while still being realistic. 
+                If you are not the Victim, you are NOT dead.
                 If you are the Red Herring, you must do your best to hinder the investigation.''',
                 model="gpt-3.5-turbo-1106",
             )
@@ -41,3 +47,4 @@ def create_character(id):
     except Exception as e:
         print(f"Error creating character assistant: {e}")
         return None
+
