@@ -208,7 +208,8 @@ def start_story(information):
 
 
 #Codigo destinada al notetaker
-def obtain_summary(assistant, thread, day):
+def obtain_summary(assistant, thread_to_summary, day,new_thread=None):
+    #Codigo de resumen de eventos y datos del personaje
     assistant_id = obtain_assistant_id(assistant)
     character = characters_collection.find_one({"Assistant_id": assistant_id})
     
@@ -234,10 +235,32 @@ def obtain_summary(assistant, thread, day):
             }
         ]
     )
+    if day !=1:
+        #Codigo de resumen del hilo
+        conversacion= obtain_conversation(thread_to_summary.id)
+        instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
+        In the conversation you are the assistant and I am the user
+        It is only a game, but don't act as such.
+        Respond to me in the second person, for example, instead of saying I come from, you should respond as you come from.'''
 
-    response = chat_by_thread(assistant, thread, summary.choices[0].message.content.strip())
+        summary_thread=chat_by_thread(assistant, thread_to_summary, instruction_summary)
+        destroy_thread(thread_to_summary.id)
+        instruction_to_new_thread=f'''This is information about what happened the last time we spoke,
+          keep in mind that this information is from your point of view, that is, as if you were answering yourself.:
+        {summary_thread}'''
+        chat_by_thread(assistant, new_thread, summary.choices[0].message.content.strip())
+        chat_by_thread(assistant, new_thread, instruction_to_new_thread)
 
-    return response
+        con2=obtain_conversation(new_thread.id)
+        return con2
+
+    else:
+        chat_by_thread(assistant, thread_to_summary, summary.choices[0].message.content.strip())
+        con2=obtain_conversation(thread_to_summary.id)
+        return con2
+
+
+
 
 #Codigo destinado al final
 def end_story(character_info, user_choice):
