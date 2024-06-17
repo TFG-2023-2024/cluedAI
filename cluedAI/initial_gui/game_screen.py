@@ -42,7 +42,7 @@ class ChatScreen:
         self.initialize_ui()
     
     def initialize_ui(self):
-        if self.day > 1:
+        if self.day > 1 and self.day !=5:
             if ChatScreen.cached_day_data is None or ChatScreen.cached_day != self.day:
                 ChatScreen.cached_day_data = start_day()
                 ChatScreen.cached_messages.clear()
@@ -58,14 +58,11 @@ class ChatScreen:
             spoken_to_today = False
         if spoken_to_today:
             self.thread = ai.obtain_thread_by_id(ChatScreen.characters_spoken_to[self.day][0][1])
-            print(self.thread)
         else:
             self.thread = ai.create_thread()
-            print(self.thread)
             if self.day not in ChatScreen.characters_spoken_to:
                 ChatScreen.characters_spoken_to[self.day] = []
             ChatScreen.characters_spoken_to[self.day].append([self.id, self.thread.id])
-            print(ChatScreen.characters_spoken_to)
 
         self.load_images()  # Load all images
         self.create_background()
@@ -73,6 +70,7 @@ class ChatScreen:
         self.create_entry()
         self.create_header()
         self.create_message_frame()
+        self.end_game()
         self.start_game()
         self.process_reroll()
 
@@ -128,7 +126,6 @@ class ChatScreen:
 
         # Concatenate all information into one string
         information = f"{characters_info}\n\n{items_info}\n\n{locations_info}"
-        print(information)
         starting_message = ai.start_story(information)
         self.display_responses(starting_message)
         
@@ -247,8 +244,12 @@ class ChatScreen:
         )
 
     def create_message_frame(self):
-        messages_frame = Frame(self.window)
-        messages_frame.place(x=0, y=100, width=1022, height=530)
+        if self.day == 0 or self.day == 5 or self.reroll:
+            messages_frame = Frame(self.window)
+            messages_frame.place(x=20, y=100, width=1002, height=530)
+        else:
+            messages_frame = Frame(self.window)
+            messages_frame.place(x=0, y=100, width=1022, height=530)
 
         scrollbar = Scrollbar(messages_frame, orient="vertical")
         scrollbar.pack(side=RIGHT, fill=Y)
@@ -320,7 +321,10 @@ class ChatScreen:
         wrapped_message = self.wrap_text(message, max_width)
 
         y_offset = self.get_y_offset()
-        x_position = 960 - 12
+        if self.day == 0 or self.day == 5 or self.reroll: 
+            x_position = 970
+        else:
+            x_position = 960 - 12
         text_item = self.messages_canvas.create_text(x_position, y_offset, anchor="ne", text=wrapped_message, fill="#FFFFFF", font=("Inter", 13))
         bbox = self.messages_canvas.bbox(text_item)
         padding = 10
@@ -336,8 +340,9 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 20:
-            self.reset_chat()
+        if len(self.responses) >= 10:
+            self.display_responses("DAY OVER, continuing in 5 seconds...")
+            self.root.after(5000, self.reset_chat)
 
     def display_responses(self, response):
         max_width = 960 - 60
@@ -359,13 +364,13 @@ class ChatScreen:
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
 
-        if len(self.messages) + len(self.responses) >= 20 or len(ChatScreen.cached_messages) >= 10:
-            self.reset_chat()
+        if len(self.responses) >= 10 or len(ChatScreen.cached_messages) >= 10:
+            self.display_responses("DAY OVER, continuing in 5 seconds...")
+            self.root.after(5000, self.reset_chat)
 
         if self.day == 0:
             self.button2_canvas.bind(self.left_click, lambda event: self.select())
             self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
-
 
     def summarize(self):
         if self.type == "Character" and not self.responses:
@@ -377,6 +382,28 @@ class ChatScreen:
                     if sublist[0] == self.id:
                         thread = ai.obtain_thread_by_id(sublist[1])
                 print(ai.obtain_summary(self.assistant, thread, self.day))
+
+    def end_game(self):
+        if self.day != 5:
+            return
+        
+        self.block_button()
+        all_characters = characters_collection.find()
+        characters_info = [f"Name: {character['Name']}, Role: {character['Archetype']}" for character in all_characters]
+        
+        response = ai.end_story(characters_info, self.id)
+        self.display_responses(response)
+        
+        def after_first_response():
+            self.display_responses("Thank you for playing cluedAI. The game will close in 30 seconds...")
+            self.root.after(30000, self.destroy)
+        
+        self.root.after(10000, after_first_response)
+
+        
+
+    def destroy(self):
+        self.root.destroy()
 
     def submit_message(self, event=None):
         message = self.entry.get()

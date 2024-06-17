@@ -95,12 +95,71 @@ class SelectScreen:
         scrollbar.config(command=selection_canvas.yview)
 
         def on_mouse_wheel(event):
-            selection_canvas.yview_scroll(-1 * event.delta, 'units')
+            selection_canvas.yview_scroll(-1 * (event.delta // 120), 'units')
 
         self.window.bind_all("<MouseWheel>", on_mouse_wheel)
 
         self.selection_canvas = selection_canvas
-        self.display_locations()
+        if self.day == 5:
+            self.display_murderer_selection()
+        else:
+            self.display_locations()
+
+    def display_murderer_selection(self):
+        if self.day != 5:
+            return
+
+        for widget in self.selection_canvas.winfo_children():
+            widget.destroy()
+
+        y_offset = 65
+
+        characters_label = Label(
+            self.selection_canvas,
+            text="Who is the murderer?",
+            bg="#202020",
+            fg="#D71D1D",
+            font=(self.label_font, 24 * -1)
+        )
+        characters_label.pack(anchor="nw", padx=106, pady=(0, 20))
+
+        # Fetch all characters and filter out victims
+        all_characters = list(characters_collection.find())
+        non_victim_characters = [
+            character for character in all_characters
+            if character['Archetype'] != "Victim"
+        ]
+
+        for character in non_victim_characters:
+            character_id = character["_id"]
+
+            background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
+            background_label.place(x=80, y=y_offset - 15)
+
+            icon_label = Label(self.selection_canvas, image=self.icon_image, bg="#292929", bd=0)
+            icon_label.place(x=105, y=y_offset)
+
+            text_label = Label(self.selection_canvas, text=character['Name'], bg="#292929", fg="#FFFFFF", font=("Inter", 13 * -1))
+            text_label.place(x=189, y=y_offset)
+
+            character_button = Canvas(
+                self.selection_canvas,
+                width=self.button_image.width(),
+                height=self.button_image.height(),
+                bg="#292929",
+                bd=0,
+                highlightthickness=0,
+                relief="flat"
+            )
+            character_button.create_image(0, 0, anchor="nw", image=self.button_image)
+            character_button.place(x=916, y=y_offset - 3)
+
+            character_button.bind(self.left_click, lambda e, char_id=character_id: self.select_character(char_id))
+
+            y_offset += 65  # Increment y_offset for the next character entry
+
+        self.selection_canvas.update_idletasks()
+        self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
     def display_locations(self):
         for widget in self.selection_canvas.winfo_children():

@@ -12,7 +12,7 @@ initial_characters = [
         "Dislikes": ["Inefficiency"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_Vc5Jo0Vf10lOYisVPi14qkGe"
+        "Assistant_id": None
     },
     {
         "_id": 2,
@@ -27,7 +27,7 @@ initial_characters = [
         "Dislikes": ["Betrayal"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_M2flwsxWxRFADNYDDJAw8wbo"
+        "Assistant_id": None
     },
     {
         "_id": 3,
@@ -42,7 +42,7 @@ initial_characters = [
         "Dislikes": ["Crowds"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_fUmqGDL4Sqa6SdGcsD4gx6a1"
+        "Assistant_id": None
     },
     {
         "_id": 4,
@@ -57,7 +57,7 @@ initial_characters = [
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_IvjsmiAMmNcoZZjNi5kpfndz"
+        "Assistant_id": None
     },
     {
         "_id": 5,
@@ -72,7 +72,7 @@ initial_characters = [
         "Dislikes": ["Deception"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_WAvCralZNYK2pC8aObMiJHEO"
+        "Assistant_id": None
     },
     {
         "_id": 6,
@@ -87,7 +87,7 @@ initial_characters = [
         "Dislikes": ["Betrayal"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_t2FOPy83EUOqwu30ye3XiBrT"
+        "Assistant_id": None
     },
     {
         "_id": 7,
@@ -102,7 +102,7 @@ initial_characters = [
         "Dislikes": ["Dishonesty"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_yb6tOEkd1iJrgZoVjnqZlHUX"
+        "Assistant_id": None
     },
     {
         "_id": 8,
@@ -117,7 +117,7 @@ initial_characters = [
         "Dislikes": ["Revealing Secrets"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_aZXjlWyLyeYr3HQg0KLFeG6b"
+        "Assistant_id": None
     },
     {
         "_id": 9,
@@ -132,7 +132,7 @@ initial_characters = [
         "Dislikes": ["Intricacies"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_7vprmblKkNkdq7SLV29dYvRW"
+        "Assistant_id": None
     },
     {
         "_id": 10,
@@ -147,7 +147,7 @@ initial_characters = [
         "Dislikes": ["Injustice"],
         "Appearance": None,
         "Location": 0,
-        "Assistant_id": "asst_mRs7Gd5xpEn7iq0GWzHCgyyJ"
+        "Assistant_id": None
     }
 ]
 

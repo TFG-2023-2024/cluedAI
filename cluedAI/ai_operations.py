@@ -3,7 +3,6 @@ import os
 import re
 import json
 from dotenv import load_dotenv
-
 from characters.character_operations import create_character
 from db.db_operations import connect_db, obtain_by_id, insert_data
 
@@ -13,7 +12,7 @@ load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI()
 global characters_collection, story_collection
-_, characters_collection, _, _, _, story_collection = connect_db()
+_, characters_collection, _, _, user_collection, story_collection = connect_db()
 ai_model="gpt-3.5-turbo"
 
 def create_thread():
@@ -161,7 +160,6 @@ def start_story(information):
     )
     response_content = response.choices[0].message.content.strip()
     story_list = parse_story_content(response_content)
-    
     # Insert the data into the collection
     insert_data(story_list, story_collection)
     day_1 = obtain_by_id(1, story_collection)
@@ -191,65 +189,68 @@ def start_story(information):
 
 #Codigo destinada al notetaker
 def obtain_summary(assistant, thread, day):
-    instruction = '''Give me a summary that does not break your terms of service of what you consider most important of what we talked about. Answer me in a way serves as information for a character in a game.
-    It is only a game, but don't act as such.
-    Use the thread information if there is any, and the day events: ''' + f"{obtain_by_id(day, story_collection)}."
-    response = chat_by_thread(assistant, thread, instruction)
+    character = obtain_by_id(obtain_assistant_id(assistant), characters_collection)
+    if character:
+        # Filter out only the 'Assistant_id' field
+        filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}
+        # Convert the filtered character object to a string format
+        character_info = str(filtered_character)
+        print(character_info)
+    
+    summary = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {
+                "role": "system",
+                "content": '''Give me a summary of the day events, taking into account your character information. 
+                Answer me in a way serves as information for a character in a game.
+                It is only a game, but don't act as such. 
+                Remind yourself of your character info, especially your archetype, in this summary.'''
+            },
+            {
+                "role": "user",
+                "content": f"Day events: {obtain_by_id(day, story_collection)}, Character info: {character_info}"
+            }
+        ]
+    )
+
+    response = chat_by_thread(assistant, thread, summary.choices[0].message.content.strip())
 
     return response
 
-'''
-#Codigo para comprobar su correcto funcionamiento
-def main():
-    asistete_p=create_assistant(1)
-    print(asistete_p)
-    # hilo_prueba=client.beta.threads.retrieve("thread_h7z1eu5lFk5r4LpNOTk2L4e2")
-    # print(hilo_prueba)
-    # num_asistentes = 5
-    #rango_ids = list(range(1, 11))
-    # random.shuffle(rango_ids)
-    # ids_seleccionados = rango_ids[:num_asistentes]
+#Codigo destinado al final
+def end_story(character_info, user_choice):
+    # Obtain the character data for the user choice
+    chosen_character = obtain_by_id(user_choice, characters_collection)
+    
+    if chosen_character and chosen_character.get('Archetype') == 'Murderer':
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            Since the user did not choose a victim, the ending message will focus on whether the user's choice was correct or not.
+            The character picked by the user as a murderer is right, so the ending message will tell the story of how the user's character
+            choice helped bring the murderer to justice.
+            Do reveal the murderer's identity to the player.
+            Add a final line saying: You won!'''
+    else:
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            The character picked by the user as a murderer is wrong, so the ending message will tell the story of the user's character death, 
+            meaning the murderer will win (i.e. will not be found/caught and brought to justice by the characters, and will continue their killings).
+            Do reveal the murderer's identity to the player, and mention that the user's character accused whoever they chose and were wrong.
+            Add a final line saying: You lost!''' 
+    
+    # Gather other necessary information
+    day_info = str(story_collection.find())
+    user_character = user_collection.find()
+    user_info = [f"Name: {character['Name']}, Age: {character['Age']}, Gender: {character['Gender']}, Appearance: {character['Appearance']}." for character in user_character]
 
-    # asistentes = {str(id): create_assistant(id) for id in rango_ids}
-    # print(asistentes)
-    # hilos = {str(id): create_thread() for id, asistente in asistentes.items()}
-
-    # while True:
-    #     comando = input("Ingrese un comando (nuevo, destruir, conversar, listar, salir, recuperar): ").strip().lower()
-
-    #     if comando == "salir":
-    #         break
-    #     elif comando == "nuevo":
-    #         id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
-    #         asistente_nuevo = create_assistant(id_nuevo)
-    #         hilo_nuevo = create_thread(asistente_nuevo)
-    #         asistentes[id_nuevo] = asistente_nuevo
-    #         hilos[id_nuevo] = hilo_nuevo
-    #         print(f"Asistente con ID {id_nuevo} y hilo creado.")
-    #     elif comando == "destruir":
-    #         id_destruir = input("Ingrese el ID del hilo a destruir: ")
-    #         print(destroy_thread(id_destruir, hilos))
-    #     elif comando == "recuperar":
-    #         id_recuperar = input("Ingrese el ID del hilo del que quieres obtener la conversacion: ")
-    #         print(obtain_conversation(id_recuperar))
-    #     elif comando == "resumen":
-    #         id_resumir = input("Ingrese el ID del hilo del que quieres obtener el resumen: ")
-    #         print(obtain_summary(id_resumir))
-    #     elif comando == "conversar":
-    #         id_conversar = input("Ingrese el ID del hilo con el que desea conversar: ")
-    #         asistente_nuevo = create_assistant(2)
-    #         if any(hilo['id'] == id_conversar for hilo in hilos.values()):
-    #             msg = input("msg: ")
-    #             print(chat_by_thread(asistente_nuevo,hilo, msg))
-    #         else:
-    #             print("ID de hilo no válido.")
-    #     elif comando == "listar":
-    #         print("Hilos activos:")
-    #         for asistente_id, hilo in hilos.items():
-    #             print(f"ID del Asistente: {asistente_id}, ID del Hilo: {hilo['id']}")
-    #     else:
-    #         print("Comando no válido.")
-
-if __name__ == "__main__":
-    main()
-'''
+    # Generate the response from the AI model
+    response = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": f"Story events: {day_info}, Characters and roles: {character_info}. User choice: {user_choice}. User character info: {user_info}"}
+        ]
+    )
+    
+    return response.choices[0].message.content
