@@ -382,9 +382,10 @@ class ChatScreen:
         if self.type == "Character" and not self.responses:
             self.assistant = ai.create_assistant(self.id)
             if self.day == 1:
-                summary=ai.obtain_summary(self.assistant, self.thread ,self.day)
-                print(summary)
+                ai.obtain_summary(self.assistant, self.thread ,self.day)
+                
             else:
+                new_talk=True
                 all_days=sorted(ChatScreen.characters_spoken_to.keys(), reverse=True)
                 all_days.pop(0)
                 for clave in all_days:
@@ -392,9 +393,13 @@ class ChatScreen:
                         # Verificar si el valor numérico coincide con el filtro
                         if sublist[0] == self.id:
                             thread = ai.obtain_thread_by_id(sublist[1])
-                            summary=ai.obtain_summary(self.assistant, thread ,self.day,self.thread)
-                            print(summary)
+                            ai.obtain_summary(self.assistant, thread ,self.day,self.thread)
+                            new_talk=False
+                            
                             break
+                if new_talk:
+                    ai.obtain_summary(self.assistant, self.thread ,self.day)
+                
                 return None
 
 

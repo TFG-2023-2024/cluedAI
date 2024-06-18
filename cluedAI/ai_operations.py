@@ -235,7 +235,7 @@ def obtain_summary(assistant, thread_to_summary, day,new_thread=None):
             }
         ]
     )
-    if day !=1:
+    if day !=1 and new_thread!=None:
         #Codigo de resumen del hilo
         conversacion= obtain_conversation(thread_to_summary.id)
         instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
@@ -251,13 +251,12 @@ def obtain_summary(assistant, thread_to_summary, day,new_thread=None):
         chat_by_thread(assistant, new_thread, summary.choices[0].message.content.strip())
         chat_by_thread(assistant, new_thread, instruction_to_new_thread)
 
-        con2=obtain_conversation(new_thread.id)
-        return con2
+
 
     else:
         chat_by_thread(assistant, thread_to_summary, summary.choices[0].message.content.strip())
-        con2=obtain_conversation(thread_to_summary.id)
-        return con2
+
+
 
 
 
