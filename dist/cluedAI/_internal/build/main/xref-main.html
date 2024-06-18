@@ -21,7 +21,6 @@ imports:
     <a href="#_collections_abc">_collections_abc</a>
  &#8226;   <a href="#_weakrefset">_weakrefset</a>
  &#8226;   <a href="#abc">abc</a>
- &#8226;   <a href="#characters.character_operations">characters.character_operations</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
@@ -154,8 +153,6 @@ imports:
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#heapq">heapq</a>
- &#8226;   <a href="#initial_gui">initial_gui</a>
- &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
@@ -174,6 +171,7 @@ imports:
  &#8226;   <a href="#pyi_rth_setuptools.py">pyi_rth_setuptools.py</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#reprlib">reprlib</a>
+ &#8226;   <a href="#screen_manager">screen_manager</a>
  &#8226;   <a href="#sre_compile">sre_compile</a>
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
@@ -3673,6 +3671,11 @@ imported by:
  &#8226;   <a href="#openai.types.beta.thread_create_params">openai.types.beta.thread_create_params</a>
  &#8226;   <a href="#openai.types.beta.thread_update_params">openai.types.beta.thread_update_params</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_param">openai.types.beta.threads.image_file_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_param">openai.types.beta.threads.image_url_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
  &#8226;   <a href="#openai.types.beta.threads.message_list_params">openai.types.beta.threads.message_list_params</a>
  &#8226;   <a href="#openai.types.beta.threads.message_update_params">openai.types.beta.threads.message_update_params</a>
@@ -3682,6 +3685,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.run_update_params">openai.types.beta.threads.run_update_params</a>
  &#8226;   <a href="#openai.types.beta.threads.runs">openai.types.beta.threads.runs</a>
  &#8226;   <a href="#openai.types.beta.threads.runs.step_list_params">openai.types.beta.threads.runs.step_list_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.text_content_block_param">openai.types.beta.threads.text_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.vector_store_create_params">openai.types.beta.vector_store_create_params</a>
  &#8226;   <a href="#openai.types.beta.vector_store_list_params">openai.types.beta.vector_store_list_params</a>
  &#8226;   <a href="#openai.types.beta.vector_store_update_params">openai.types.beta.vector_store_update_params</a>
@@ -3700,6 +3704,7 @@ imported by:
  &#8226;   <a href="#openai.types.chat.chat_completion_message_param">openai.types.chat.chat_completion_message_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_message_tool_call_param">openai.types.chat.chat_completion_message_tool_call_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_named_tool_choice_param">openai.types.chat.chat_completion_named_tool_choice_param</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_system_message_param">openai.types.chat.chat_completion_system_message_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_message_param">openai.types.chat.chat_completion_tool_message_param</a>
@@ -5524,6 +5529,29 @@ imported by:
  &#8226;   <a href="#trio._util">trio._util</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ai_operations"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/ai_operations.py" type="text/plain"><tt>ai_operations</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#characters.character_operations">characters.character_operations</a>
+ &#8226;   <a href="#db.db_operations">db.db_operations</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#openai">openai</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#re">re</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
 
   </div>
 
@@ -9652,12 +9680,11 @@ imports:
  &#8226;   <a href="#dotenv">dotenv</a>
  &#8226;   <a href="#openai">openai</a>
  &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#threading">threading</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#main.py">main.py</a>
+    <a href="#ai_operations">ai_operations</a>
 
   </div>
 
@@ -15444,11 +15471,15 @@ imports:
  &#8226;   <a href="#db.initial_data">db.initial_data</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pymongo">pymongo</a>
+ &#8226;   <a href="#random">random</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#characters.character_operations">characters.character_operations</a>
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#characters.character_operations">characters.character_operations</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
  &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#users.user_operations">users.user_operations</a>
 
@@ -15468,6 +15499,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#db.db_operations">db.db_operations</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
 
   </div>
 
@@ -18920,12 +18952,14 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#characters.character_operations">characters.character_operations</a>
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#characters.character_operations">characters.character_operations</a>
  &#8226;   <a href="#dotenv.ipython">dotenv.ipython</a>
  &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
  &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
- &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
  &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#pydantic.v1.env_settings">pydantic.v1.env_settings</a>
 
@@ -27200,16 +27234,14 @@ imported by:
   <a name="initial_gui"></a>
   <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/__init__.py" type="text/plain"><tt>initial_gui</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
-
-  </div>
-  <div class="import">
 imported by:
     <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
  &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.reroll_screen">initial_gui.reroll_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
  &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
- &#8226;   <a href="#main.py">main.py</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
 
   </div>
 
@@ -27221,7 +27253,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#initial_gui">initial_gui</a>
- &#8226;   <a href="#pathlib">pathlib</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
  &#8226;   <a href="#tkinter">tkinter</a>
  &#8226;   <a href="#tkinter.messagebox">tkinter.messagebox</a>
  &#8226;   <a href="#users.user_operations">users.user_operations</a>
@@ -27229,7 +27261,29 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+    <a href="#screen_manager">screen_manager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="initial_gui.game_screen"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/game_screen.py" type="text/plain"><tt>initial_gui.game_screen</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#db.db_operations">db.db_operations</a>
+ &#8226;   <a href="#db.db_randomizers">db.db_randomizers</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#initial_gui">initial_gui</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#screen_manager">screen_manager</a>
 
   </div>
 
@@ -27240,11 +27294,8 @@ imported by:
   <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/login_screen.py" type="text/plain"><tt>initial_gui.login_screen</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#dotenv">dotenv</a>
- &#8226;   <a href="#initial_gui">initial_gui</a>
- &#8226;   <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
- &#8226;   <a href="#os">os</a>
- &#8226;   <a href="#pathlib">pathlib</a>
+    <a href="#initial_gui">initial_gui</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
  &#8226;   <a href="#tkinter">tkinter</a>
  &#8226;   <a href="#tkinter.messagebox">tkinter.messagebox</a>
  &#8226;   <a href="#users.user_operations">users.user_operations</a>
@@ -27252,7 +27303,46 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
+    <a href="#screen_manager">screen_manager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="initial_gui.reroll_screen"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/reroll_screen.py" type="text/plain"><tt>initial_gui.reroll_screen</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#initial_gui">initial_gui</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#screen_manager">screen_manager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="initial_gui.select_screen"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/select_screen.py" type="text/plain"><tt>initial_gui.select_screen</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#db.db_operations">db.db_operations</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#initial_gui">initial_gui</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#screen_manager">screen_manager</a>
 
   </div>
 
@@ -27264,15 +27354,36 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#initial_gui">initial_gui</a>
- &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#screen_manager">screen_manager</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="initial_gui.starting_operations"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/initial_gui/starting_operations.py" type="text/plain"><tt>initial_gui.starting_operations</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#initial_gui">initial_gui</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#tkinter">tkinter</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#initial_gui">initial_gui</a>
- &#8226;   <a href="#main.py">main.py</a>
+    <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
+ &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.reroll_screen">initial_gui.reroll_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
+ &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
 
   </div>
 
@@ -28541,7 +28652,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#bson.json_util">bson.json_util</a>
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#bson.json_util">bson.json_util</a>
  &#8226;   <a href="#charset_normalizer.models">charset_normalizer.models</a>
  &#8226;   <a href="#dateutil.zoneinfo">dateutil.zoneinfo</a>
  &#8226;   <a href="#distro.distro">distro.distro</a>
@@ -39621,7 +39733,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#characters.character_operations">characters.character_operations</a>
+    <a href="#ai_operations">ai_operations</a>
+ &#8226;   <a href="#characters.character_operations">characters.character_operations</a>
  &#8226;   <a href="#openai">openai</a>
  &#8226;   <a href="#openai._base_client">openai._base_client</a>
  &#8226;   <a href="#openai._client">openai._client</a>
@@ -40111,7 +40224,12 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.image_file_content_block">openai.types.beta.threads.image_file_content_block</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta">openai.types.beta.threads.image_file_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_deleted">openai.types.beta.threads.message_deleted</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta">openai.types.beta.threads.message_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta_event">openai.types.beta.threads.message_delta_event</a>
  &#8226;   <a href="#openai.types.beta.threads.required_action_function_tool_call">openai.types.beta.threads.required_action_function_tool_call</a>
@@ -40484,6 +40602,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.runs.run_step_delta">openai.types.beta.threads.runs.run_step_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.runs.tool_call">openai.types.beta.threads.runs.tool_call</a>
  &#8226;   <a href="#openai.types.beta.threads.runs.tool_call_delta">openai.types.beta.threads.runs.tool_call_delta</a>
+ &#8226;   <a href="#openai.types.beta.vector_stores.vector_store_file">openai.types.beta.vector_stores.vector_store_file</a>
 
   </div>
 
@@ -41158,7 +41277,9 @@ imports:
  &#8226;   <a href="#openai.resources.beta.threads">openai.resources.beta.threads</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_deleted">openai.types.beta.threads.message_deleted</a>
  &#8226;   <a href="#openai.types.beta.threads.message_list_params">openai.types.beta.threads.message_list_params</a>
  &#8226;   <a href="#openai.types.beta.threads.message_update_params">openai.types.beta.threads.message_update_params</a>
  &#8226;   <a href="#typing">typing</a>
@@ -41226,7 +41347,6 @@ imports:
  &#8226;   <a href="#openai.types.beta.threads.run_list_params">openai.types.beta.threads.run_list_params</a>
  &#8226;   <a href="#openai.types.beta.threads.run_submit_tool_outputs_params">openai.types.beta.threads.run_submit_tool_outputs_params</a>
  &#8226;   <a href="#openai.types.beta.threads.run_update_params">openai.types.beta.threads.run_update_params</a>
- &#8226;   <a href="#time">time</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -41514,6 +41634,7 @@ imports:
  &#8226;   <a href="#openai.types.chat.chat_completion">openai.types.chat.chat_completion</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_chunk">openai.types.chat.chat_completion_chunk</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_message_param">openai.types.chat.chat_completion_message_param</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_param">openai.types.chat.chat_completion_tool_param</a>
  &#8226;   <a href="#openai.types.chat.completion_create_params">openai.types.chat.completion_create_params</a>
@@ -41549,6 +41670,7 @@ imports:
  &#8226;   <a href="#openai._utils">openai._utils</a>
  &#8226;   <a href="#openai.resources">openai.resources</a>
  &#8226;   <a href="#openai.types">openai.types</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.completion">openai.types.completion</a>
  &#8226;   <a href="#openai.types.completion_create_params">openai.types.completion_create_params</a>
  &#8226;   <a href="#typing">typing</a>
@@ -42703,6 +42825,7 @@ imported by:
 imports:
     <a href="#openai._models">openai._models</a>
  &#8226;   <a href="#openai.types.beta">openai.types.beta</a>
+ &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
   </div>
@@ -42710,7 +42833,6 @@ imports:
 imported by:
     <a href="#openai.types.beta">openai.types.beta</a>
  &#8226;   <a href="#openai.types.beta.assistant_tool">openai.types.beta.assistant_tool</a>
- &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
 
   </div>
 
@@ -42731,9 +42853,6 @@ imported by:
     <a href="#openai.types.beta">openai.types.beta</a>
  &#8226;   <a href="#openai.types.beta.assistant_tool_param">openai.types.beta.assistant_tool_param</a>
  &#8226;   <a href="#openai.types.beta.thread_create_and_run_params">openai.types.beta.thread_create_and_run_params</a>
- &#8226;   <a href="#openai.types.beta.thread_create_params">openai.types.beta.thread_create_params</a>
- &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
- &#8226;   <a href="#openai.types.beta.threads.run_create_params">openai.types.beta.threads.run_create_params</a>
 
   </div>
 
@@ -42814,6 +42933,7 @@ imports:
  &#8226;   <a href="#openai.types.beta.code_interpreter_tool_param">openai.types.beta.code_interpreter_tool_param</a>
  &#8226;   <a href="#openai.types.beta.file_search_tool_param">openai.types.beta.file_search_tool_param</a>
  &#8226;   <a href="#openai.types.beta.function_tool_param">openai.types.beta.function_tool_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -42835,7 +42955,7 @@ imports:
     <a href="#__future__">__future__</a>
  &#8226;   <a href="#openai.types.beta">openai.types.beta</a>
  &#8226;   <a href="#openai.types.beta.code_interpreter_tool_param">openai.types.beta.code_interpreter_tool_param</a>
- &#8226;   <a href="#openai.types.beta.file_search_tool_param">openai.types.beta.file_search_tool_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -42903,12 +43023,22 @@ imports:
  &#8226;   <a href="#openai.types.beta.threads.file_path_delta_annotation">openai.types.beta.threads.file_path_delta_annotation</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file">openai.types.beta.threads.image_file</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_content_block">openai.types.beta.threads.image_file_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta">openai.types.beta.threads.image_file_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_param">openai.types.beta.threads.image_file_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_param">openai.types.beta.threads.image_url_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content_delta">openai.types.beta.threads.message_content_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_deleted">openai.types.beta.threads.message_deleted</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta">openai.types.beta.threads.message_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta_event">openai.types.beta.threads.message_delta_event</a>
  &#8226;   <a href="#openai.types.beta.threads.message_list_params">openai.types.beta.threads.message_list_params</a>
@@ -42922,6 +43052,7 @@ imports:
  &#8226;   <a href="#openai.types.beta.threads.run_update_params">openai.types.beta.threads.run_update_params</a>
  &#8226;   <a href="#openai.types.beta.threads.text">openai.types.beta.threads.text</a>
  &#8226;   <a href="#openai.types.beta.threads.text_content_block">openai.types.beta.threads.text_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.text_content_block_param">openai.types.beta.threads.text_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta">openai.types.beta.threads.text_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta_block">openai.types.beta.threads.text_delta_block</a>
 
@@ -42939,12 +43070,22 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.file_path_delta_annotation">openai.types.beta.threads.file_path_delta_annotation</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file">openai.types.beta.threads.image_file</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_content_block">openai.types.beta.threads.image_file_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta">openai.types.beta.threads.image_file_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_param">openai.types.beta.threads.image_file_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_param">openai.types.beta.threads.image_url_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content_delta">openai.types.beta.threads.message_content_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_deleted">openai.types.beta.threads.message_deleted</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta">openai.types.beta.threads.message_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta_event">openai.types.beta.threads.message_delta_event</a>
  &#8226;   <a href="#openai.types.beta.threads.message_list_params">openai.types.beta.threads.message_list_params</a>
@@ -42959,6 +43100,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.runs">openai.types.beta.threads.runs</a>
  &#8226;   <a href="#openai.types.beta.threads.text">openai.types.beta.threads.text</a>
  &#8226;   <a href="#openai.types.beta.threads.text_content_block">openai.types.beta.threads.text_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.text_content_block_param">openai.types.beta.threads.text_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta">openai.types.beta.threads.text_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta_block">openai.types.beta.threads.text_delta_block</a>
 
@@ -43095,6 +43237,8 @@ imported by:
 imports:
     <a href="#openai._models">openai._models</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
   </div>
   <div class="import">
@@ -43127,6 +43271,26 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="openai.types.beta.threads.image_file_content_block_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_file_content_block_param.py" type="text/plain"><tt>openai.types.beta.threads.image_file_content_block_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_param">openai.types.beta.threads.image_file_param</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="openai.types.beta.threads.image_file_delta"></a>
   <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_file_delta.py" type="text/plain"><tt>openai.types.beta.threads.image_file_delta</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -43134,6 +43298,7 @@ imports:
     <a href="#openai._models">openai._models</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
   </div>
   <div class="import">
@@ -43167,13 +43332,151 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="openai.types.beta.threads.image_file_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_file_param.py" type="text/plain"><tt>openai.types.beta.threads.image_file_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url.py" type="text/plain"><tt>openai.types.beta.threads.image_url</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url_content_block"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url_content_block.py" type="text/plain"><tt>openai.types.beta.threads.image_url_content_block</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url_content_block_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url_content_block_param.py" type="text/plain"><tt>openai.types.beta.threads.image_url_content_block_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_param">openai.types.beta.threads.image_url_param</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url_delta"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url_delta.py" type="text/plain"><tt>openai.types.beta.threads.image_url_delta</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url_delta_block"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url_delta_block.py" type="text/plain"><tt>openai.types.beta.threads.image_url_delta_block</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_delta">openai.types.beta.threads.message_content_delta</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.image_url_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/image_url_param.py" type="text/plain"><tt>openai.types.beta.threads.image_url_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="openai.types.beta.threads.message"></a>
   <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/message.py" type="text/plain"><tt>openai.types.beta.threads.message</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#openai._models">openai._models</a>
  &#8226;   <a href="#openai.types.beta.code_interpreter_tool">openai.types.beta.code_interpreter_tool</a>
- &#8226;   <a href="#openai.types.beta.file_search_tool">openai.types.beta.file_search_tool</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
  &#8226;   <a href="#typing">typing</a>
@@ -43198,6 +43501,7 @@ imports:
     <a href="#openai._utils">openai._utils</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_content_block">openai.types.beta.threads.image_file_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
  &#8226;   <a href="#openai.types.beta.threads.text_content_block">openai.types.beta.threads.text_content_block</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
@@ -43220,6 +43524,7 @@ imports:
     <a href="#openai._utils">openai._utils</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta_block">openai.types.beta.threads.text_delta_block</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
@@ -43235,15 +43540,60 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="openai.types.beta.threads.message_content_part_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/message_content_part_param.py" type="text/plain"><tt>openai.types.beta.threads.message_content_part_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.text_content_block_param">openai.types.beta.threads.text_content_block_param</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.resources.beta.threads.messages">openai.resources.beta.threads.messages</a>
+ &#8226;   <a href="#openai.types.beta.thread_create_and_run_params">openai.types.beta.thread_create_and_run_params</a>
+ &#8226;   <a href="#openai.types.beta.thread_create_params">openai.types.beta.thread_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.run_create_params">openai.types.beta.threads.run_create_params</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="openai.types.beta.threads.message_create_params"></a>
   <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/message_create_params.py" type="text/plain"><tt>openai.types.beta.threads.message_create_params</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#__future__">__future__</a>
  &#8226;   <a href="#openai.types.beta.code_interpreter_tool_param">openai.types.beta.code_interpreter_tool_param</a>
- &#8226;   <a href="#openai.types.beta.file_search_tool_param">openai.types.beta.file_search_tool_param</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.resources.beta.threads.messages">openai.resources.beta.threads.messages</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="openai.types.beta.threads.message_deleted"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/message_deleted.py" type="text/plain"><tt>openai.types.beta.threads.message_deleted</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
   </div>
@@ -43392,8 +43742,8 @@ imports:
  &#8226;   <a href="#openai.types.beta.assistant_tool_choice_option_param">openai.types.beta.assistant_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.beta.assistant_tool_param">openai.types.beta.assistant_tool_param</a>
  &#8226;   <a href="#openai.types.beta.code_interpreter_tool_param">openai.types.beta.code_interpreter_tool_param</a>
- &#8226;   <a href="#openai.types.beta.file_search_tool_param">openai.types.beta.file_search_tool_param</a>
  &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -43955,6 +44305,25 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="openai.types.beta.threads.text_content_block_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/text_content_block_param.py" type="text/plain"><tt>openai.types.beta.threads.text_content_block_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.types.beta.threads">openai.types.beta.threads</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="openai.types.beta.threads.text_delta"></a>
   <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/beta/threads/text_delta.py" type="text/plain"><tt>openai.types.beta.threads.text_delta</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -44171,6 +44540,7 @@ imported by:
 imports:
     <a href="#__future__">__future__</a>
  &#8226;   <a href="#openai.types.beta.vector_stores">openai.types.beta.vector_stores</a>
+ &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
   </div>
@@ -44208,6 +44578,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#openai._models">openai._models</a>
+ &#8226;   <a href="#openai._utils">openai._utils</a>
  &#8226;   <a href="#openai.types.beta.vector_stores">openai.types.beta.vector_stores</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
@@ -44282,6 +44653,7 @@ imports:
  &#8226;   <a href="#openai.types.chat.chat_completion_message_tool_call_param">openai.types.chat.chat_completion_message_tool_call_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_named_tool_choice_param">openai.types.chat.chat_completion_named_tool_choice_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_role">openai.types.chat.chat_completion_role</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_system_message_param">openai.types.chat.chat_completion_system_message_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_token_logprob">openai.types.chat.chat_completion_token_logprob</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
@@ -44308,6 +44680,7 @@ imported by:
  &#8226;   <a href="#openai.types.chat.chat_completion_message_tool_call_param">openai.types.chat.chat_completion_message_tool_call_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_named_tool_choice_param">openai.types.chat.chat_completion_named_tool_choice_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_role">openai.types.chat.chat_completion_role</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_system_message_param">openai.types.chat.chat_completion_system_message_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_token_logprob">openai.types.chat.chat_completion_token_logprob</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
@@ -44372,6 +44745,7 @@ imports:
     <a href="#openai._models">openai._models</a>
  &#8226;   <a href="#openai.types.chat">openai.types.chat</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_token_logprob">openai.types.chat.chat_completion_token_logprob</a>
+ &#8226;   <a href="#openai.types.completion_usage">openai.types.completion_usage</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -44604,6 +44978,28 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="openai.types.chat.chat_completion_stream_options_param"></a>
+  <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/chat/chat_completion_stream_options_param.py" type="text/plain"><tt>openai.types.chat.chat_completion_stream_options_param</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#openai.types.chat">openai.types.chat</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#openai.resources.chat.completions">openai.resources.chat.completions</a>
+ &#8226;   <a href="#openai.resources.completions">openai.resources.completions</a>
+ &#8226;   <a href="#openai.types.chat">openai.types.chat</a>
+ &#8226;   <a href="#openai.types.chat.completion_create_params">openai.types.chat.completion_create_params</a>
+ &#8226;   <a href="#openai.types.completion_create_params">openai.types.completion_create_params</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="openai.types.chat.chat_completion_system_message_param"></a>
   <a target="code" href="///C:/Users/joaqu/AppData/Local/Programs/Python/Python310/lib/site-packages/openai/types/chat/chat_completion_system_message_param.py" type="text/plain"><tt>openai.types.chat.chat_completion_system_message_param</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -44736,6 +45132,7 @@ imports:
  &#8226;   <a href="#openai.types.chat">openai.types.chat</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_function_call_option_param">openai.types.chat.chat_completion_function_call_option_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_message_param">openai.types.chat.chat_completion_message_param</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_param">openai.types.chat.chat_completion_tool_param</a>
  &#8226;   <a href="#openai.types.chat_model">openai.types.chat_model</a>
@@ -44821,6 +45218,7 @@ imported by:
 imports:
     <a href="#__future__">__future__</a>
  &#8226;   <a href="#openai.types">openai.types</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#typing">typing</a>
  &#8226;   <a href="#typing_extensions">typing_extensions</a>
 
@@ -44847,6 +45245,7 @@ imports:
 imported by:
     <a href="#openai.types">openai.types</a>
  &#8226;   <a href="#openai.types.chat.chat_completion">openai.types.chat.chat_completion</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_chunk">openai.types.chat.chat_completion_chunk</a>
  &#8226;   <a href="#openai.types.completion">openai.types.completion</a>
 
   </div>
@@ -50530,6 +50929,7 @@ imported by:
  &#8226;   <a href="#_pyi_rth_utils">_pyi_rth_utils</a>
  &#8226;   <a href="#_pyi_rth_utils.tempfile">_pyi_rth_utils.tempfile</a>
  &#8226;   <a href="#_sitebuiltins">_sitebuiltins</a>
+ &#8226;   <a href="#ai_operations">ai_operations</a>
  &#8226;   <a href="#anyio._backends._asyncio">anyio._backends._asyncio</a>
  &#8226;   <a href="#anyio._backends._trio">anyio._backends._trio</a>
  &#8226;   <a href="#anyio._core._fileio">anyio._core._fileio</a>
@@ -50630,7 +51030,6 @@ imported by:
  &#8226;   <a href="#importlib._common">importlib._common</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources">importlib.resources</a>
- &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#jinja2.bccache">jinja2.bccache</a>
  &#8226;   <a href="#jinja2.environment">jinja2.environment</a>
@@ -50787,6 +51186,7 @@ imported by:
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
  &#8226;   <a href="#runpy">runpy</a>
+ &#8226;   <a href="#screen_manager">screen_manager</a>
  &#8226;   <a href="#setuptools">setuptools</a>
  &#8226;   <a href="#setuptools._core_metadata">setuptools._core_metadata</a>
  &#8226;   <a href="#setuptools._distutils._msvccompiler">setuptools._distutils._msvccompiler</a>
@@ -63801,9 +64201,7 @@ imported by:
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.readers">importlib.readers</a>
  &#8226;   <a href="#importlib.resources">importlib.resources</a>
- &#8226;   <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
- &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
- &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
  &#8226;   <a href="#matplotlib">matplotlib</a>
  &#8226;   <a href="#matplotlib.backends._backend_tk">matplotlib.backends._backend_tk</a>
  &#8226;   <a href="#matplotlib.backends.backend_webagg">matplotlib.backends.backend_webagg</a>
@@ -72389,6 +72787,7 @@ imported by:
     <a href="#PIL.ImagePalette">PIL.ImagePalette</a>
  &#8226;   <a href="#bson.objectid">bson.objectid</a>
  &#8226;   <a href="#click._compat">click._compat</a>
+ &#8226;   <a href="#db.db_operations">db.db_operations</a>
  &#8226;   <a href="#db.db_randomizers">db.db_randomizers</a>
  &#8226;   <a href="#dns.entropy">dns.entropy</a>
  &#8226;   <a href="#dns.rdataset">dns.rdataset</a>
@@ -72453,6 +72852,7 @@ imported by:
  &#8226;   <a href="#_pydecimal">_pydecimal</a>
  &#8226;   <a href="#_sre">_sre</a>
  &#8226;   <a href="#_strptime">_strptime</a>
+ &#8226;   <a href="#ai_operations">ai_operations</a>
  &#8226;   <a href="#anyio.streams.tls">anyio.streams.tls</a>
  &#8226;   <a href="#argparse">argparse</a>
  &#8226;   <a href="#attr.validators">attr.validators</a>
@@ -73349,6 +73749,29 @@ imported by:
 imported by:
     <a href="#pandas.core.missing">pandas.core.missing</a>
  &#8226;   <a href="#pandas.core.nanops">pandas.core.nanops</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="screen_manager"></a>
+  <a target="code" href="///C:/Users/joaqu/Desktop/Uni/TFG/cluedAI/cluedAI/screen_manager.py" type="text/plain"><tt>screen_manager</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
+ &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.reroll_screen">initial_gui.reroll_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
+ &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
 
   </div>
 
@@ -79956,7 +80379,6 @@ imported by:
  &#8226;   <a href="#asyncio.unix_events">asyncio.unix_events</a>
  &#8226;   <a href="#attr._compat">attr._compat</a>
  &#8226;   <a href="#bson.objectid">bson.objectid</a>
- &#8226;   <a href="#characters.character_operations">characters.character_operations</a>
  &#8226;   <a href="#click.globals">click.globals</a>
  &#8226;   <a href="#concurrent.futures._base">concurrent.futures._base</a>
  &#8226;   <a href="#concurrent.futures.process">concurrent.futures.process</a>
@@ -80092,7 +80514,6 @@ imported by:
  &#8226;   <a href="#numpy.testing._private.utils">numpy.testing._private.utils</a>
  &#8226;   <a href="#openai._base_client">openai._base_client</a>
  &#8226;   <a href="#openai._resource">openai._resource</a>
- &#8226;   <a href="#openai.resources.beta.threads.runs.runs">openai.resources.beta.threads.runs.runs</a>
  &#8226;   <a href="#openai.resources.files">openai.resources.files</a>
  &#8226;   <a href="#pandas._testing.contexts">pandas._testing.contexts</a>
  &#8226;   <a href="#pandas.io.clipboard">pandas.io.clipboard</a>
@@ -80163,9 +80584,14 @@ imports:
   <div class="import">
 imported by:
     <a href="#initial_gui.create_screen">initial_gui.create_screen</a>
+ &#8226;   <a href="#initial_gui.game_screen">initial_gui.game_screen</a>
  &#8226;   <a href="#initial_gui.login_screen">initial_gui.login_screen</a>
+ &#8226;   <a href="#initial_gui.reroll_screen">initial_gui.reroll_screen</a>
+ &#8226;   <a href="#initial_gui.select_screen">initial_gui.select_screen</a>
  &#8226;   <a href="#initial_gui.start_screen">initial_gui.start_screen</a>
+ &#8226;   <a href="#initial_gui.starting_operations">initial_gui.starting_operations</a>
  &#8226;   <a href="#matplotlib.backends._backend_tk">matplotlib.backends._backend_tk</a>
+ &#8226;   <a href="#screen_manager">screen_manager</a>
  &#8226;   <a href="#tkinter.commondialog">tkinter.commondialog</a>
  &#8226;   <a href="#tkinter.constants">tkinter.constants</a>
  &#8226;   <a href="#tkinter.dialog">tkinter.dialog</a>
@@ -83226,6 +83652,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.assistant_tool_choice_option_param">openai.types.beta.assistant_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.beta.assistant_tool_param">openai.types.beta.assistant_tool_param</a>
  &#8226;   <a href="#openai.types.beta.assistant_update_params">openai.types.beta.assistant_update_params</a>
+ &#8226;   <a href="#openai.types.beta.file_search_tool">openai.types.beta.file_search_tool</a>
  &#8226;   <a href="#openai.types.beta.thread">openai.types.beta.thread</a>
  &#8226;   <a href="#openai.types.beta.thread_create_and_run_params">openai.types.beta.thread_create_and_run_params</a>
  &#8226;   <a href="#openai.types.beta.thread_create_params">openai.types.beta.thread_create_params</a>
@@ -83234,11 +83661,16 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.annotation_delta">openai.types.beta.threads.annotation_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.file_citation_delta_annotation">openai.types.beta.threads.file_citation_delta_annotation</a>
  &#8226;   <a href="#openai.types.beta.threads.file_path_delta_annotation">openai.types.beta.threads.file_path_delta_annotation</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file">openai.types.beta.threads.image_file</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta">openai.types.beta.threads.image_file_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content_delta">openai.types.beta.threads.message_content_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_content_part_param">openai.types.beta.threads.message_content_part_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta">openai.types.beta.threads.message_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_update_params">openai.types.beta.threads.message_update_params</a>
@@ -83267,6 +83699,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.vector_store_create_params">openai.types.beta.vector_store_create_params</a>
  &#8226;   <a href="#openai.types.beta.vector_store_update_params">openai.types.beta.vector_store_update_params</a>
  &#8226;   <a href="#openai.types.beta.vector_stores.file_batch_create_params">openai.types.beta.vector_stores.file_batch_create_params</a>
+ &#8226;   <a href="#openai.types.beta.vector_stores.file_create_params">openai.types.beta.vector_stores.file_create_params</a>
  &#8226;   <a href="#openai.types.beta.vector_stores.vector_store_file">openai.types.beta.vector_stores.vector_store_file</a>
  &#8226;   <a href="#openai.types.chat.chat_completion">openai.types.chat.chat_completion</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_assistant_message_param">openai.types.chat.chat_completion_assistant_message_param</a>
@@ -83977,12 +84410,23 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.file_citation_delta_annotation">openai.types.beta.threads.file_citation_delta_annotation</a>
  &#8226;   <a href="#openai.types.beta.threads.file_path_annotation">openai.types.beta.threads.file_path_annotation</a>
  &#8226;   <a href="#openai.types.beta.threads.file_path_delta_annotation">openai.types.beta.threads.file_path_delta_annotation</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file">openai.types.beta.threads.image_file</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_content_block">openai.types.beta.threads.image_file_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_content_block_param">openai.types.beta.threads.image_file_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_delta">openai.types.beta.threads.image_file_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.image_file_delta_block">openai.types.beta.threads.image_file_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_file_param">openai.types.beta.threads.image_file_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url">openai.types.beta.threads.image_url</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block">openai.types.beta.threads.image_url_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_content_block_param">openai.types.beta.threads.image_url_content_block_param</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta">openai.types.beta.threads.image_url_delta</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_delta_block">openai.types.beta.threads.image_url_delta_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.image_url_param">openai.types.beta.threads.image_url_param</a>
  &#8226;   <a href="#openai.types.beta.threads.message">openai.types.beta.threads.message</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content">openai.types.beta.threads.message_content</a>
  &#8226;   <a href="#openai.types.beta.threads.message_content_delta">openai.types.beta.threads.message_content_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_create_params">openai.types.beta.threads.message_create_params</a>
+ &#8226;   <a href="#openai.types.beta.threads.message_deleted">openai.types.beta.threads.message_deleted</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta">openai.types.beta.threads.message_delta</a>
  &#8226;   <a href="#openai.types.beta.threads.message_delta_event">openai.types.beta.threads.message_delta_event</a>
  &#8226;   <a href="#openai.types.beta.threads.message_list_params">openai.types.beta.threads.message_list_params</a>
@@ -84013,6 +84457,7 @@ imported by:
  &#8226;   <a href="#openai.types.beta.threads.runs.tool_call_delta_object">openai.types.beta.threads.runs.tool_call_delta_object</a>
  &#8226;   <a href="#openai.types.beta.threads.runs.tool_calls_step_details">openai.types.beta.threads.runs.tool_calls_step_details</a>
  &#8226;   <a href="#openai.types.beta.threads.text_content_block">openai.types.beta.threads.text_content_block</a>
+ &#8226;   <a href="#openai.types.beta.threads.text_content_block_param">openai.types.beta.threads.text_content_block_param</a>
  &#8226;   <a href="#openai.types.beta.threads.text_delta_block">openai.types.beta.threads.text_delta_block</a>
  &#8226;   <a href="#openai.types.beta.vector_store">openai.types.beta.vector_store</a>
  &#8226;   <a href="#openai.types.beta.vector_store_create_params">openai.types.beta.vector_store_create_params</a>
@@ -84038,6 +84483,7 @@ imported by:
  &#8226;   <a href="#openai.types.chat.chat_completion_message_tool_call_param">openai.types.chat.chat_completion_message_tool_call_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_named_tool_choice_param">openai.types.chat.chat_completion_named_tool_choice_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_role">openai.types.chat.chat_completion_role</a>
+ &#8226;   <a href="#openai.types.chat.chat_completion_stream_options_param">openai.types.chat.chat_completion_stream_options_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_system_message_param">openai.types.chat.chat_completion_system_message_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_choice_option_param">openai.types.chat.chat_completion_tool_choice_option_param</a>
  &#8226;   <a href="#openai.types.chat.chat_completion_tool_message_param">openai.types.chat.chat_completion_tool_message_param</a>

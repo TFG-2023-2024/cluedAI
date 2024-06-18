@@ -10,8 +10,8 @@ initial_characters = [
         "Hobbies": ["Solving Puzzles", "Reading"],
         "Likes": ["Coffee", "Challenges"],
         "Dislikes": ["Inefficiency"],
-        "Backstory": "Olivia comes from a family of detectives and is known for her sharp mind and attention to detail. She has a calm and composed demeanor.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 2,
@@ -24,8 +24,8 @@ initial_characters = [
         "Hobbies": ["Art", "Dancing"],
         "Likes": ["Luxury", "Secrecy"],
         "Dislikes": ["Betrayal"],
-        "Backstory": "Once a respected socialite, Sophia's financial troubles led her to commit a desperate act. Her facade hides a troubled past.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 3,
@@ -38,8 +38,8 @@ initial_characters = [
         "Hobbies": ["Painting", "Gardening"],
         "Likes": ["Nature", "Art"],
         "Dislikes": ["Crowds"],
-        "Backstory": "Ava was an artist with a fascination for the occult. Her death reveals a connection between her artwork and a hidden secret.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 4,
@@ -52,8 +52,8 @@ initial_characters = [
         "Hobbies": ["Photography", "Writing"],
         "Likes": ["Adventure", "Animals"],
         "Dislikes": ["Dishonesty"],
-        "Backstory": "Mia, an aspiring journalist, joined the investigation team to prove herself. She's determined to uncover the truth behind the murder.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 5,
@@ -66,8 +66,8 @@ initial_characters = [
         "Hobbies": ["Bird Watching", "Astronomy"],
         "Likes": ["Tranquility", "Starry Nights"],
         "Dislikes": ["Deception"],
-        "Backstory": "Isabella, a recluse, saw something peculiar the night of the murder. Her observant nature makes her a valuable witness in the case.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 6,
@@ -80,8 +80,8 @@ initial_characters = [
         "Hobbies": ["Horse Riding", "Swordplay"],
         "Likes": ["Power", "Respect"],
         "Dislikes": ["Betrayal"],
-        "Backstory": "Emma, a charismatic noble, is suspected due to rivalry and ambition within the social hierarchy.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 7,
@@ -94,8 +94,8 @@ initial_characters = [
         "Hobbies": ["Music", "Dancing"],
         "Likes": ["Poetry", "Romance"],
         "Dislikes": ["Dishonesty"],
-        "Backstory": "Liam, a musician, becomes entangled in the investigation due to his romantic involvement with the victim.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 8,
@@ -108,8 +108,8 @@ initial_characters = [
         "Hobbies": ["Chess", "Astronomy"],
         "Likes": ["Solitude", "Night Sky"],
         "Dislikes": ["Revealing Secrets"],
-        "Backstory": "Noah, an enigmatic character, is introduced to divert attention from the actual murderer, hiding their true motives.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 9,
@@ -122,8 +122,8 @@ initial_characters = [
         "Hobbies": ["Fishing", "Woodworking"],
         "Likes": ["Quiet", "Simplicity"],
         "Dislikes": ["Intricacies"],
-        "Backstory": "Jackson, a reluctant participant, is drawn into the investigation against his will due to his connection to the victim.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     },
     {
         "_id": 10,
@@ -136,8 +136,8 @@ initial_characters = [
         "Hobbies": ["Medical Research", "Reading"],
         "Likes": ["Healing", "Knowledge"],
         "Dislikes": ["Injustice"],
-        "Backstory": "Ethan, the local doctor, is compelled to uncover the truth behind the murder for the sake of justice and his profession.",
-        "Appearance": None
+        "Appearance": None,
+        "Location": 0
     }
 ]
 
@@ -288,76 +288,106 @@ initial_locations = [
     {
         "_id": 1,
         "Room": "Drawing Room",
-        "Description": "A formal and elegantly decorated room for socializing, often furnished with comfortable seating and artwork."
+        "Description": "A formal and elegantly decorated room for socializing, often furnished with comfortable seating and artwork.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 2,
         "Room": "Library",
-        "Description": "A room filled with shelves of books, often adorned with leather furniture, providing a quiet space for reading."
+        "Description": "A room filled with shelves of books, often adorned with leather furniture, providing a quiet space for reading.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 3,
         "Room": "Dining Hall",
-        "Description": "A large and ornate room for formal dining, featuring a grand dining table, chandeliers, and elaborate decor."
+        "Description": "A large and ornate room for formal dining, featuring a grand dining table, chandeliers, and elaborate decor.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 4,
         "Room": "Conservatory",
-        "Description": "A glass-enclosed room filled with plants, used for cultivating exotic flowers and creating a serene atmosphere."
+        "Description": "A glass-enclosed room filled with plants, used for cultivating exotic flowers and creating a serene atmosphere.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 5,
         "Room": "Ballroom",
-        "Description": "An expansive room designed for hosting dances and grand events, typically adorned with crystal chandeliers."
+        "Description": "An expansive room designed for hosting dances and grand events, typically adorned with crystal chandeliers.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 6,
         "Room": "Study",
-        "Description": "A private room for intellectual pursuits, featuring a desk, bookshelves, and possibly scientific instruments."
+        "Description": "A private room for intellectual pursuits, featuring a desk, bookshelves, and possibly scientific instruments.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 7,
         "Room": "Servants' Quarters",
-        "Description": "A section of the mansion dedicated to rooms for household staff, including bedrooms, a common area, and kitchens."
+        "Description": "A section of the mansion dedicated to rooms for household staff, including bedrooms, a common area, and kitchens.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 8,
         "Room": "Billiard Room",
-        "Description": "A recreational room with a billiard table, often decorated with rich wood paneling, plush seating, and artwork."
+        "Description": "A recreational room with a billiard table, often decorated with rich wood paneling, plush seating, and artwork.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 9,
         "Room": "Music Room",
-        "Description": "A space designed for musical performances, equipped with instruments, comfortable seating, and excellent acoustics."
+        "Description": "A space designed for musical performances, equipped with instruments, comfortable seating, and excellent acoustics.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 10,
         "Room": "Gallery",
-        "Description": "An art gallery or exhibition space showcasing the mansion owner's collection of paintings, sculptures, or artifacts."
+        "Description": "An art gallery or exhibition space showcasing the mansion owner's collection of paintings, sculptures, or artifacts.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 11,
         "Room": "Bedroom",
-        "Description": "A private sleeping quarters, usually adorned with antique furniture, drapes, and personal touches reflecting the occupant's style."
+        "Description": "A private sleeping quarters, usually adorned with antique furniture, drapes, and personal touches reflecting the occupant's style.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 12,
         "Room": "Kitchen",
-        "Description": "The space designated for cooking and food preparation, equipped with stoves, ovens, and sometimes a large hearth."
+        "Description": "The space designated for cooking and food preparation, equipped with stoves, ovens, and sometimes a large hearth.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 13,
         "Room": "Sitting Room",
-        "Description": "A more casual and intimate space for relaxation, featuring comfortable seating, smaller tables, and a cozy fireplace."
+        "Description": "A more casual and intimate space for relaxation, featuring comfortable seating, smaller tables, and a cozy fireplace.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 14,
         "Room": "Trophy Room",
-        "Description": "A room used to display hunting trophies, artifacts, or other collections, showcasing the owner's interests and achievements."
+        "Description": "A room used to display hunting trophies, artifacts, or other collections, showcasing the owner's interests and achievements.",
+        "Characters": None,
+        "Items": None
     },
     {
         "_id": 15,
         "Room": "Bathroom",
-        "Description": "A private room for personal hygiene, equipped with a bathtub, sink, and a toilet, decorated in a style consistent with the mansion's overall design."
+        "Description": "A private room for personal hygiene, equipped with a bathtub, sink, and a toilet, decorated in a style consistent with the mansion's overall design.",
+        "Characters": None,
+        "Items": None
     }
 ]
