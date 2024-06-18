@@ -1,11 +1,19 @@
 from tkinter import BOTH, LEFT, RIGHT, Y, Frame, Label, Scrollbar, Canvas, PhotoImage, Tk
 from dotenv import load_dotenv
-from db.db_operations import start_day, obtain_by_id, connect_db, start_day_0
+from db.db_operations import obtain_by_id, connect_db
 from initial_gui.starting_operations import create_window, relative_to_assets
-import ai_operations as ai
 
 class SelectScreen:
     def __init__(self, root, switch_to_chat, day, data):
+        """
+        Initialize the SelectScreen object with necessary attributes and UI setup.
+
+        Args:
+        - root (Tk): The root Tkinter window.
+        - switch_to_chat (function): Function to switch to the chat interface.
+        - day (int): The current day of the game.
+        - data (dict): Data containing game-specific information.
+        """
         self.root = root
         self.switch_to_chat = switch_to_chat
         self.day = day
@@ -19,13 +27,17 @@ class SelectScreen:
         self.setup_ui()
 
     def setup_ui(self):
+        """
+        Set up the user interface elements for the SelectScreen.
+
+        This includes loading images, creating canvas elements, and preparing UI components.
+        """
         self.locations_by_id = [
             obtain_by_id(location_id, locations_collection)
             for location_id in self.data.get("locations", [])
             if locations_collection.find_one({"_id": location_id, "Characters": {"$exists": True, "$ne": []}})
         ]
 
-        # Load images once to use them multiple times
         self.calendar_image = PhotoImage(file=relative_to_assets("calendar.png"))
         self.background_image = PhotoImage(file=relative_to_assets("item_bg.png"))
         self.icon_image = PhotoImage(file=relative_to_assets("icon.png"))
@@ -45,6 +57,11 @@ class SelectScreen:
         self.create_canvas_elements()
 
     def create_canvas_elements(self):
+        """
+        Create canvas elements for the main UI of the ChatScreen.
+
+        This method initializes various graphical elements on the canvas, including text, images, and buttons.
+        """
         self.canvas.create_image(515.0, 390.0, image=self.image_bg)
         self.canvas.create_image(510, 40, image=self.image_banner)
         self.canvas.create_image(304.66650390625, 40.0, image=self.pressed_button_image)
@@ -83,6 +100,11 @@ class SelectScreen:
         self.create_selection_frame()
 
     def create_selection_frame(self):
+        """
+        Create the selection frame for displaying characters or locations.
+
+        This method creates a scrollable canvas within a frame to display selectable options.
+        """
         selection_frame = Frame(self.window, bg="#202020")
         selection_frame.place(x=0, y=100, width=1024, height=658)
 
@@ -106,6 +128,11 @@ class SelectScreen:
             self.display_locations()
 
     def display_murderer_selection(self):
+        """
+        Display the selection interface for identifying the murderer.
+
+        This method populates the selection canvas with character options excluding the victim(s).
+        """
         if self.day != 5:
             return
 
@@ -162,6 +189,11 @@ class SelectScreen:
         self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
     def display_locations(self):
+        """
+        Display the selection interface for choosing locations.
+
+        This method populates the selection canvas with available locations based on game data.
+        """
         for widget in self.selection_canvas.winfo_children():
             widget.destroy()
 
@@ -178,6 +210,10 @@ class SelectScreen:
 
         for location in self.locations_by_id:
             location_id = location["_id"]
+
+            # Check if the location has characters or items
+            if not location['Characters'] and not location['Items']:
+                continue
 
             background_label = Label(self.selection_canvas, image=self.background_image, bg="#202020", bd=0)
             background_label.place(x=80, y=y_offset - 15)
@@ -208,6 +244,16 @@ class SelectScreen:
         self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
     def display_characters_and_items(self, location_id):
+        """
+        Display characters and items for the selected location on the canvas.
+
+        This method populates the selection canvas with characters and items based on
+        the location ID provided. It creates UI elements for each character and item,
+        allowing users to select them.
+
+        Args:
+        - location_id (str): The ID of the location to display characters and items for.
+        """
         for widget in self.selection_canvas.winfo_children():
             widget.destroy()
 
@@ -318,12 +364,35 @@ class SelectScreen:
         self.selection_canvas.config(scrollregion=self.selection_canvas.bbox("all"))
 
     def select_character(self, id, event=None):
-        # Handle selection of character
+        """
+        Handle selection of a character.
+
+        This method is triggered when a user selects a character from the UI,
+        and it switches the interface to the chat screen for the selected character.
+
+        Args:
+        - id (str): The ID of the selected character.
+        - event (Event, optional): The event object triggering the selection. Default is None.
+        """
         self.switch_to_chat(self.day, id, type="Character")
 
     def select_item(self, id, event=None):
-        # Handle selection of item
+        """
+        Handle selection of an item.
+
+        This method is triggered when a user selects an item from the UI,
+        and it switches the interface to the chat screen for the selected item.
+
+        Args:
+        - id (str): The ID of the selected item.
+        - event (Event, optional): The event object triggering the selection. Default is None.
+        """
         self.switch_to_chat(self.day, id, type="Item")
 
     def hide(self):
+        """
+        Hide the canvas.
+
+        This method hides the main canvas element associated with the SelectScreen.
+        """
         self.canvas.pack_forget()  # Hide canvas
