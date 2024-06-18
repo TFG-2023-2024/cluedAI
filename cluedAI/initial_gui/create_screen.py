@@ -32,6 +32,14 @@ class CreateScreen:
         self.focus = '<FocusIn>'
         self.image_refs = {}  # Initialize image reference dictionary
 
+        # Define placeholders
+        self.placeholders = {
+            "Name": "Name",
+            "Age": "Age",
+            "Gender": "Gender",
+            "Appearance": "Appearance"
+        }
+
     def show(self):
         """
         Show the CreateScreen with its elements.
@@ -81,10 +89,10 @@ class CreateScreen:
         self.canvas.create_image(512.0, 277.0, image=self.image_refs["banner"])
         self.canvas.create_image(515.0, 397.56201171875, image=self.image_refs["divider"])
 
-        self.entry_name = self.create_entry_with_icon(152.0, 420.0, 278.0, 51.0, "Name", "entry_bg_1", "entry_1")
-        self.entry_age = self.create_entry_with_icon(152.0, 486.0, 278.0, 51.0, "Age", "entry_bg_1", "entry_1")
-        self.entry_gender = self.create_entry_with_icon(152.0, 551.0, 278.0, 51.0, "Gender", "entry_bg_1", "entry_1")
-        self.entry_appearance = self.create_entry_with_icon(629.0, 421.0, 281.0, 181.0, "Appearance", "entry_bg_2", "entry_2")
+        self.entry_name = self.create_entry_with_icon(152.0, 420.0, 278.0, 51.0, self.placeholders['Name'], "entry_bg_1", "entry_1")
+        self.entry_age = self.create_entry_with_icon(152.0, 486.0, 278.0, 51.0, self.placeholders['Age'], "entry_bg_1", "entry_1")
+        self.entry_gender = self.create_entry_with_icon(152.0, 551.0, 278.0, 51.0, self.placeholders['Gender'], "entry_bg_1", "entry_1")
+        self.entry_appearance = self.create_entry_with_icon(629.0, 421.0, 281.0, 181.0, self.placeholders['Appearance'], "entry_bg_2", "entry_2")
 
         # Create icon images
         self.canvas.create_image(124.0,446.0,image=self.image_refs["icon"])
@@ -161,7 +169,10 @@ class CreateScreen:
 
         if not all(data.values()):
             messagebox.showerror(title='Error', message='All fields must be completed.')
+        elif any(data[key] == self.placeholders[key] for key in self.placeholders):
+            messagebox.showerror(title='Error', message='All fields must be filled with valid data, not placeholders.')
         else:
+            insert_character(self.username, data)
             insert_character(self.username, data)
             self.switch_to_chat(0, None, None)
 

@@ -1,4 +1,5 @@
 from tkinter import Entry, Button, PhotoImage, messagebox
+from dotenv import load_dotenv, set_key
 from initial_gui.starting_operations import create_window, relative_to_assets
 from users.user_operations import log_user
 
@@ -119,6 +120,13 @@ class LoginScreen:
         if not api or not username or api == "Enter your API Key" or username == self.username_text:
             messagebox.showerror(title='Error', message='Both fields must be completed.', icon="error")
         else:
+             # Load existing environment variables
+            load_dotenv()
+            
+            # Save the API key to the .env file
+            env_file_path = ".env"
+            set_key(env_file_path, "OPENAI_API_KEY", api)
+            
             log_user(username)
             self.switch_to_create(username)
 
