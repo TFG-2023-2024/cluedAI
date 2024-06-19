@@ -389,9 +389,8 @@ class RerollScreen:
         """
         message = self.entry.get()
         if message:
-            self.display_message(message)
             self.entry.delete(0, END)
-            self.switch_to_chat(self.id, message)
+            self.switch_to_chat(self.day, self.id, type="Character", reroll=message)
 
     def hide(self):
         """

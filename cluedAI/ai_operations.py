@@ -153,7 +153,7 @@ def obtain_conversation(hilo_id):
     conversacion.reverse()
     return conversacion
 
-def reroll(id, hilo, reroll_message):
+def reroll(assistant, thread, reroll_message):
     """
     Perform a reroll in a thread by sending a message and receiving a response.
 
@@ -168,7 +168,7 @@ def reroll(id, hilo, reroll_message):
     - response (str): The response received after the reroll message is sent.
     """
     message = f"Rewrite your last response. The reason for rewrite is: {reroll_message}"
-    response = chat_by_thread(id, hilo, message)
+    response = chat_by_thread(assistant, thread, message)
     return response
 
 def chat_by_thread(assistant, hilo, user_message):

@@ -100,8 +100,9 @@ class ChatScreen:
         the response. If a reroll response is received, it is displayed on the UI.
         """
         if self.reroll:
+            print(self.reroll)
             reroll_message = self.reroll
-            reroll_response = ai.reroll(self.id, self.thread, reroll_message)
+            reroll_response = ai.reroll(self.assistant, self.thread, reroll_message)
             if reroll_response:
                 self.display_responses(reroll_response)
 
@@ -246,18 +247,19 @@ class ChatScreen:
         self.button2_canvas.create_image(0, 0, anchor="nw", image=self.button_select_button)
         self.button2_canvas.bind(self.left_click, lambda event: self.select())
 
-        self.button3_canvas = Canvas(
-            self.canvas,
-            width=self.button_reroll_button.width(),
-            height=self.button_reroll_button.height(),
-            bg="#3D3D3D",
-            bd=0,
-            highlightthickness=0,
-            relief="ridge"
-        )
-        self.button3_canvas.place(x=712.0 - self.button_reroll_button.width() // 2, y=40.0 - self.button_reroll_button.height() // 2)
-        self.button3_canvas.create_image(0, 0, anchor="nw", image=self.button_reroll_button)
-        self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
+        if self.type != "Item":
+            self.button3_canvas = Canvas(
+                self.canvas,
+                width=self.button_reroll_button.width(),
+                height=self.button_reroll_button.height(),
+                bg="#3D3D3D",
+                bd=0,
+                highlightthickness=0,
+                relief="ridge"
+            )
+            self.button3_canvas.place(x=712.0 - self.button_reroll_button.width() // 2, y=40.0 - self.button_reroll_button.height() // 2)
+            self.button3_canvas.create_image(0, 0, anchor="nw", image=self.button_reroll_button)
+            self.button3_canvas.bind(self.left_click, lambda event: self.reroll_response())
 
     def create_entry(self):
         """
