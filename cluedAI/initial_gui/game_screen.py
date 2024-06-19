@@ -569,9 +569,6 @@ class ChatScreen:
             self.entry.delete(0, END)
             if self.day > 0:
                 self.submit_response(message)
-                if self.type=="Item":
-                    response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
-                    self.submit_response(response)
             else:
                 wait_msg = "Please wait a few seconds to start..."
                 self.submit_button_canvas.unbind(self.left_click)
@@ -610,7 +607,7 @@ class ChatScreen:
             if self.type=="Character":
                 response = ai.chat_by_thread(self.assistant, self.thread, message)
             elif self.type=="Item":
-                response = message
+                response = ai.chat_narrator("Item", str(obtain_by_id(self.id, items_collection)), message)
         else:
             if self.responses and not self.response_submitted:
                 self.response_submitted = True
