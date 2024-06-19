@@ -395,7 +395,7 @@ class ChatScreen:
                 ChatScreen.cached_day_data = start_day()
                 ChatScreen.cached_messages.clear()
                 ChatScreen.cached_day = self.day
-            self.data = ChatScreen.cached_day_data
+        self.data = ChatScreen.cached_day_data
         
         if self.day == 5:
             self.switch_to_select(self.day, self.data)
@@ -471,8 +471,8 @@ class ChatScreen:
         Display a message indicating the day is over and schedule a reset of the chat after 5 seconds.
         """
         self.display_responses("DAY OVER, continuing in 5 seconds...")
-        self.unblock_button()
         self.root.after(5000, self.reset_chat)
+        self.unblock_button()
 
     def display_responses(self, response):
         """
