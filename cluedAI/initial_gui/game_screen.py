@@ -63,9 +63,8 @@ class ChatScreen:
         creates or obtains a thread for communication, loads images, and sets up UI elements
         like buttons, entry field, and message frames.
         """
-        if self.day == 1:
-            if ChatScreen.cached_day_data is None:
-                ChatScreen.cached_day_data = start_day()
+        if self.day == 1 and ChatScreen.cached_day_data is None:
+            ChatScreen.cached_day_data = start_day()
             self.data = ChatScreen.cached_day_data
 
        # Check if the character has been spoken to today
@@ -674,6 +673,12 @@ class ChatScreen:
             self.root.after(100, lambda: self.switch_to_select(self.day, self.data))  # 100 ms delay
         else:
             self.switch_to_select(self.day, self.data)
+
+    def destroy(self):
+        """
+        Destroy the screen.
+        """
+        self.root.destroy()
 
     def hide(self):
         """
