@@ -65,7 +65,7 @@ class ChatScreen:
         """
         if self.day == 1 and ChatScreen.cached_day_data is None:
             ChatScreen.cached_day_data = start_day()
-            self.data = ChatScreen.cached_day_data
+        self.data = ChatScreen.cached_day_data
 
        # Check if the character has been spoken to today
         if self.day in ChatScreen.characters_spoken_to:
