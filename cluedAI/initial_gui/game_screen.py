@@ -525,17 +525,24 @@ class ChatScreen:
         summarizes based on the character's ID.
         """
         new_talk = True
+        first_day_talk= True
         all_days = sorted(ChatScreen.characters_spoken_to.keys(), reverse=True)
-        all_days.pop(0)
-        for clave in all_days:
-            for sublist in ChatScreen.characters_spoken_to[clave]:
+        chats_of_day=ChatScreen.characters_spoken_to[all_days[0]]
+        for sublist in chats_of_day:
                 if sublist[0] == self.id:
-                    thread = ai.obtain_thread_by_id(sublist[1])
-                    ai.obtain_summary(self.assistant, thread, self.day, self.thread)
-                    new_talk = False
-                    break
-        if new_talk:
-            ai.obtain_summary(self.assistant, self.thread, self.day)
+                    first_day_talk=False
+                    
+        if first_day_talk:
+            all_days.pop(0)
+            for clave in all_days:
+                for sublist in ChatScreen.characters_spoken_to[clave]:
+                    if sublist[0] == self.id:
+                        thread = ai.obtain_thread_by_id(sublist[1])
+                        ai.obtain_summary(self.assistant, thread, self.day, self.thread)
+                        new_talk = False
+                        break
+            if new_talk:
+                ai.obtain_summary(self.assistant, self.thread, self.day)
 
     def end_game(self):
         """
