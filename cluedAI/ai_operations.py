@@ -216,7 +216,7 @@ def chat_narrator(type_information, information, user_message):
     responding to user queries based on predefined information types.
 
     Args:
-    - type_information (str): Type of information (e.g., Item, Location, Event).
+    - type_information (str): Type of information (e.g., Item, Location, Event...).
     - information (str): Specific information related to the type.
     - user_message (str): User query message.
 
@@ -227,12 +227,12 @@ def chat_narrator(type_information, information, user_message):
     model=ai_model,
     messages=[
         {"role": "system", "content": '''You will be the narrator of a mystery game about a murder, you must respond in a mysterious way.
-            The prompts that will be given to you will have the following structure: information_type: information
+            The prompts that will be given to you will have the following structure: information_type: information. User query: user_message.
             These are the different types of information that exist, along with the information:
-            - Item: Information about an item
-            - Location: Information about a location
-            - Event: Description of an event
-            Remember to respond in a mysterious way but sticking to the information given without inventing anything'''},
+            - Item: Information about an item.
+            - Location: Information about a location.
+            Remember to respond to the user query in a mysterious way but mostly sticking to the information given.
+            '''},
         {"role": "user", "content": f"{type_information}: {information}. User query: {user_message}"},
         ]
     )

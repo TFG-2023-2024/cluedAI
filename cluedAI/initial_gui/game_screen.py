@@ -175,7 +175,8 @@ class ChatScreen:
         """
         self.submit_button_canvas.unbind(self.left_click)
         self.button2_canvas.unbind(self.left_click)
-        self.button3_canvas.unbind(self.left_click)
+        if self.type != "Item":
+            self.button3_canvas.unbind(self.left_click)
 
     def unblock_button(self):
         """
@@ -324,6 +325,16 @@ class ChatScreen:
             fill="#D71E1E",
             font=("Inter", 24)
         )
+        
+        if self.day != 0:
+            self.count_label = self.canvas.create_text(
+                70.0,
+                30.0,
+                anchor="nw",
+                text= "Messages: " + str(len(ChatScreen.cached_messages)),
+                fill="#D71E1E",
+                font=("Inter", 20)
+            )
 
     def create_message_frame(self):
         """
@@ -453,8 +464,9 @@ class ChatScreen:
         rect_y2 = bbox[3] + padding
         rounded_rect = self.create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#333333")
         self.messages_canvas.tag_lower(rounded_rect, text_item)
+        if self.day != 0:
+            ChatScreen.cached_messages.append(message)
         self.messages.append((rounded_rect, text_item, wrapped_message))
-        ChatScreen.cached_messages.append(message)
 
         self.messages_canvas.config(scrollregion=self.messages_canvas.bbox("all"))
         self.messages_canvas.yview_moveto(1.0)
@@ -485,14 +497,20 @@ class ChatScreen:
 
         y_offset = self.get_y_offset()
         x_position = 40
-        text_item = self.messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill="#FFFFFF", font=("Inter", 13))
+        if self.type == "Item":
+            text_color="#D71E1E"
+            rectangle_color="#FFFFFF"
+        else:
+            text_color="#FFFFFF"
+            rectangle_color="#D71E1E"
+        text_item = self.messages_canvas.create_text(x_position, y_offset, anchor="nw", text=wrapped_response, fill=text_color, font=("Inter", 13))
         bbox = self.messages_canvas.bbox(text_item)
         padding = 10
         rect_x1 = bbox[0] - padding
         rect_y1 = bbox[1] - padding
         rect_x2 = bbox[2] + padding
         rect_y2 = bbox[3] + padding
-        rounded_rect = self.create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill="#D71E1E")
+        rounded_rect = self.create_rounded_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, radius=20, fill=rectangle_color)
         self.messages_canvas.tag_lower(rounded_rect, text_item)
         self.responses.append((rounded_rect, text_item, wrapped_response))
 
@@ -582,6 +600,8 @@ class ChatScreen:
                 self.submit_button_canvas.unbind(self.left_click)
                 self.submit_response(wait_msg)
                 self.root.after(2000, self.complete_tutorial)
+        if self.day != 0:
+            self.canvas.itemconfig(self.count_label, text="Messages: " + str(len(ChatScreen.cached_messages)))
                 
     def clear_default(self, event):
         """
