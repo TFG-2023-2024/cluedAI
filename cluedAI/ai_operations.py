@@ -1,67 +1,203 @@
-#Este codigo es para probar los metodos dentro del mismo permitiendo crear x hilos con x personajes de la db mediante un rango de id ademas de acceder a dichos hilos en cualquier momento
-import json
 import openai
 import os
+import re
 from dotenv import load_dotenv
-import random
-
 from characters.character_operations import create_character
+from db.db_operations import connect_db, obtain_by_id, insert_data
 
-
-# Cargar la clave de API de OpenAI
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI()
+global characters_collection, story_collection
+_, characters_collection, _, _, user_collection, story_collection = connect_db()
+ai_model="gpt-3.5-turbo"
 
+def create_thread():
+    """
+    Create a new thread using the client's beta API.
 
+    This function calls the client's method to create a new thread.
 
-def crear_asistente(id):
-    assistant = create_character(id)
-    return assistant
-
-def crear_hilo():
+    Returns:
+    - thread (object): The created thread object.
+    """
     thread = client.beta.threads.create()
-    return {"id": thread.id}
+    return thread
+    
+def obtain_thread_by_id(id):
+    """
+    Retrieve a thread by its ID using the client's beta API.
 
-def obtener_id_hilo(hilo):
-    return hilo['id']
+    This function attempts to retrieve a thread by its ID.
 
-def destruir_hilo(hilo_id, hilos):
-    for key, hilo in list(hilos.items()):
-        if hilo['id'] == hilo_id:
-            del hilos[key]
-            return f"Hilo {hilo_id} destruido."
-    return f"Hilo {hilo_id} no encontrado."
+    Args:
+    - id (str): The ID of the thread to retrieve.
 
-def recuperar_conversacion(hilo_id):
+    Returns:
+    - thread (object or None): The retrieved thread object, or None if not found.
+    """
+    try:
+        return client.beta.threads.retrieve(id)
+    except Exception:
+        return None
+    
+
+def obtain_assistant_id(assistant):
+    """
+    Retrieve the ID of an assistant object.
+
+    This function returns the ID of the provided assistant object.
+
+    Args:
+    - assistant (object): The assistant object.
+
+    Returns:
+    - id (str): The ID of the assistant.
+    """
+    return assistant.id
+
+def obtain_assistant_by_id(id):
+    """
+    Retrieve an assistant by its ID using the client's beta API.
+
+    This function attempts to retrieve an assistant by its ID.
+
+    Args:
+    - id (str): The ID of the assistant to retrieve.
+
+    Returns:
+    - assistant (object or None): The retrieved assistant object, or None if not found.
+    """
+    try:
+        assistant=client.beta.assistants.retrieve(id)
+        return assistant
+    except Exception:
+        return None
+    
+def create_assistant(id):
+    """
+    Create an assistant associated with a character ID.
+
+    This function first checks if the character already has an assistant assigned.
+    If not, it creates a new assistant and updates the character document in the characters_collection.
+
+    Args:
+    - id (str): The ID of the character associated with the assistant.
+
+    Returns:
+    - assistant (object or None): The created or retrieved assistant object, or None if creation failed.
+    """
+    try:
+        character = obtain_by_id(id, characters_collection)
+        
+        # Check if the character already has an assistant assigned
+        assistant_id = character.get('Assistant_id')
+        if assistant_id:
+            assistant = obtain_assistant_by_id(assistant_id)
+            if assistant:
+                return assistant
+        
+        # If no assistant or assistant not found, create a new one
+        assistant = create_character(id)
+        if assistant:
+            # Use update_one with upsert=True to insert if not exists, update if exists
+            characters_collection.update_one(
+                {"_id": character["_id"]},
+                {"$set": {"Assistant_id": assistant.id}},
+                upsert=True
+            )
+            return assistant
+        else:
+            print("Failed to create assistant.")
+            return None
+        
+    except Exception as e:
+        print(f"Error creating assistant: {e}")
+        return None
+
+def destroy_thread(id):
+    """
+    Destroy (delete) a thread by its ID using the client's beta API.
+
+    This function attempts to delete a thread by its ID.
+
+    Args:
+    - id (str): The ID of the thread to delete.
+
+    Returns:
+    - result (object or None): The result of the deletion operation, or None if deletion failed.
+    """
+    try:
+        return client.beta.threads.delete(id)
+    except Exception:
+        return None
+
+def obtain_conversation(hilo_id):
+    """
+    Retrieve a conversation (list of messages) from a thread by its ID using the client's beta API.
+
+    This function retrieves messages from a thread and formats them into a conversation list.
+
+    Args:
+    - hilo_id (str): The ID of the thread to retrieve messages from.
+
+    Returns:
+    - conversacion (list): A list of formatted messages in the conversation.
+    """
     messages = client.beta.threads.messages.list(thread_id=hilo_id)
     conversacion = []
     for message in messages:
         role = message.role
         content = message.content[0].text.value
-        conversacion.append(f"{role.capitalize()}: {content}")
+        conversacion.append(f"{role}: {content}")
+    conversacion.reverse()
     return conversacion
 
-def conversar_en_hilo(hilo, user_message):
+def reroll(assistant, thread, reroll_message):
+    """
+    Perform a reroll in a thread by sending a message and receiving a response.
 
+    This function sends a reroll message to a thread and retrieves the response.
+
+    Args:
+    - id (str): The ID associated with the reroll operation.
+    - hilo (object): The thread object where the reroll message will be sent.
+    - reroll_message (str): The message explaining the reroll reason.
+
+    Returns:
+    - response (str): The response received after the reroll message is sent.
+    """
+    message = f"Rewrite your last response. The reason for rewrite is: {reroll_message}"
+    response = chat_by_thread(assistant, thread, message)
+    return response
+
+def chat_by_thread(assistant, hilo, user_message):
+    """
+    Perform a chat action in a thread by sending a message and processing the response.
+
+    This function sends a message to a thread and processes the response to build a complete message.
+
+    Args:
+    - assistant (object): The assistant object associated with the chat action.
+    - hilo (object): The thread object where the message will be sent.
+    - user_message (str): The message sent by the user.
+
+    Returns:
+    - response (str): The complete response received after processing the chat action.
+    """
     if not hilo:
         print("Hilo no encontrado.")
         return
 
-    asistente = crear_asistente(1)
-    print(asistente)
-
     client.beta.threads.messages.create(
-        thread_id=hilo['id'],
+        thread_id=hilo.id,
         role="user",
         content=user_message,
     )
 
-    print("Asistente: ", end="", flush=True)
-
     stream = client.beta.threads.runs.create(
-        thread_id=hilo['id'],
-        assistant_id=asistente.id,
+        thread_id=hilo.id,
+        assistant_id=assistant.id,
         stream=True,
     )
     response = ""
@@ -72,184 +208,236 @@ def conversar_en_hilo(hilo, user_message):
     return response
             #print(event_dict, end="", flush=True)
 
-#Codigo para comprobar su correcto funcionamiento
-def main():
-    # Crear asistentes y hilos
-    num_asistentes = 5
-    rango_ids = list(range(1, 11))
-    random.shuffle(rango_ids)
-    ids_seleccionados = rango_ids[:num_asistentes]
+def chat_narrator(type_information, information, user_message):
+    """
+    Initiate a chat with the narrator AI for the game.
 
-    asistentes = {str(id): crear_asistente(id) for id in ids_seleccionados}
-    hilos = {str(id): crear_hilo() for id, asistente in asistentes.items()}
+    This function sends a message to the AI model to interact as the narrator role,
+    responding to user queries based on predefined information types.
 
-    while True:
-        comando = input("Ingrese un comando (nuevo, destruir, conversar, listar, salir, recuperar): ").strip().lower()
+    Args:
+    - type_information (str): Type of information (e.g., Item, Location, Event...).
+    - information (str): Specific information related to the type.
+    - user_message (str): User query message.
 
-        if comando == "salir":
-            break
-        elif comando == "nuevo":
-            id_nuevo = str(random.choice([id for id in rango_ids if str(id) not in asistentes]))
-            asistente_nuevo = crear_asistente(id_nuevo)
-            hilo_nuevo = crear_hilo()
-            asistentes[id_nuevo] = asistente_nuevo
-            hilos[id_nuevo] = hilo_nuevo
-            print(f"Asistente con ID {id_nuevo} y hilo creado.")
-        elif comando == "destruir":
-            id_destruir = input("Ingrese el ID del hilo a destruir: ")
-            print(destruir_hilo(id_destruir, hilos))
-        elif comando == "recuperar":
-            id_recuperar = input("Ingrese el ID del hilo del que quieres obtener la conversacion: ")
-            print(recuperar_conversacion(id_recuperar))
-        elif comando == "conversar":
-            id_conversar = input("Ingrese el ID del hilo con el que desea conversar: ")
-            if any(hilo['id'] == id_conversar for hilo in hilos.values()):
-                print(f"Conversando con el hilo {id_conversar}. Escriba 'salir' para finalizar la conversación.")
-                conversar_en_hilo(id_conversar, hilos)
-            else:
-                print("ID de hilo no válido.")
-        elif comando == "listar":
-            print("Hilos activos:")
-            for asistente_id, hilo in hilos.items():
-                print(f"ID del Asistente: {asistente_id}, ID del Hilo: {hilo['id']}")
-        else:
-            print("Comando no válido.")
+    Returns:
+    - response (str): AI-generated response in the form of a mysterious narrative.
+    """
+    response = client.chat.completions.create(
+    model=ai_model,
+    messages=[
+        {"role": "system", "content": '''You will be the narrator of a mystery game about a murder, you must respond in a mysterious way.
+            The prompts that will be given to you will have the following structure: information_type: information. User query: user_message.
+            These are the different types of information that exist, along with the information:
+            - Item: Information about an item.
+            - Location: Information about a location.
+            Remember to respond to the user query in a mysterious way but mostly sticking to the information given.
+            '''},
+        {"role": "user", "content": f"{type_information}: {information}. User query: {user_message}"},
+        ]
+    )
+    return response.choices[0].message.content
 
-if __name__ == "__main__":
-    main()
+def parse_story_content(content):
+    """
+    Parse and extract story events from a formatted content string.
 
+    This function extracts story events for each day from a formatted content string
+    and returns them as a list of dictionaries.
 
+    Args:
+    - content (str): Formatted content string containing story events.
 
+    Returns:
+    - story_list (list): List of dictionaries containing _id and Events for each day.
+    """
+    content = content[len("story = "):].strip()
 
+    # Use a regular expression to find each dictionary-like string
+    pattern = re.compile(r'\{[^}]+\}')
+    matches = pattern.findall(content)
 
+    story_list = []
+    for match in matches:
+        # Extract the _id
+        id_match = re.search(r'"_id":\s*(\d+)', match)
+        _id = int(id_match.group(1)) if id_match else None
 
+        # Extract the Events
+        events_match = re.search(r'"Events":\s*"([^"]+)"', match)
+        events = events_match.group(1) if events_match else ""
+        story_list.append({"_id": _id, "Events": events})
 
+    return story_list
 
+def start_story(information):
+    """
+    Start the creation of a story using the 3-act structure (can ve varied) based on provided information.
 
+    This function initiates the creation of a story based on provided information,
+    involving characters, items, and locations. It formats the response for each day
+    and stores it in a collection for further use.
 
+    Args:
+    - information (str): Initial information to start the story.
 
+    Returns:
+    - story_text (str): AI-generated response containing the formatted story text for day 1.
+    """
+    response = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {
+                "role": "system",
+                "content": '''Your task is to create a story using the 3-act structure based on the provided information about characters, items, and locations.
+                Generate a part of the story for each day (4 days) based on this structure. 
+                Do write out who is the victim (Character whose role is Victim) and their manner of death involving an existing item, but not their murderer on day 1. 
+                The rest of the days events are up to you.
+                You must take into account that this story is subject to change, as the player's actions are unknown.
+                This story shall serve as a base, and needs to shape characters' interactions with the player.
+                Format the response in the following way:
+                story = [
+                    {"_id": 1, "Events": "Story events for day 1"},
+                    {"_id": 2, "Events": "Story events for day 2"},
+                    {"_id": 3, "Events": "Story events for day 3"},
+                    {"_id": 4, "Events": "Story events for day 4"},
+                    {"_id": 5, "Events": "Story events for day 5"}
+                ]'''
+            },
+            {
+                "role": "user",
+                "content": f"{information}."
+            }
+        ]
+    )
+    response_content = response.choices[0].message.content.strip()
+    story_list = parse_story_content(response_content)
+    # Insert the data into the collection
+    insert_data(story_list, story_collection)
+    day_1 = obtain_by_id(1, story_collection)
 
+    story_text = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {
+                "role": "system",
+                "content": '''Create a starting message in second person to a chat-based murder mystery game acting as a narrator for the story.
+                Do not mention the game, and stay in character. Do not mention who's the murderer, the red herring or the reluctant participant.
+                Do write out who is the victim and their manner of death, but not their murderer. 
+                The starting location for the player is the entrance of the mansion.
+                You must use the information for the day provided to build the story, but can invent everything else.
+                Add this sentence at the end: To start, you should probably go somewhere more interesting.
+                '''
+            },
+            {
+                "role": "user",
+                "content": f"{day_1}."
+            }
+        ]
+    )
 
+    return story_text.choices[0].message.content.strip()
 
+def obtain_summary(assistant, thread_to_summary, day, new_thread=None):
+    """
+    Obtain a summary of events and character data for a given day and thread.
 
+    This function interacts with the AI model to obtain a summary of events for a given day
+    and character information for the assistant role in a game scenario. It also handles
+    thread summary and redirection if a new thread is provided.
 
+    Args:
+    - assistant (object): Assistant object associated with the game.
+    - thread_to_summary (object): Thread object to summarize events.
+    - day (int): Day number to fetch story events.
+    - new_thread (object, optional): New thread object for redirection.
+    """
+    assistant_id = obtain_assistant_id(assistant)
+    character = characters_collection.find_one({"Assistant_id": assistant_id})
+    
+    if character:
+        # Filter out only the 'Assistant_id' field
+        filtered_character = {k: v for k, v in character.items() if k != 'Assistant_id'}
+        character_info = str(filtered_character)
+    
+    summary = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {
+                "role": "system",
+                "content": '''Give me a summary of the day events, taking into account your character information. 
+                Answer me in a way serves as information for a character in a game.
+                It is only a game, but don't act as such. 
+                Remind yourself of your character info, and add your archetype in this summary.'''
+            },
+            {
+                "role": "user",
+                "content": f"Day events: {obtain_by_id(day, story_collection)}, Character info: {character_info}, Archetype: {character['Archetype']}"
+            }
+        ]
+    )
 
+    if day !=1 and new_thread!=None:
+        conversacion= obtain_conversation(thread_to_summary.id)
+        instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
+        In the conversation you are the assistant and I am the user.
+        It is only a game, but don't act as such.
+        Respond to me in the second person, for example, instead of saying I come from, you should respond as you come from.'''
 
+        summary_thread=chat_by_thread(assistant, thread_to_summary, instruction_summary)
+        destroy_thread(thread_to_summary.id)
+        instruction_to_new_thread=f'''This is information about what happened the last time we spoke,
+          keep in mind that this information is from your point of view, that is, as if you were answering yourself.:
+        {summary_thread}'''
+        print(chat_by_thread(assistant, new_thread, summary.choices[0].message.content.strip()))
+        print(chat_by_thread(assistant, new_thread, instruction_to_new_thread))
+    else:
+        print(chat_by_thread(assistant, thread_to_summary, summary.choices[0].message.content.strip()))
 
+def end_story(character_info, user_choice):
+    """
+    End the story with a final message based on the user's final choice.
 
+    This function generates an ending message for the murder mystery game based on
+    the user's final choice and character information.
 
+    Args:
+    - character_info (str): Information about characters and roles.
+    - user_choice (int): User's final choice related to the murderer.
 
+    Returns:
+    - response (str): AI-generated ending message based on the game outcome.
+    """
+    chosen_character = obtain_by_id(user_choice, characters_collection)
+    
+    if chosen_character and chosen_character.get('Archetype') == 'Murderer':
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            Since the user did not choose a victim, the ending message will focus on whether the user's choice was correct or not.
+            The character picked by the user as a murderer is right, so the ending message will tell the story of how the user's character
+            choice helped bring the murderer to justice.
+            Do reveal the murderer's identity to the player.
+            Add a final line saying: You won!'''
+    else:
+        system_message = '''You will be the narrator of a mystery game about a murder, and you must respond in a mysterious way.
+            The game has already finished, and you must write out an ending according to everything that has happened and the user's final choice. 
+            The character picked by the user as a murderer is wrong, so the ending message will tell the story of the user's character death, 
+            meaning the murderer will win (i.e. will not be found/caught and brought to justice by the characters, and will continue their killings).
+            Do reveal the murderer's identity to the player, and mention that the user's character accused whoever they chose and were wrong.
+            Add a final line saying: You lost!''' 
+    
+    # Gather necessary information
+    day_info = str(story_collection.find())
+    user_character = user_collection.find()
+    user_info = [f"Name: {character['Name']}, Age: {character['Age']}, Gender: {character['Gender']}, Appearance: {character['Appearance']}." for character in user_character]
 
-
-
-
-
-
-
-
-
-# def crear_hilos_asistentes(num_hilos, rango_ids):
-#     random.shuffle(rango_ids)
-#     ids_seleccionados = rango_ids[:num_hilos]
-#     asistentes = [create_character(id) for id in ids_seleccionados]
-#     threads = [client.beta.threads.create() for _ in range(num_hilos)]
-#     return asistentes, threads
-
-# def consulta_api(index, entrada_usuario, textos_respuesta, threads, asistentes):
-#     thread_id = threads[index]['id']
-#     assistant_id = asistentes[index]['id']
-
-#     mensajes = [{"role": "user", "content": entrada_usuario}]
-
-#     response = openai.ChatCompletion.create(
-#         model="gpt-3.5-turbo",
-#         messages=mensajes,
-#         stream=True  # Habilitar el streaming
-#     )
-
-#     # Limpiar el campo de respuesta antes de comenzar a recibir la nueva respuesta
-#     textos_respuesta[index].delete("1.0", tk.END)
-#     respuesta_completa = ""
-
-#     for chunk in response:
-#         if 'choices' in chunk:
-#             for choice in chunk['choices']:
-#                 if 'delta' in choice and 'content' in choice['delta']:
-#                     texto_parcial = choice['delta']['content']
-#                     respuesta_completa += texto_parcial
-#                     textos_respuesta[index].insert(tk.END, texto_parcial)
-#                     textos_respuesta[index].see(tk.END)  # Scroll al final para ver la nueva respuesta
-
-#     return respuesta_completa
-
-# def manejar_entrada(index, textos_entrada, textos_respuesta, threads, asistentes):
-#     entrada_usuario = textos_entrada[index].get("1.0", "end-1c")
-#     textos_entrada[index].delete("1.0", "end")
-#     textos_respuesta[index].insert(tk.END, "User: " + entrada_usuario + "\n\n")
-
-#     hilo_consulta = threading.Thread(target=consulta_api, args=(index, entrada_usuario, textos_respuesta, threads, asistentes))
-#     hilo_consulta.start()
-
-# def on_close_window(window, window_list, index):
-#     window_list[index] = None
-#     window.destroy()
-
-# def crear_ventana_entrada(index, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta):
-#     if ventanas_entrada[index] is None or not ventanas_entrada[index].winfo_exists():
-#         ventana_entrada = tk.Toplevel()
-#         ventana_entrada.title(f"Input for Thread {index + 1}")
-#         ventana_entrada.protocol("WM_DELETE_WINDOW", lambda: on_close_window(ventana_entrada, ventanas_entrada, index))
-
-#         texto_entrada = tk.Text(ventana_entrada, height=5)
-#         texto_entrada.pack(fill=tk.BOTH, expand=True)
-#         textos_entrada[index] = texto_entrada
-
-#         boton_submit = tk.Button(ventana_entrada, text="Submit", command=lambda: crear_ventana_salida(index, threads, asistentes, ventanas_salida, textos_entrada, textos_respuesta))
-#         boton_submit.pack()
-
-#         ventanas_entrada[index] = ventana_entrada
-#     else:
-#         ventanas_entrada[index].deiconify()
-
-# def crear_ventana_salida(index, threads, asistentes, ventanas_salida, textos_entrada, textos_respuesta):
-#     if ventanas_salida[index] is None or not ventanas_salida[index].winfo_exists():
-#         ventana_salida = tk.Toplevel()
-#         ventana_salida.title(f"Output for Thread {index + 1}")
-#         ventana_salida.protocol("WM_DELETE_WINDOW", lambda: on_close_window(ventana_salida, ventanas_salida, index))
-
-#         texto_respuesta = tk.Text(ventana_salida, height=20)
-#         texto_respuesta.pack(fill=tk.BOTH, expand=True)
-#         textos_respuesta[index] = texto_respuesta
-
-#         ventanas_salida[index] = ventana_salida
-#     else:
-#         ventanas_salida[index].deiconify()
-
-#     manejar_entrada(index, textos_entrada, textos_respuesta, threads, asistentes)
-
-# def crear_botones_hilos(ventana_principal, num_hilos, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta):
-#     for i in range(num_hilos):
-#         boton_hilo = tk.Button(ventana_principal, text=f"Thread {i + 1}", command=lambda i=i: crear_ventana_entrada(i, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta))
-#         boton_hilo.pack(fill=tk.BOTH, expand=True)
-
-# def iniciar_aplicacion(num_hilos, rango_ids):
-#     ventana_principal = tk.Tk()
-#     ventana_principal.title("cluedAI")
-
-#     asistentes, threads = crear_hilos_asistentes(num_hilos, rango_ids)
-
-#     textos_entrada = [None] * num_hilos
-#     textos_respuesta = [None] * num_hilos
-#     ventanas_entrada = [None] * num_hilos
-#     ventanas_salida = [None] * num_hilos
-
-#     crear_botones_hilos(ventana_principal, num_hilos, threads, asistentes, ventanas_entrada, ventanas_salida, textos_entrada, textos_respuesta)
-
-#     ventana_principal.mainloop()
-
-# # Número de hilos y rango de IDs de personajes disponibles
-# NUM_HILOS = 5
-# RANGO_IDS = list(range(1, 11))
-
-# # Iniciar la aplicación
-# iniciar_aplicacion(NUM_HILOS, RANGO_IDS)
+    # Generate the response from the AI model
+    response = client.chat.completions.create(
+        model=ai_model,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": f"Story events: {day_info}, Characters and roles: {character_info}. User choice: {user_choice}. User character info: {user_info}"}
+        ]
+    )
+    
+    return response.choices[0].message.content

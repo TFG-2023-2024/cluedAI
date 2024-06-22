@@ -32,8 +32,9 @@ def connect_db():
         items_collection = db["items"]
         locations_collection = db["locations"]
         users_collection = db["users"]
+        story_collection = db["story"]
 
-        return db, characters_collection, items_collection, locations_collection, users_collection
+        return db, characters_collection, items_collection, locations_collection, users_collection, story_collection
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
         return None
@@ -72,7 +73,7 @@ def setup_db():
     - None
     """
     # CONNECT TO DATABASE
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
+    _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
 
     # Insert initial data
     insert_data(initial_characters, characters_collection)
@@ -94,13 +95,14 @@ def flush_db():
     """
     try:
         # Connect to MongoDB
-        db, _, _, _, _ = connect_db()
+        db, _, _, _, _, _ = connect_db()
 
         # Drop collections
         db["characters"].drop()
         db["items"].drop()
         db["locations"].drop()
         db["users"].drop()
+        db["story"].drop()
 
         print("Database flushed successfully.")
     except Exception as e:
@@ -128,31 +130,6 @@ def insert_column_data(column_data, column_name, collection):
         print(f"Error inserting data into {column_name} column: {e}")
         return None
 
-def randomize():
-    """
-    Randomizes character archetypes, locations, and items.
-
-    Args:
-    - None.
-
-    Returns:
-    - randomized_data (dict): Dictionary containing randomized location IDs.
-    """
-
-    # CONNECT TO DATABASE
-    _, characters_collection, items_collection, locations_collection, _ = connect_db()
-    randomized_data = {}
-
-    # Randomize character archetypes and update 
-    randomize_archetypes(characters_collection)
-
-    # Randomize locations
-    randomized_data["locations"] = randomize_locations(locations_collection)
-
-    randomize_items(items_collection, locations_collection, randomized_data["locations"])
-
-    return randomized_data
-
 def obtain_by_id(id, collection):
     """
     Fetches a database object by its ID from the given collection.
@@ -173,7 +150,35 @@ def obtain_by_id(id, collection):
         print(f"Error obtaining object by ID: {e}")
         return None
 
-def start_day():
+def randomize():
+    """
+    Randomizes character archetypes, locations, and items.
+
+    Args:
+    - None.
+
+    Returns:
+    - randomized_data (dict): Dictionary containing randomized location IDs.
+    """
+
+    # CONNECT TO DATABASE
+    _, _, items_collection, locations_collection, _, _ = connect_db()
+    randomized_data = {}
+
+    # Randomize character archetypes and update 
+    #randomize_archetypes(characters_collection)
+
+    # Randomize locations
+    randomized_data["locations"] = randomize_locations(locations_collection)
+
+    randomize_items(items_collection, locations_collection, randomized_data["locations"])
+    for item in items_collection.find():
+            # Assign the random location name to the item, instead of id
+            items_collection.update_one({"_id": item["_id"]}, {"$set": {"Location": obtain_by_id(item['Location'], locations_collection)['Room']}})
+            
+    return randomized_data
+
+def start_day_0():
     """
     Randomizes the Location ID on both the character and item collection.
 
@@ -181,7 +186,7 @@ def start_day():
     - randomized_day (dict): The randomized data for the characters.
     """
     # Fetch all location IDs
-    _, characters_collection, _, locations_collections, _ = connect_db()
+    _, characters_collection, _, locations_collection, _, _ = connect_db()
 
     randomized_data = randomize()
 
@@ -191,12 +196,43 @@ def start_day():
     # Randomize character locations
     for character in characters_collection.find():
         random_location_id = random.choice(randomized_data["locations"])
-        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": random_location_id}})
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": obtain_by_id(random_location_id, locations_collection)['Room']}})
         location_characters[random_location_id].append(character["_id"])
 
     # Update the locations collection with the characters
     for location_id, character_ids in location_characters.items():
-        locations_collections.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
+        locations_collection.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
+
+    return randomized_data
+
+def start_day():
+    """
+    Randomizes the Location ID on both the character and item collection.
+
+    Returns:
+    - randomized_day (dict): The randomized data for the characters.
+    """
+    # Fetch all location IDs
+    _, characters_collection, items_collection, locations_collection, _, _ = connect_db()
+
+    # Randomize locations
+    randomized_data = {}
+    randomized_data["locations"] = randomize_locations(locations_collection)
+
+    randomize_items(items_collection, locations_collection, randomized_data["locations"])
+
+    # Temporary dictionary to hold characters assigned to each location
+    location_characters = {location: [] for location in randomized_data["locations"]}
+
+    # Randomize character locations
+    for character in characters_collection.find():
+        random_location_id = random.choice(randomized_data["locations"])
+        characters_collection.update_one({"_id": character["_id"]}, {"$set": {"Location": obtain_by_id(random_location_id, locations_collection)['Room']}})
+        location_characters[random_location_id].append(character["_id"])
+
+    # Update the locations collection with the characters
+    for location_id, character_ids in location_characters.items():
+        locations_collection.update_one({"_id": location_id}, {"$set": {"Characters": character_ids}})
 
     return randomized_data
 
