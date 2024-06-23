@@ -32,16 +32,16 @@ def main():
     and initiates the GUI.
     """
     load_dotenv()  # Load environment variables from .env file
-    #mongodb_process = start_mongodb()  
+    mongodb_process = start_mongodb()  
     
-    #try:
-    flush_db()  
-    setup_db() 
-    basic_window()  
-    #finally:
+    try:
+        flush_db()  
+        setup_db() 
+        basic_window()  
+    finally:
         # Ensure MongoDB process is terminated when the application ends
-        #mongodb_process.terminate()
-        #mongodb_process.wait()
+        mongodb_process.terminate()
+        mongodb_process.wait()
 
 if __name__ == "__main__":
     main()
