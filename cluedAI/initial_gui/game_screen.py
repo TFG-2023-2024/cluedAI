@@ -13,6 +13,7 @@ class ChatScreen:
     cached_day = None
     cached_messages = []
     characters_spoken_to = {}
+    characters_today_spoken = []
     
     def __init__(self, root, switch_to_select, switch_to_reroll, day, id, type, reroll=None):
         """
@@ -398,6 +399,7 @@ class ChatScreen:
         interaction session or tutorial.
         """
         self.day += 1
+        ChatScreen.characters_today_spoken=[]
         self.canvas.itemconfig(self.day_label, text=str(self.day))
         
         if self.day > 1 and self.day != 5:
@@ -545,10 +547,8 @@ class ChatScreen:
         new_talk = True
         first_day_talk= True
         all_days = sorted(ChatScreen.characters_spoken_to.keys(), reverse=True)
-        chats_of_day=ChatScreen.characters_spoken_to[all_days[0]]
-        for sublist in chats_of_day:
-                if sublist[0] == self.id:
-                    first_day_talk=False
+        if self.id in self.characters_today_spoken:
+            first_day_talk=False
                     
         if first_day_talk:
             all_days.pop(0)
@@ -561,6 +561,8 @@ class ChatScreen:
                         break
             if new_talk:
                 ai.obtain_summary(self.assistant, self.thread, self.day)
+
+            self.characters_today_spoken.append(self.id)
 
     def end_game(self):
         """

@@ -2,6 +2,7 @@ from tkinter import Entry, Button, PhotoImage, messagebox
 from dotenv import load_dotenv, set_key
 from initial_gui.starting_operations import create_window, relative_to_assets
 from users.user_operations import log_user
+import os
 
 class LoginScreen:
     def __init__(self, root, switch_to_create):
@@ -122,10 +123,16 @@ class LoginScreen:
         else:
              # Load existing environment variables
             load_dotenv()
+
+            #default db data
+            default_mongodb_uri = "mongodb+srv://Atlas_Admin:edPKm4nKMvc4utrw@cluedai.d6izjzw.mongodb.net/?retryWrites=true&w=majority&appName=CluedAI"
+            default_mongodb_db = "cluedAI"
             
             # Save the API key to the .env file
             env_file_path = ".env"
             set_key(env_file_path, "OPENAI_API_KEY", api)
+            set_key(env_file_path, "MONGODB_URI", default_mongodb_uri)
+            set_key(env_file_path, "MONGODB_DB", default_mongodb_db)
             
             log_user(username)
             self.switch_to_create(username)

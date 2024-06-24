@@ -7,13 +7,9 @@ block_cipher = None
 a = Analysis(
     ['cluedAI/main.py'],
     pathex=['cluedAI'],
-    binaries=[        
-        ('cluedAI/mongodb/bin/mongod.exe', 'mongodb/bin'),
-        ('cluedAI/mongodb/bin/mongos.exe', 'mongodb/bin'),
-        ('cluedAI/mongodb/bin/vc_redist.x64.exe', 'mongodb/bin')],
+    binaries=[],
     datas=[
         ('cluedAI/db/', 'db'),
-        ('cluedAI/mongodb/', 'mongodb'),
         ('cluedAI/characters/', 'characters'),
         ('cluedAI/initial_gui/', 'initial_gui'),
         ('cluedAI/users/', 'users'),
@@ -41,8 +37,8 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
-    console=True,
+    upx=False,
+    console=False,
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,
@@ -54,7 +50,7 @@ coll = COLLECT(
     a.zipfiles,
     a.datas,
     strip=False,
-    upx=True,
+    upx=False,
     upx_exclude=[],
     name='cluedAI',
 )

@@ -380,19 +380,23 @@ def obtain_summary(assistant, thread_to_summary, day, new_thread=None):
     if day !=1 and new_thread!=None:
         conversacion= obtain_conversation(thread_to_summary.id)
         instruction_summary = f'''Give me a summary of what you consider most important of what was talked about in this conversation: {conversacion}
-        In the conversation you are the assistant and I am the user.
-        It is only a game, but don't act as such.
-        Respond to me in the second person, for example, instead of saying I come from, you should respond as you come from.'''
+            In the conversation, you are the assistant and I am the user.
+            It is only a game, but don't act as such.
+            Respond to me in the second person, for example, instead of saying "I come from," you should respond as "you come from."
+            Ensure that the summary is written as instructions for the assistant, referring to actions or statements made by the user in the second person. For instance, if the user accused the assistant of something, write "The user accused you of something," instead of "I accused you of something."
+            '''
 
         summary_thread=chat_by_thread(assistant, thread_to_summary, instruction_summary)
         destroy_thread(thread_to_summary.id)
-        instruction_to_new_thread=f'''This is information about what happened the last time we spoke,
+        instruction_to_new_thread=f'''[INSTRUCTION]This is information about what happened the last time we spoke,
           keep in mind that this information is from your point of view, that is, as if you were answering yourself.:
-        {summary_thread}'''
-        print(chat_by_thread(assistant, new_thread, summary.choices[0].message.content.strip()))
-        print(chat_by_thread(assistant, new_thread, instruction_to_new_thread))
+        {summary_thread}[/INSTRUCTION]'''
+        chat_by_thread(assistant, new_thread, summary.choices[0].message.content.strip())
+        chat_by_thread(assistant, new_thread, instruction_to_new_thread)
+
     else:
-        print(chat_by_thread(assistant, thread_to_summary, summary.choices[0].message.content.strip()))
+        chat_by_thread(assistant, thread_to_summary, summary.choices[0].message.content.strip())
+
 
 def end_story(character_info, user_choice):
     """
